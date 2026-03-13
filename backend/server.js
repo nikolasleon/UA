@@ -9,15 +9,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-console.log("MONGO_URI:", process.env.MONGO_URI); // prueba temporal
+app.get("/", (req, res) => {
+  console.log("Han llamado a /");
+  res.json({ message: "API funcionando" });
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB conectado"))
-  .catch(err => console.log(err));
-
-app.get("/", (req, res) => {
-  res.json({ message: "API funcionando" });
-});
+  .catch(err => console.log("Error MongoDB:", err));
 
 const PORT = process.env.PORT || 5000;
 
