@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000"; //para probarlo en local comentar el process.env y dejar solo http://localhost:5000, para producción usar la variable de entorno REACT_APP_API_URL con la URL del backend desplegado.
 
 function HomePage() {
   const [message, setMessage] = useState("Cargando...");
