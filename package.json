@@ -1,7 +1,10 @@
 {
-  "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "mongoose": "^9.3.0"
+  "name": "ua",
+  "private": true,
+  "scripts": {
+    "start:frontend": "npm --prefix frontend start",
+    "start:backend": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "build:frontend": "npm --prefix frontend run build"
   }
 }
