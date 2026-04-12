@@ -6,8 +6,19 @@ const cors = require("cors");
 
 const app = express();
 
-// Configurar CORS - permitir todos los orígenes para debugging
-app.use(cors());
+// Configurar CORS para permitir desde Render y localhost
+const corsOptions = {
+  origin: [
+    "https://daydare.onrender.com",
+    "http://localhost:3000",
+    "http://localhost:5000",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Importar rutas
