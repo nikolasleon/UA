@@ -4,6 +4,8 @@ import ChallengeCarousel from "../components/ChallengeCarousel";
 import Alert from "../components/Alert";
 import "../styles/AccountPage.css";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 function AccountPage() {
   const [user, setUser] = useState(null);
   const [challenges, setChallenges] = useState({ creados: [], enProgreso: [], completados: [] });
@@ -15,7 +17,7 @@ function AccountPage() {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/profile/${userId}`);
+      const response = await fetch(`${API_URL}/api/users/profile/${userId}`);
       if (response.ok) {
         const data = await response.json();
         setUser(data);
@@ -32,9 +34,9 @@ function AccountPage() {
 
   const fetchUserChallenges = async () => {
     try {
-      const res1 = await fetch(`http://localhost:5000/api/challenges/user/${userId}?estado=creados`);
-      const res2 = await fetch(`http://localhost:5000/api/challenges/user/${userId}?estado=enProgreso`);
-      const res3 = await fetch(`http://localhost:5000/api/challenges/user/${userId}?estado=completados`);
+      const res1 = await fetch(`${API_URL}/api/challenges/user/${userId}?estado=creados`);
+      const res2 = await fetch(`${API_URL}/api/challenges/user/${userId}?estado=enProgreso`);
+      const res3 = await fetch(`${API_URL}/api/challenges/user/${userId}?estado=completados`);
       if (res1.ok && res2.ok && res3.ok) {
         setChallenges({
           creados: await res1.json(),
@@ -79,7 +81,7 @@ function AccountPage() {
 
   const handleDeleteChallenge = async (challengeId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/challenges/${challengeId}`, {
+      const response = await fetch(`${API_URL}/api/challenges/${challengeId}`, {
         method: "DELETE",
       });
 

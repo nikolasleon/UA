@@ -3,6 +3,8 @@ import Modal from "../components/Modal";
 import Alert from "../components/Alert";
 import "../styles/SettingsPage.css";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 function SettingsPage() {
   const userId = localStorage.getItem("userId") || "69dbce705178f132188226ac";
   
@@ -32,7 +34,7 @@ function SettingsPage() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/users/profile/${userId}`);
+        const response = await fetch(`${API_URL}/api/users/profile/${userId}`);
         if (response.ok) {
           const data = await response.json();
           setProfile({
@@ -92,7 +94,7 @@ function SettingsPage() {
     setIsSaving(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/profile/${userId}`,
+        `${API_URL}/api/users/profile/${userId}`,
         {
           method: "PUT",
           headers: {
@@ -126,7 +128,7 @@ function SettingsPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/settings/${userId}/password`,
+        `${API_URL}/api/users/settings/${userId}/password`,
         {
           method: "PUT",
           headers: {
@@ -153,7 +155,7 @@ function SettingsPage() {
   const handleDeleteAccount = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/${userId}`,
+        `${API_URL}/api/users/${userId}`,
         {
           method: "DELETE",
         }

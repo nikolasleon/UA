@@ -4,6 +4,8 @@ import ChallengeCard from "../components/ChallengeCard";
 import Alert from "../components/Alert";
 import "../styles/ChallengesListPage.css";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 function ChallengesListPage() {
   const { tipo } = useParams(); // "completados", "creados", "en-progreso"
   const [challenges, setChallenges] = useState([]);
@@ -26,7 +28,7 @@ function ChallengesListPage() {
         const estadoParam = tipoMap[tipo] || "creados";
         
         const response = await fetch(
-          `http://localhost:5000/api/challenges/user/${userId}?estado=${estadoParam}`
+          `${API_URL}/api/challenges/user/${userId}?estado=${estadoParam}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -48,7 +50,7 @@ function ChallengesListPage() {
 
   const handleDeleteChallenge = async (challengeId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/challenges/${challengeId}`, {
+      const response = await fetch(`${API_URL}/api/challenges/${challengeId}`, {
         method: "DELETE",
       });
 
