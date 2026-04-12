@@ -9,10 +9,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Importar rutas
+const userRoutes = require("./routes/users");
+const challengeRoutes = require("./routes/challenges");
+
 app.get("/", (req, res) => {
   console.log("Han llamado a /");
   res.json({ message: "API funcionando" });
 });
+
+// Usar rutas
+app.use("/api/users", userRoutes);
+app.use("/api/challenges", challengeRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB conectado"))
