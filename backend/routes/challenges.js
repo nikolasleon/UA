@@ -70,7 +70,11 @@ router.get("/:id", async (req, res) => {
 // Crear nuevo reto
 router.post("/", async (req, res) => {
   try {
-    const { titulo, descripcion, imagenDesafio, creadorId, dificultad, categoria } = req.body;
+    const { titulo, descripcion, imagenDesafio, creadorId, dificultad, categoria, esRetoDia } = req.body;
+
+    if (!titulo || !descripcion || !creadorId) {
+      return res.status(400).json({ message: "Título, descripción y creador son obligatorios" });
+    }
 
     // Obtener nombre del creador
     const user = await User.findById(creadorId);
@@ -86,6 +90,7 @@ router.post("/", async (req, res) => {
       creador: `${user.nombre} ${user.apellido}`,
       dificultad: dificultad || "medio",
       categoria: categoria || "general",
+      esRetoDia: Boolean(esRetoDia),
     });
 
     await newChallenge.save();

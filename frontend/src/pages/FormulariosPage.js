@@ -28,13 +28,24 @@ const initialLoginState = {
   contraseña: "",
 };
 
+const initialChallengeState = {
+  titulo: "",
+  descripcion: "",
+  imagenDesafio: "",
+  dificultad: "medio",
+  categoria: "general",
+  esRetoDia: false,
+};
+
 function FormulariosPage() {
   const navigate = useNavigate();
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showChallengeModal, setShowChallengeModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registerForm, setRegisterForm] = useState(initialFormState);
   const [loginForm, setLoginForm] = useState(initialLoginState);
+  const [challengeForm, setChallengeForm] = useState(initialChallengeState);
   const [alert, setAlert] = useState({ message: "", type: "success" });
 
   const handleInputChange = (e) => {
@@ -53,6 +64,10 @@ function FormulariosPage() {
     setLoginForm(initialLoginState);
   };
 
+  const resetChallengeForm = () => {
+    setChallengeForm(initialChallengeState);
+  };
+
   const closeModal = () => {
     if (isSubmitting) return;
     setShowRegisterModal(false);
@@ -65,11 +80,25 @@ function FormulariosPage() {
     resetLoginForm();
   };
 
+  const closeChallengeModal = () => {
+    if (isSubmitting) return;
+    setShowChallengeModal(false);
+    resetChallengeForm();
+  };
+
   const handleLoginInputChange = (e) => {
     const { name, value } = e.target;
     setLoginForm((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleChallengeInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setChallengeForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -204,6 +233,61 @@ function FormulariosPage() {
     }
   };
 
+  const handleCreateChallenge = async () => {
+    if (isSubmitting) return;
+
+    const userId = localStorage.getItem("userId");
+    const userName = localStorage.getItem("userName") || "";
+    const userLastName = localStorage.getItem("userLastName") || "";
+
+    if (!userId) {
+      setAlert({ message: "Debes iniciar sesión para crear un reto", type: "error" });
+      return;
+    }
+
+    const { titulo, descripcion, imagenDesafio, dificultad, categoria, esRetoDia } = challengeForm;
+
+    if (!titulo.trim() || !descripcion.trim()) {
+      setAlert({ message: "Título y descripción son obligatorios", type: "error" });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/challenges`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          titulo: titulo.trim(),
+          descripcion: descripcion.trim(),
+          imagenDesafio: imagenDesafio.trim(),
+          creadorId: userId,
+          creador: `${userName} ${userLastName}`.trim(),
+          dificultad,
+          categoria: categoria.trim() || "general",
+          esRetoDia,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "No se pudo crear el reto");
+      }
+
+      setAlert({ message: "Reto creado correctamente", type: "success" });
+      setShowChallengeModal(false);
+      resetChallengeForm();
+    } catch (error) {
+      setAlert({ message: error.message || "Error al crear el reto", type: "error" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="formularios-container">
       <h1>Formularios</h1>
@@ -235,6 +319,14 @@ function FormulariosPage() {
             aria-label="Abrir formulario de login"
           >
             Abrir Formulario de Login
+          </button>
+
+          <button
+            className="btn btn-success"
+            onClick={() => setShowChallengeModal(true)}
+            aria-label="Abrir formulario de creación de reto"
+          >
+            Crear Reto
           </button>
         </div>
       </div>
@@ -448,6 +540,93 @@ function FormulariosPage() {
                 onChange={handleLoginInputChange}
                 placeholder="Tu contraseña"
               />
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {showChallengeModal && (
+        <Modal
+          title={isSubmitting ? "Creando reto..." : "Crear Nuevo Reto"}
+          onClose={closeChallengeModal}
+          onConfirm={handleCreateChallenge}
+          confirmText={isSubmitting ? "Creando..." : "Crear Reto"}
+        >
+          <div className="register-form">
+            <div className="form-group">
+              <label htmlFor="titulo">Título:</label>
+              <input
+                id="titulo"
+                type="text"
+                name="titulo"
+                value={challengeForm.titulo}
+                onChange={handleChallengeInputChange}
+                placeholder="Nombre del reto"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="descripcion">Descripción:</label>
+              <textarea
+                id="descripcion"
+                name="descripcion"
+                value={challengeForm.descripcion}
+                onChange={handleChallengeInputChange}
+                placeholder="Describe el reto"
+                maxLength="500"
+                rows="4"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="imagenDesafio">Imagen del reto (URL):</label>
+              <input
+                id="imagenDesafio"
+                type="url"
+                name="imagenDesafio"
+                value={challengeForm.imagenDesafio}
+                onChange={handleChallengeInputChange}
+                placeholder="https://..."
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="dificultad">Dificultad:</label>
+              <select
+                id="dificultad"
+                name="dificultad"
+                value={challengeForm.dificultad}
+                onChange={handleChallengeInputChange}
+              >
+                <option value="fácil">Fácil</option>
+                <option value="medio">Medio</option>
+                <option value="difícil">Difícil</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="categoria">Categoría:</label>
+              <input
+                id="categoria"
+                type="text"
+                name="categoria"
+                value={challengeForm.categoria}
+                onChange={handleChallengeInputChange}
+                placeholder="general, deporte, salud..."
+              />
+            </div>
+
+            <div className="checkbox-group">
+              <label htmlFor="esRetoDia" className="checkbox-label">
+                <input
+                  id="esRetoDia"
+                  type="checkbox"
+                  name="esRetoDia"
+                  checked={challengeForm.esRetoDia}
+                  onChange={handleChallengeInputChange}
+                />
+                Marcar como reto del día
+              </label>
             </div>
           </div>
         </Modal>

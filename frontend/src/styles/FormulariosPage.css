@@ -68,6 +68,15 @@
   background: #545b62;
 }
 
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:active {
+  background: #1e7e34;
+}
+
 .formularios-actions {
   display: flex;
   flex-direction: column;
