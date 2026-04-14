@@ -1,20 +1,24 @@
+import "./App.css";
 import { useEffect, useState } from "react";
+import Buscar from "./pages/Buscar";
 
 function App() {
-
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:5000")
-      .then(res => res.json())
-      .then(data => setMessage(data.message));
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message))
+      .catch((err) => console.log(err));
   }, []);
 
   return (
-    <div>
-      <h1>MERN App</h1>
-      <p>{message}</p>
-    </div>
+    <>
+      <Buscar />
+
+      {/* Mensaje backend opcional */}
+      {/* <p>{message}</p> */}
+    </>
   );
 }
 
