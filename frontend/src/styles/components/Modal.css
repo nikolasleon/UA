@@ -6,29 +6,41 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.5);
+  }
 }
 
 .modal-content {
   background: white;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-height: 85vh;
   overflow-y: auto;
-  animation: slideUp 0.3s ease;
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes slideUp {
   from {
     transform: translateY(100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -54,21 +66,27 @@
 .modal-close {
   background: none;
   border: none;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   cursor: pointer;
   color: #999;
-  padding: 0.5rem;
-  width: 40px;
-  height: 40px;
+  padding: 0.6rem 0.8rem;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.modal-close:hover {
+  background: #f0f0f0;
+  color: #333;
 }
 
 .modal-close:active {
-  background: #f0f0f0;
+  background: #e0e0e0;
   color: #333;
 }
 
@@ -92,13 +110,17 @@
 
 .modal-footer .btn {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-footer .btn-primary {
@@ -106,8 +128,13 @@
   color: white;
 }
 
+.modal-footer .btn-primary:hover {
+  background: #0047b3;
+}
+
 .modal-footer .btn-primary:active {
-  background: #0056b3;
+  background: #003080;
+  transform: scale(0.98);
 }
 
 .modal-footer .btn-secondary {
@@ -115,8 +142,13 @@
   color: #333;
 }
 
+.modal-footer .btn-secondary:hover {
+  background: #d0d0d0;
+}
+
 .modal-footer .btn-secondary:active {
-  background: #e0e0e0;
+  background: #b0b0b0;
+  transform: scale(0.98);
 }
 
 .modal-footer .btn-danger {
@@ -124,8 +156,13 @@
   color: white;
 }
 
+.modal-footer .btn-danger:hover {
+  background: #b02a33;
+}
+
 .modal-footer .btn-danger:active {
-  background: #c82333;
+  background: #7d1a21;
+  transform: scale(0.98);
 }
 
 /* Tablet (min-width: 768px) */

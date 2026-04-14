@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaArrowUp } from "react-icons/fa";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
 import "../styles/SettingsPage.css";
@@ -9,17 +10,19 @@ function SettingsPage() {
   const userId = localStorage.getItem("userId") || "69dbce705178f132188226ac";
   
   const [profile, setProfile] = useState({
-    nombre: localStorage.getItem("userName") || "Sandra",
-    apellido: localStorage.getItem("userLastName") || "Moya",
-    email: localStorage.getItem("userEmail") || "sandra@example.com",
+    nombre: "",
+    apellido: "",
+    email: "",
     telefono: "",
     fechaNacimiento: "",
     nacionalidad: "",
     bio: "",
     fotoPerfil: "",
+    cuentaPrivada: false,
   });
 
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -29,6 +32,7 @@ function SettingsPage() {
     nueva: "",
     confirmar: "",
   });
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   // Cargar datos al montar el componente
   useEffect(() => {
@@ -46,10 +50,15 @@ function SettingsPage() {
             nacionalidad: data.nacionalidad || "",
             bio: data.bio || "",
             fotoPerfil: data.fotoPerfil || "",
+            cuentaPrivada: data.cuentaPrivada || false,
           });
+          setLoadError(false);
+        } else {
+          setLoadError(true);
         }
       } catch (err) {
         console.error("Error al cargar perfil:", err);
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -57,6 +66,27 @@ function SettingsPage() {
     
     fetchUserProfile();
   }, [userId]);
+
+  // Scroll to top button handler
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollToTop(true);
+      } else {
+        setShowScrollToTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -187,7 +217,21 @@ function SettingsPage() {
 
       {loading && <p style={{ textAlign: "center", color: "#888" }}>Cargando perfil...</p>}
 
-      {!loading && (
+      {loadError && !loading && (
+        <div style={{
+          textAlign: "center",
+          padding: "2rem",
+          backgroundColor: "#fff1f2",
+          borderRadius: "10px",
+          color: "#9f2330",
+          marginBottom: "2rem"
+        }}>
+          <p><strong>⚠️ No hay conexión con el servidor</strong></p>
+          <p>Por favor, verifica tu conexión a internet e intenta de nuevo</p>
+        </div>
+      )}
+
+      {!loading && !loadError && (
         <>
           <div className="settings-card">
             <h2>Información Personal</h2>
@@ -280,7 +324,35 @@ function SettingsPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="fotoPerfil">Foto de Perfil:</label>
+              <label>Privacidad de Cuenta:</label>
+              <div style={{ display: "flex", gap: "2rem", marginTop: "0.5rem" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                  <input
+                    type="radio"
+                    name="cuentaPrivada"
+                    value="publica"
+                    checked={!profile.cuentaPrivada}
+                    onChange={() => setProfile(prev => ({ ...prev, cuentaPrivada: false }))}
+                  />
+                  <span>Pública</span>
+                </label>
+                <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                  <input
+                    type="radio"
+                    name="cuentaPrivada"
+                    value="privada"
+                    checked={profile.cuentaPrivada}
+                    onChange={() => setProfile(prev => ({ ...prev, cuentaPrivada: true }))}
+                  />
+                  <span>Privada</span>
+                </label>
+              </div>
+              <p style={{ fontSize: "0.85rem", color: "#888", marginTop: "0.5rem" }}>
+                {profile.cuentaPrivada ? "Solo usuarios autorizados podrán ver tu perfil" : "Tu perfil es visible para todos"}
+              </p>
+            </div>
+
+            <div className="form-group">
               <input
                 id="fotoPerfil"
                 type="file"
@@ -402,6 +474,18 @@ function SettingsPage() {
             Esta acción es irreversible. Se eliminarán todos tus datos y retos.
           </p>
         </Modal>
+      )}
+
+      {/* Botón flotante para volver arriba */}
+      {showScrollToTop && (
+        <button
+          onClick={scrollToTop}
+          className="scroll-to-top-btn"
+          aria-label="Volver al inicio"
+          title="Volver al inicio"
+        >
+          <FaArrowUp size={20} />
+        </button>
       )}
     </div>
   );

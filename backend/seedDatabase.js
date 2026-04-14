@@ -328,6 +328,102 @@ async function seedSandraParticipations() {
   }
 }
 
+/**
+ * Enriquece los comentarios de Sandra en sus retos completados
+ */
+async function seedSandraComments() {
+  try {
+    console.log("\n💬 Agregando comentarios a retos completados de Sandra...");
+
+    // Obtener Sandra
+    const sandra = await User.findOne({ nombre: "Sandra" });
+    if (!sandra) {
+      console.log("   ⚠️  No se encontró a Sandra");
+      return;
+    }
+
+    // Comentarios variados y realistas por categoría
+    const commentTemplates = [
+      {
+        descripcion: "¡Excelente reto! Me ayudó a mejorar mi resistencia física",
+        valoracion: 5
+      },
+      {
+        descripcion: "Completé el ejercicio completo, fue bastante desafiante pero gratificante",
+        valoracion: 5
+      },
+      {
+        descripcion: "Muy buena experiencia general, buen ritmo de dificultad",
+        valoracion: 4
+      },
+      {
+        descripcion: "Reto interesante que me motivó a superarme a mí misma",
+        valoracion: 5
+      },
+      {
+        descripcion: "Cumplí todos los objetivos y aprendí nuevas técnicas",
+        valoracion: 5
+      },
+      {
+        descripcion: "Fue un buen desafío para mi nivel actual de entrenamiento",
+        valoracion: 4
+      },
+      {
+        descripcion: "Completé con éxito, aunque fue más difícil de lo esperado",
+        valoracion: 4
+      },
+      {
+        descripcion: "Superé mis límites personales durante este reto",
+        valoracion: 5
+      },
+    ];
+
+    // Buscar todos los UserChallenge de Sandra con estado aprobado
+    const sandraCompletedChallenges = await UserChallenge.find({
+      usuarioId: sandra._id,
+      estado: "aprobado",
+    });
+
+    console.log(`   Encontrados ${sandraCompletedChallenges.length} retos completados`);
+
+    // Actualizar cada uno con comentarios variados
+    for (let i = 0; i < sandraCompletedChallenges.length; i++) {
+      const challenge = sandraCompletedChallenges[i];
+      const template = commentTemplates[i % commentTemplates.length];
+
+      // URLs de imágenes de muestra para diferentes tipos de actividades
+      const sampleImages = [
+        "https://via.placeholder.com/400x300?text=Completé+el+reto",
+        "https://via.placeholder.com/400x300?text=Mi+aportación",
+        "https://via.placeholder.com/400x300?text=Resultado+exitoso",
+        "https://via.placeholder.com/400x300?text=Desafío+completado",
+        "https://via.placeholder.com/400x300?text=Recordatorio+del+reto",
+      ];
+
+      // Variar entre 1 y 4 imágenes por comentario
+      const numImages = (i % 4) + 1; // 1, 2, 3 o 4
+      const imagenesEnvio = [];
+      for (let j = 0; j < numImages; j++) {
+        imagenesEnvio.push(sampleImages[(i + j) % sampleImages.length]);
+      }
+
+      // Actualizar el comentario
+      await UserChallenge.findByIdAndUpdate(challenge._id, {
+        descripcionEnvio: template.descripcion,
+        valoracion: template.valoracion,
+        imagenEnvio: imagenesEnvio[0], // Fallback para compatibilidad
+        imagenesEnvio: imagenesEnvio,
+      });
+
+      console.log(`   ✅ Comentario agregado a reto ${i + 1}/${sandraCompletedChallenges.length} (${numImages} imagen/es)`);
+    }
+
+    console.log(`\n📊 Total: ${sandraCompletedChallenges.length} comentarios agregados`);
+  } catch (error) {
+    console.error("❌ Error al agregar comentarios:", error.message);
+  }
+}
+
 // ===========================
 // FUNCIÓN PRINCIPAL
 // ===========================
@@ -345,10 +441,12 @@ async function seedDatabase(options = {}) {
       await seedOtherUsersAndChallenges();
       await seedSportChallenges();
       await seedSandraParticipations();
+      await seedSandraComments();
     } else {
       if (options.otherUsers) await seedOtherUsersAndChallenges();
       if (options.sportChallenges) await seedSportChallenges();
       if (options.participations) await seedSandraParticipations();
+      if (options.comments) await seedSandraComments();
     }
 
     console.log("\n" + "=".repeat(50));

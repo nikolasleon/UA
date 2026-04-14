@@ -1,8 +1,9 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import "../styles/components/Modal.css";
 
 function Modal({ title, children, onClose, onConfirm, confirmText = "Confirmar", isDanger = false }) {
-  return (
+  return ReactDOM.createPortal(
     <div className="modal-overlay" onClick={onClose} role="presentation">
       <div className="modal-content" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div className="modal-header">
@@ -10,6 +11,7 @@ function Modal({ title, children, onClose, onConfirm, confirmText = "Confirmar",
             {title}
           </h2>
           <button
+            type="button"
             className="modal-close"
             onClick={onClose}
             aria-label="Cerrar diálogo"
@@ -21,10 +23,11 @@ function Modal({ title, children, onClose, onConfirm, confirmText = "Confirmar",
         <div className="modal-body">{children}</div>
 
         <div className="modal-footer">
-          <button onClick={onClose} className="btn btn-secondary" aria-label="Cancelar">
+          <button type="button" onClick={onClose} className="btn btn-secondary" aria-label="Cancelar">
             Cancelar
           </button>
           <button
+            type="button"
             onClick={onConfirm}
             className={`btn ${isDanger ? "btn-danger" : "btn-primary"}`}
             aria-label={confirmText}
@@ -33,7 +36,8 @@ function Modal({ title, children, onClose, onConfirm, confirmText = "Confirmar",
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

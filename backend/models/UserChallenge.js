@@ -13,7 +13,11 @@ const userChallengeSchema = new mongoose.Schema({
   },
   imagenEnvio: {
     type: String,
-    required: true,
+    default: "", // Fallback para compatibilidad
+  },
+  imagenesEnvio: {
+    type: [String], // Array de URLs de imágenes/video
+    default: [],
   },
   descripcionEnvio: {
     type: String,

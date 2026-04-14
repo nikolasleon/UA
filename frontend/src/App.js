@@ -1,4 +1,5 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import HomePage from "./pages/HomePage";
@@ -10,13 +11,7 @@ import ChallengesListPage from "./pages/ChallengesListPage";
 function App() {
   return (
     <div>
-      <nav>
-        <Link to="/">Inicio</Link> |
-        <Link to="/about">Acerca de</Link> |
-        <Link to="/contact">Contacto</Link> |
-        <Link to="/account">Mi Cuenta</Link> |
-        <Link to="/settings">Ajustes</Link>
-      </nav>
+      <Header />
 
       <Routes>
         <Route path="/" element={<HomePage />} />

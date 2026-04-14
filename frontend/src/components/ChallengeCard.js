@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaTrash } from "react-icons/fa";
+import Modal from "./Modal";
 import "../styles/components/ChallengeCard.css";
 
 function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const handleOpenDetails = () => {
     onViewDetails(challenge._id);
   };
@@ -11,6 +15,11 @@ function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
       event.preventDefault();
       handleOpenDetails();
     }
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteModal(false);
+    onDelete(challenge._id);
   };
 
   return (
@@ -37,41 +46,56 @@ function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
         </div>
 
         <div className="challenge-card__content">
-          <div className="challenge-card__header">
-            <h3 className="challenge-card__title">{challenge.titulo}</h3>
+          <h3 className="challenge-card__title">{challenge.titulo}</h3>
+
+          <p className="challenge-card__description">
+            {challenge.descripcion}
+          </p>
+
+          <div className="challenge-card__tags">
+            <span className="challenge-card__tag">{challenge.dificultad}</span>
+            {challenge.categoria && <span className="challenge-card__tag">{challenge.categoria}</span>}
+            {challenge.duracion && <span className="challenge-card__tag">{challenge.duracion}</span>}
+          </div>
+
+          <div className="challenge-card__footer">
             <div className="challenge-card__rating">
               ★ {challenge.valoracionPromedio.toFixed(1)}
             </div>
-          </div>
-
-          <p className="challenge-card__description">
-            {challenge.descripcion.substring(0, 80)}...
-          </p>
-
-          <div className="challenge-card__meta">
             <span className="challenge-card__creator">
-              por <strong>{challenge.creador}</strong>
+              por {challenge.creador}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="challenge-card__actions">
-        {onDelete && (
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm("¿Estás seguro de que quieres eliminar este reto?")) {
-                onDelete(challenge._id);
-              }
-            }}
-            className="challenge-card__action challenge-card__action--delete"
-            aria-label={`Eliminar reto ${challenge.titulo}`}
-          >
-            Eliminar
-          </button>
-        )}
-      </div>
+      {onDelete && (
+        <button
+          type="button"
+          onClick={() => setShowDeleteModal(true)}
+          className="challenge-card__btn-delete"
+          aria-label={`Eliminar reto ${challenge.titulo}`}
+        >
+          <FaTrash style={{ marginRight: "0.3rem" }} />
+          Eliminar
+        </button>
+      )}
+
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteModal && (
+        <Modal
+          title="Eliminar Reto"
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleConfirmDelete}
+          confirmText="Eliminar"
+          isDanger={true}
+        >
+          <p>¿Estás seguro de que quieres eliminar el reto <strong>"{challenge.titulo}"</strong>?</p>
+          <p style={{ color: "#666", fontSize: "0.9rem" }}>
+            Esta acción no se puede deshacer.
+          </p>
+        </Modal>
+      )}
     </article>
   );
 }
