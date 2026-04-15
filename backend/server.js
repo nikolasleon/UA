@@ -6,18 +6,37 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors());
+// Configurar CORS para permitir desde Render y localhost
+const corsOptions = {
+  origin: [
+    "https://daydare.onrender.com",
+    "http://localhost:3000",
+    "http://localhost:5000",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
-console.log("MONGO_URI:", process.env.MONGO_URI); // prueba temporal
+// Importar rutas
+const userRoutes = require("./routes/users");
+const challengeRoutes = require("./routes/challenges");
+
+app.get("/", (req, res) => {
+  console.log("Han llamado a /");
+  res.json({ message: "API funcionando" });
+});
+
+// Usar rutas
+app.use("/api/users", userRoutes);
+app.use("/api/challenges", challengeRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB conectado"))
-  .catch(err => console.log(err));
-
-app.get("/", (req, res) => {
-  res.json({ message: "API funcionando" });
-});
+  .catch(err => console.log("Error MongoDB:", err));
 
 const PORT = process.env.PORT || 5000;
 

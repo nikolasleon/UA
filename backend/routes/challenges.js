@@ -1,0 +1,178 @@
+const express = require("express");
+const router = express.Router();
+const Challenge = require("../models/Challenge");
+const UserChallenge = require("../models/UserChallenge");
+const User = require("../models/User");
+
+// Obtener retos del usuario (creados, en progreso, completados)
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { estado } = req.query; // "creados", "enProgreso", "completados"
+
+    let query = {};
+
+    if (estado === "creados") {
+      query = { creadorId: userId };
+    } else if (estado === "enProgreso" || estado === "completados") {
+      // Para estos casos buscamos en UserChallenge
+      const userChallenges = await UserChallenge.find({
+        usuarioId: userId,
+        estado: estado === "completados" ? "aprobado" : "pendiente",
+      }).populate("desafioId");
+
+      return res.json(
+        userChallenges.map((uc) => ({
+          ...uc.desafioId.toObject(),
+          estadoParticipacion: uc.estado,
+        }))
+      );
+    }
+
+    const challenges = await Challenge.find(query).populate("creadorId", "nombre apellido");
+    res.json(challenges);
+  } catch (err) {
+    res.status(500).json({ message: "Error al obtener retos", error: err });
+  }
+});
+
+// Obtener todos los retos
+router.get("/", async (req, res) => {
+  try {
+    const challenges = await Challenge.find({ estado: "activo" }).populate(
+      "creadorId",
+      "nombre apellido fotoPerfil"
+    );
+    res.json(challenges);
+  } catch (err) {
+    res.status(500).json({ message: "Error al obtener retos", error: err });
+  }
+});
+
+// Obtener un reto específico
+router.get("/:id", async (req, res) => {
+  try {
+    const challenge = await Challenge.findById(req.params.id).populate(
+      "creadorId",
+      "nombre apellido fotoPerfil bio"
+    );
+
+    if (!challenge) {
+      return res.status(404).json({ message: "Reto no encontrado" });
+    }
+
+    res.json(challenge);
+  } catch (err) {
+    res.status(500).json({ message: "Error al obtener reto", error: err });
+  }
+});
+
+// Crear nuevo reto
+router.post("/", async (req, res) => {
+  try {
+    const { titulo, descripcion, imagenDesafio, creadorId, dificultad, categoria } = req.body;
+
+    // Obtener nombre del creador
+    const user = await User.findById(creadorId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    const newChallenge = new Challenge({
+      titulo,
+      descripcion,
+      imagenDesafio,
+      creadorId,
+      creador: `${user.nombre} ${user.apellido}`,
+      dificultad: dificultad || "medio",
+      categoria: categoria || "general",
+    });
+
+    await newChallenge.save();
+
+    // Actualizar contador de retos creados del usuario
+    await User.findByIdAndUpdate(
+      creadorId,
+      { $inc: { "estilo.retosCreados": 1 } },
+      { new: true }
+    );
+
+    res.status(201).json({ message: "Reto creado exitosamente", reto: newChallenge });
+  } catch (err) {
+    res.status(500).json({ message: "Error al crear reto", error: err });
+  }
+});
+
+// Actualizar reto
+router.put("/:id", async (req, res) => {
+  try {
+    const { titulo, descripcion, imagenDesafio, dificultad, categoria } = req.body;
+
+    const challenge = await Challenge.findByIdAndUpdate(
+      req.params.id,
+      { titulo, descripcion, imagenDesafio, dificultad, categoria },
+      { new: true }
+    );
+
+    if (!challenge) {
+      return res.status(404).json({ message: "Reto no encontrado" });
+    }
+
+    res.json({ message: "Reto actualizado", reto: challenge });
+  } catch (err) {
+    res.status(500).json({ message: "Error al actualizar reto", error: err });
+  }
+});
+
+// Borrar reto
+router.delete("/:id", async (req, res) => {
+  try {
+    const challenge = await Challenge.findByIdAndDelete(req.params.id);
+
+    if (!challenge) {
+      return res.status(404).json({ message: "Reto no encontrado" });
+    }
+
+    // Actualizar contador de retos creados
+    await User.findByIdAndUpdate(
+      challenge.creadorId,
+      { $inc: { "estilo.retosCreados": -1 } },
+      { new: true }
+    );
+
+    res.json({ message: "Reto eliminado exitosamente" });
+  } catch (err) {
+    res.status(500).json({ message: "Error al eliminar reto", error: err });
+  }
+});
+
+// Participar en un reto (subir imagen)
+router.post("/:id/participar", async (req, res) => {
+  try {
+    const { usuarioId, imagenEnvio, descripcionEnvio } = req.body;
+    const { id } = req.params;
+
+    const challenge = await Challenge.findById(id);
+    if (!challenge) {
+      return res.status(404).json({ message: "Reto no encontrado" });
+    }
+
+    const userChallenge = new UserChallenge({
+      usuarioId,
+      desafioId: id,
+      imagenEnvio,
+      descripcionEnvio,
+    });
+
+    await userChallenge.save();
+
+    // Actualizar contador de participantes
+    await Challenge.findByIdAndUpdate(id, { $inc: { participantes: 1 } });
+
+    res.status(201).json({ message: "Participación registrada", participacion: userChallenge });
+  } catch (err) {
+    res.status(500).json({ message: "Error al participar", error: err });
+  }
+});
+
+module.exports = router;
