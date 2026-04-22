@@ -25,14 +25,9 @@ function App() {
     <div>
       <Header />
 
-      {/* opcional: componente de búsqueda */}
-      <Buscar />
-
-      {/* Mensaje backend opcional */}
-      {/* <p>{message}</p> */}
-
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/buscar" element={<Buscar />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/account" element={<AccountPage />} />

@@ -27,13 +27,24 @@ function Header() {
     setSearchQuery(e.target.value);
   };
 
+  // const handleSearchSubmit = (e) => {
+  //   if (e.key === "Enter" && searchQuery.trim()) {
+  //     console.log("Buscando:", searchQuery);
+  //     setSearchQuery("");
+  //     setSearchOpen(false);
+  //   }
+  // };
+
   const handleSearchSubmit = (e) => {
-    if (e.key === "Enter" && searchQuery.trim()) {
-      console.log("Buscando:", searchQuery);
-      setSearchQuery("");
-      setSearchOpen(false);
-    }
-  };
+  if (e.key === "Enter" && searchQuery.trim()) {
+    console.log("Buscando:", searchQuery);
+
+    navigate(`/buscar?query=${encodeURIComponent(searchQuery)}`);
+
+    setSearchQuery("");
+    setSearchOpen(false);
+  }
+};
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
@@ -159,10 +170,17 @@ function Header() {
                       <FaHome className="dropdown-icon" />
                       Inicio
                     </Link>
-                    <button className="options-link" onClick={() => setOptionsMenuOpen(false)}>
+                    {/* <button className="options-link" onClick={() => setOptionsMenuOpen(false)}>
                       <FaSearch className="dropdown-icon" />
                       Buscar
-                    </button>
+                    </button> */}
+                    <button className="options-link" onClick={() => { navigate("/buscar");
+                      setOptionsMenuOpen(false);
+                    }}
+                  >
+                    <FaSearch className="dropdown-icon" />
+                    Buscar
+                  </button>
                     <div className="options-divider"></div>
                     <Link
                       to="/about"
@@ -255,9 +273,14 @@ function Header() {
             <FaHome className="mobile-menu-icon" />
             Inicio
           </Link>
-          <button 
+          {/* <button 
             className="mobile-menu-search"
             onClick={() => setMenuOpen(false)}
+          > */}
+          <button
+            className="mobile-menu-search" onClick={() => { navigate("/buscar");
+              setMenuOpen(false);
+            }}
           >
             <FaSearch className="mobile-menu-icon" />
             Buscar

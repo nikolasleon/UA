@@ -1,6 +1,7 @@
 import "./Buscar.css";
-import { FaSearch, FaTimes, FaBars } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 // IMÁGENES
 import rutaBiciImg from "../assets/images/rutabici.jpg";
@@ -8,9 +9,16 @@ import sentadillasImg from "../assets/images/sentadillas.jpg";
 import cintacorrerImg from "../assets/images/cintacorrer.png";
 import yogaImg from "../assets/images/yoga.png";
 
-function Buscar() {
+// leer query params
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
-  const [search, setSearch] = useState("");
+function Buscar() {
+  const query = useQuery();
+  const urlSearch = query.get("query") || "";
+
+  const [search, setSearch] = useState(urlSearch);
   const [categoria, setCategoria] = useState("");
   const [duracion, setDuracion] = useState("");
   const [nivel, setNivel] = useState("");
@@ -42,17 +50,17 @@ function Buscar() {
     }
   ];
 
-  // FILTRO COMPLETO
-  const retosFiltrados = retos.filter(reto => {
-
-    const coincideTexto = reto.titulo.toLowerCase().includes(search.toLowerCase());
+  const retosFiltrados = retos.filter((reto) => {
+    const coincideTexto = reto.titulo
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
     const coincideCategoria = categoria
       ? reto.tags[0] === categoria
       : true;
 
     const coincideDuracion = duracion
-      ? reto.tags[1].includes(duracion)
+      ? reto.tags[1] === duracion
       : true;
 
     const coincideNivel = nivel
@@ -65,24 +73,12 @@ function Buscar() {
   return (
     <div className="page">
 
-      {/* HEADER */}
-      <header className="header">
-        <h2 className="logo">DayDare</h2>
-
-        <div className="header-right">
-          <FaSearch className="search-icon" />
-          <button className="login-btn">Iniciar sesión</button>
-          <FaBars className="menu-icon" />
-        </div>
-      </header>
-
-      {/* BUSCADOR */}
+      {/* BUSCADOR (SIN HEADER DUPLICADO) */}
       <section className="search-block">
         <h1 className="search-title">BUSCA TU RETO</h1>
 
         <div className="search-container">
 
-          {/* INPUT */}
           <div className="search-bar">
             <FaSearch className="icon-left" />
 
@@ -93,7 +89,6 @@ function Buscar() {
               onChange={(e) => setSearch(e.target.value)}
             />
 
-            {/* x */}
             <FaTimes
               className="icon-right"
               onClick={() => setSearch("")}
@@ -119,7 +114,7 @@ function Buscar() {
               <option>10min</option>
               <option>15min</option>
               <option>30min</option>
-              <option>1-7 días</option>
+              <option>15-20min</option>
             </select>
 
             <select onChange={(e) => setNivel(e.target.value)}>
@@ -130,14 +125,12 @@ function Buscar() {
             </select>
 
           </div>
-
         </div>
       </section>
 
-      {/* TÍTULO */}
+      {/* RESULTADOS */}
       <h2 className="popular-title">RETOS POPULARES</h2>
 
-      {/* CARDS */}
       <div className="cards-container">
 
         {retosFiltrados.length > 0 ? (
@@ -159,7 +152,7 @@ function Buscar() {
           ))
         ) : (
           <p style={{ textAlign: "center" }}>
-            No se encontraron retos que coincidan con tu búsqueda.
+            No se encontraron retos.
           </p>
         )}
 
