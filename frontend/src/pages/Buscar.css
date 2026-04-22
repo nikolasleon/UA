@@ -50,13 +50,14 @@ body {
 }
 
 /* BUSCADOR */
-.search-block {
+ .search-block {
   background: white;
-  margin: 25px;
+  margin: 25px 0;
   padding: 25px;
   border-radius: 18px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
+} 
+
 
 .search-title {
   text-align: center;
@@ -101,7 +102,7 @@ body {
 
 /* TITULO */
 .popular-title {
-  margin: 25px;
+  margin: 25px 0;
   padding: 14px;
   text-align: center;
   background: linear-gradient(90deg, #1e73d8, #155bb5);
@@ -119,7 +120,8 @@ body {
 /* IMPORTANTE */
 .card {
   background: white;
-  margin: 15px 25px;
+  /* margin: 15px 25px; */
+  margin: 15px 0;
   padding: 15px;
   border-radius: 16px;
   display: flex;
@@ -150,11 +152,32 @@ body {
 }
 
 /* MÓVIL */
-@media (max-width: 768px) {
-  .content {
-    max-width: 430px;
+ @media (max-width: 768px) {
+
+  html,
+  body {
+    overflow-x: hidden;
   }
+
+  .content {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .search-block,
+  .popular-title,
+  .card {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
 }
+
+/* MÓVIL */
+
 
 /* ESCRITORIO*/
 @media (min-width: 768px) {
