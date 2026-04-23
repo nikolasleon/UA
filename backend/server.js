@@ -22,9 +22,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Servir archivos estáticos del frontend
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-
 // Importar rutas
 const userRoutes = require("./routes/users");
 const challengeRoutes = require("./routes/challenges");
@@ -38,9 +35,21 @@ app.get("/api/health", (req, res) => {
   res.json({ message: "API funcionando" });
 });
 
-// Servir index.html para todas las rutas que no sean API
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+// Servir archivos estáticos del frontend
+const buildPath = path.join(__dirname, "../frontend/build");
+console.log("Sirviendo archivos estáticos desde:", buildPath);
+app.use(express.static(buildPath));
+
+// Servir index.html para todas las rutas que no sean API (catchall)
+app.get("*", (req, res) => {
+  const indexPath = path.join(buildPath, "index.html");
+  console.log("Sirviendo index.html desde:", indexPath);
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error("Error sirviendo index.html:", err);
+      res.status(404).json({ error: "No encontrado" });
+    }
+  });
 });
 
 mongoose.connect(process.env.MONGO_URI)

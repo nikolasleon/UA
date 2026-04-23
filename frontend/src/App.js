@@ -35,18 +35,6 @@ function App() {
         <Link to="/formularios">Formularios</Link>
       </nav>
       <Header />
-
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/buscar" element={<Buscar />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/account" element={<AccountPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/formularios" element={<FormulariosPage />} />
-        <Route path="/my-challenges/:tipo" element={<ChallengesListPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
     </div>
   );
 }
