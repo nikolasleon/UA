@@ -26,15 +26,18 @@ function App() {
 
   return (
     <div>
-      <nav>
-        <Link to="/">Inicio</Link> |
-        <Link to="/about">Acerca de</Link> |
-        <Link to="/contact">Contacto</Link> |
-        <Link to="/account">Mi Cuenta</Link> |
-        <Link to="/settings">Ajustes</Link> |
-        <Link to="/formularios">Formularios</Link>
-      </nav>
       <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/buscar" element={<Buscar />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/account" element={<AccountPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/formularios" element={<FormulariosPage />} />
+        <Route path="/my-challenges/:tipo" element={<ChallengesListPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </div>
   );
 }
