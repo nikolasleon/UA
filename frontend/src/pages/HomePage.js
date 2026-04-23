@@ -17,7 +17,7 @@ function HomePage() {
     const loadData = async () => {
       try {
         // 1. Obtener todos los retos activos para la sección inferior
-        const resPopulares = await fetch(`${API_URL}/challenges`);
+        const resPopulares = await fetch(`${API_URL}/api/challenges`);
         const dataPopulares = await resPopulares.json();
         
         // Aseguramos que valoracionPromedio no rompa el ChallengeCard si viene undefined
@@ -29,7 +29,7 @@ function HomePage() {
 
         // 2. Obtener el reto diario y las imágenes de los participantes
         // Nota: Crearemos este endpoint en el backend más abajo
-        const resDaily = await fetch(`${API_URL}/challenges/daily`);
+        const resDaily = await fetch(`${API_URL}/api/challenges/daily`);
         const dataDaily = await resDaily.json();
         
         if(dataDaily.reto){
