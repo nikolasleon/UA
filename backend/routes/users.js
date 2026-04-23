@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Challenge = require("../models/Challenge");
+const UserChallenge = require("../models/UserChallenge");
 
 // Registrar usuario
 router.post("/register", async (req, res) => {
@@ -231,6 +232,25 @@ router.delete("/:id", async (req, res) => {
     res.json({ message: "Cuenta eliminada exitosamente" });
   } catch (err) {
     res.status(500).json({ message: "Error al eliminar cuenta", error: err });
+  }
+});
+
+// Obtener comentarios/aportaciones de los retos completados del usuario
+router.get("/:id/comments", async (req, res) => {
+  try {
+    // Obtener todos los UserChallenge APROBADOS donde el usuario es el que envió (usuarioId)
+    // Ordenados por fecha más reciente primero
+    const userComments = await UserChallenge.find({
+      usuarioId: req.params.id,
+      estado: "aprobado", // Solo mostrar aprobados (completados y con comentarios)
+    })
+      .populate("desafioId", "titulo")
+      .sort({ fechaEnvio: -1 })
+      .limit(10);
+
+    res.json(userComments);
+  } catch (err) {
+    res.status(500).json({ message: "Error al obtener comentarios", error: err });
   }
 });
 

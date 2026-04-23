@@ -23,7 +23,7 @@ function ChallengeCarousel({
   const showViewAllCard = challenges.length > 3 && onViewAll;
 
   return (
-    <section className="challenge-section" role="region" aria-label={title}>
+    <section className="challenge-section" aria-label={title}>
       <div className="challenge-section__header">
         <div className="challenge-section__heading">
           <h2 className="challenge-section__title">{title}</h2>

@@ -66,7 +66,37 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Error al obtener reto", error: err });
   }
 });
+// Obtener el reto del día
+router.get("/daily", async (req, res) => {
+  try {
+    // 1. Buscamos el reto que tiene esRetoDia: true
+    const dailyChallenge = await Challenge.findOne({ esRetoDia: true, estado: "activo" });
 
+    if (!dailyChallenge) {
+      // Si no hay ninguno marcado, traemos el más reciente por si acaso
+      const fallback = await Challenge.findOne({ estado: "activo" }).sort({ fechaCreacion: -1 });
+      return res.json({ reto: fallback, imagenesParticipantes: [] });
+    }
+
+    // 2. Traer fotos de personas que completaron este reto específico
+    const participaciones = await UserChallenge.find({
+      desafioId: dailyChallenge._id,
+      estado: "aprobado"
+    })
+    .sort({ fechaEnvio: -1 })
+    .limit(4);
+
+    // Extraemos la imagenEnvio de cada participación
+    const imagenesParticipantes = participaciones.map(p => p.imagenEnvio);
+
+    res.json({
+      reto: dailyChallenge,
+      imagenesParticipantes: imagenesParticipantes
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error en el servidor", error: err });
+  }
+});
 // Crear nuevo reto
 router.post("/", async (req, res) => {
   try {
