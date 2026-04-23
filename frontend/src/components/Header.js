@@ -21,7 +21,19 @@ function Header() {
   const toggleSearch = () => setSearchOpen(!searchOpen);
   const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen);
   const toggleOptionsMenu = () => setOptionsMenuOpen(!optionsMenuOpen);
-  const toggleDarkMode = () => setDarkModeEnabled(!darkModeEnabled);
+  // const toggleDarkMode = () => setDarkModeEnabled(!darkModeEnabled);
+  const toggleDarkMode = () => {
+  const newMode = !darkModeEnabled;
+  setDarkModeEnabled(newMode);
+
+    if (newMode) {
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -74,6 +86,15 @@ function Header() {
       return () => document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [profileMenuOpen, optionsMenuOpen]);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-mode");
+      setDarkModeEnabled(true);
+    }
+  }, []);
 
   return (
     <header className="header">

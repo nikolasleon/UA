@@ -3,7 +3,7 @@
   box-sizing: border-box;
 }
 
-body {
+/* body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -12,6 +12,22 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #f8f9fa;
+} */
+
+ body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background: #f8f9fa;
+  color: #111827;
+
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .App {
@@ -80,4 +96,56 @@ main {
     margin: 0 auto;
     padding: 2rem;
   }
+}
+
+/* ===== MODO OSCURO ===== */
+
+body.dark-mode {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+body.dark-mode .App,
+body.dark-mode .page,
+body.dark-mode main,
+body.dark-mode .content {
+  background: #0f172a;
+}
+
+/* Header */
+body.dark-mode .header {
+  background: linear-gradient(90deg, #111827, #1e293b);
+}
+
+/* Tarjetas */
+body.dark-mode .card,
+body.dark-mode .search-block,
+body.dark-mode .profile-dropdown,
+body.dark-mode .options-dropdown {
+  background: #1e293b;
+  color: white;
+}
+
+/* Inputs */
+body.dark-mode input,
+body.dark-mode select {
+  background: #334155;
+  color: white;
+}
+
+/* Buscar */
+body.dark-mode .search-bar {
+  background: #1e293b;
+}
+
+/* Menú móvil */
+body.dark-mode .mobile-menu,
+body.dark-mode .search-mobile {
+  background: #111827 !important;
+}
+
+/* Tags */
+body.dark-mode .tags span {
+  background: #334155;
+  color: white;
 }

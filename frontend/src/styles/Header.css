@@ -697,6 +697,12 @@
   }
 
 
+  /* .header.search-active .mobile-menu {
+    top: 112px !important;
+    height: calc(100vh - 112px);
+  } */
+
+
   .header.search-active .logo,
   .header.search-active .search-toggle,
   .header.search-active .menu-toggle,
