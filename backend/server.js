@@ -41,7 +41,7 @@ console.log("Sirviendo archivos estáticos desde:", buildPath);
 app.use(express.static(buildPath));
 
 // Servir index.html para todas las rutas que no sean API (catchall)
-app.get("*", (req, res) => {
+app.get(/.*/, (req, res) => {
   const indexPath = path.join(buildPath, "index.html");
   console.log("Sirviendo index.html desde:", indexPath);
   res.sendFile(indexPath, (err) => {
