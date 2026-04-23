@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "./Header"; // Ajusta la ruta según tu estructura
-import ChallengeCard from "./ChallengeCard"; 
-import MediaCollage from "./MediaCollage";
+import ChallengeCard from "../components/ChallengeCard"; 
+import MediaCollage from "../components/MediaCollage";
 import "../styles/HomePage.css"; // Estilos personalizados que imiten tu captura
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -33,8 +32,10 @@ function HomePage() {
         const resDaily = await fetch(`${API_URL}/challenges/daily`);
         const dataDaily = await resDaily.json();
         
-        setDailyChallenge(dataDaily.reto);
-        setChallengersImages(dataDaily.imagenesParticipantes || []);
+        if(dataDaily.reto){
+          setDailyChallenge(dataDaily.reto);
+          setChallengersImages(dataDaily.imagenesParticipantes || []);
+        }
         
       } catch (error) {
         console.error("Error al conectar con el backend", error);
@@ -53,7 +54,6 @@ function HomePage() {
   return (
     <div className="homepage-wrapper">
       {/* 1. Header que ya tienes programado */}
-      <Header />
 
       <main className="homepage-main">
         {/* 2. Sección del Reto Diario (Caja verde de tu imagen) */}

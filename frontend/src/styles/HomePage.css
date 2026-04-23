@@ -64,6 +64,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
+  padding: 2rem;
 }
 
 /* Ajuste para el MediaCollage dentro de la Home */
@@ -78,4 +79,9 @@
   font-size: 1rem;
   color: #555;
   margin-bottom: 1rem;
+}
+
+.no-challengers {
+  color: #666;
+  font-style: italic;
 }
