@@ -39,7 +39,7 @@ app.get("/api/health", (req, res) => {
 });
 
 // Servir index.html para todas las rutas que no sean API
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
