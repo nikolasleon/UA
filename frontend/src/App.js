@@ -17,7 +17,8 @@ function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000")
+    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    fetch(`${apiUrl}/api/health`)
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((err) => console.log(err));

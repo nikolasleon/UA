@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
@@ -21,18 +22,26 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Servir archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
 // Importar rutas
 const userRoutes = require("./routes/users");
 const challengeRoutes = require("./routes/challenges");
 
-app.get("/", (req, res) => {
-  console.log("Han llamado a /");
-  res.json({ message: "API funcionando" });
-});
-
 // Usar rutas
 app.use("/api/users", userRoutes);
 app.use("/api/challenges", challengeRoutes);
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({ message: "API funcionando" });
+});
+
+// Servir index.html para todas las rutas que no sean API
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB conectado"))
