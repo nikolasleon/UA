@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
 import "../styles/SettingsPage.css";
@@ -7,7 +8,8 @@ import "../styles/SettingsPage.css";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 function SettingsPage() {
-  const userId = localStorage.getItem("userId") || "69dbce705178f132188226ac";
+  const { user: authUser, updateUser, logout } = useAuth();
+  const userId = authUser?._id || "69dbce705178f132188226ac";
   
   const [profile, setProfile] = useState({
     nombre: "",
@@ -136,10 +138,13 @@ function SettingsPage() {
 
       if (!response.ok) throw new Error("Error al guardar");
 
-      // Guardar datos en localStorage para persistencia
-      localStorage.setItem("userName", profile.nombre);
-      localStorage.setItem("userLastName", profile.apellido);
-      localStorage.setItem("userEmail", profile.email);
+      // Actualizar el contexto de autenticación
+      updateUser({
+        nombre: profile.nombre,
+        apellido: profile.apellido,
+        email: profile.email,
+        fotoPerfil: profile.fotoPerfil,
+      });
 
       setAlert({ message: "✓ Perfil guardado correctamente", type: "success" });
       setIsSaving(false);
@@ -194,7 +199,7 @@ function SettingsPage() {
       if (!response.ok) throw new Error("Error al eliminar");
 
       setAlert({ message: "✓ Cuenta eliminada. Redirigiendo...", type: "success" });
-      localStorage.clear();
+      logout();
       
       setTimeout(() => {
         window.location.href = "/";

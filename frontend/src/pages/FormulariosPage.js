@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
 import "../styles/FormulariosPage.css";
@@ -39,6 +40,7 @@ const initialChallengeState = {
 
 function FormulariosPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showChallengeModal, setShowChallengeModal] = useState(false);
@@ -215,10 +217,7 @@ function FormulariosPage() {
         throw new Error(data.message || "No se pudo iniciar sesión");
       }
 
-      localStorage.setItem("userId", data.user._id);
-      localStorage.setItem("userName", data.user.nombre || "");
-      localStorage.setItem("userLastName", data.user.apellido || "");
-      localStorage.setItem("userEmail", data.user.email || "");
+      login(data.user);
 
       setAlert({ message: "Login correcto", type: "success" });
       setShowLoginModal(false);

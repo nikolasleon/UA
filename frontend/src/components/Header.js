@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaHome, FaInfoCircle, FaEnvelope } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Header.css";
 
 function Header() {
+  const { user, isLoggedIn, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,9 +15,8 @@ function Header() {
   const profileMenuRef = useRef(null);
   const optionsMenuRef = useRef(null);
   const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("userId");
-  const userName = localStorage.getItem("userName") || "";
-  const userPhoto = localStorage.getItem("fotoPerfil") || "";
+  const userName = user?.nombre || "";
+  const userPhoto = user?.fotoPerfil || "";
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const toggleSearch = () => setSearchOpen(!searchOpen);
@@ -59,11 +60,7 @@ function Header() {
 };
 
   const handleLogout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userLastName");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("fotoPerfil");
+    logout();
     setMenuOpen(false);
     setProfileMenuOpen(false);
     setOptionsMenuOpen(false);

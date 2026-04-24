@@ -1,0 +1,124 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import Alert from "../components/Alert";
+import "../styles/FormulariosPage.css";
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
+const initialLoginState = {
+  email: "",
+  contraseña: "",
+};
+
+function LoginPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [loginForm, setLoginForm] = useState(initialLoginState);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [alert, setAlert] = useState({ message: "", type: "success" });
+
+  const handleLoginChange = (e) => {
+    const { name, value } = e.target;
+    setLoginForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const resetLoginForm = () => {
+    setLoginForm(initialLoginState);
+  };
+
+  const handleLogin = async () => {
+    if (isSubmitting) return;
+
+    const { email, contraseña } = loginForm;
+
+    if (!email.trim() || !contraseña.trim()) {
+      setAlert({ message: "Introduce email y contraseña", type: "error" });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/users/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          contraseña,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Login incorrecto");
+        }
+        throw new Error(data.message || "No se pudo iniciar sesión");
+      }
+
+      login(data.user);
+
+      setAlert({ message: "Login correcto", type: "success" });
+      resetLoginForm();
+      setTimeout(() => {
+        navigate("/account");
+      }, 500);
+    } catch (error) {
+      setAlert({ message: error.message || "Error al iniciar sesión", type: "error" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="formularios-container">
+      <Alert message={alert.message} type={alert.type} />
+      
+      <div className="form-block">
+        <h2>Iniciar Sesión</h2>
+        
+        <div className="form-group">
+          <label htmlFor="login-email">Email:</label>
+          <input
+            id="login-email"
+            type="email"
+            name="email"
+            placeholder="tu@email.com"
+            value={loginForm.email}
+            onChange={handleLoginChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="login-contraseña">Contraseña:</label>
+          <input
+            id="login-contraseña"
+            type="password"
+            name="contraseña"
+            placeholder="Tu contraseña"
+            value={loginForm.contraseña}
+            onChange={handleLoginChange}
+            onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+          />
+        </div>
+
+        <button
+          className="btn-submit"
+          onClick={handleLogin}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Iniciando sesión..." : "Iniciar Sesión"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default LoginPage;

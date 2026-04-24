@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaStar, FaSearch, FaTimes, FaArrowUp, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 import ChallengeCarousel from "../components/ChallengeCarousel";
 import Alert from "../components/Alert";
 import MediaCollage from "../components/MediaCollage";
@@ -9,6 +10,7 @@ import "../styles/AccountPage.css";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 function AccountPage() {
+  const { user: authUser, updateUser } = useAuth();
   const [user, setUser] = useState(null);
   const [challenges, setChallenges] = useState({ creados: [], enProgreso: [], completados: [] });
   const [comments, setComments] = useState([]);
@@ -28,7 +30,7 @@ function AccountPage() {
   const creadosRef = useRef(null);
   const enProgresoRef = useRef(null);
 
-  const userId = localStorage.getItem("userId") || "69dbce705178f132188226ac";
+  const userId = authUser?._id || "69dbce705178f132188226ac";
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -36,17 +38,17 @@ function AccountPage() {
       if (response.ok) {
         const data = await response.json();
         setUser(data);
-        // Guardar datos en localStorage para acceso rápido
-        localStorage.setItem("userId", userId);
-        localStorage.setItem("userName", data.nombre || "");
-        localStorage.setItem("userLastName", data.apellido || "");
-        localStorage.setItem("userEmail", data.email || "");
-        localStorage.setItem("fotoPerfil", data.fotoPerfil || "");
+        updateUser({
+          nombre: data.nombre || "",
+          apellido: data.apellido || "",
+          email: data.email || "",
+          fotoPerfil: data.fotoPerfil || "",
+        });
       }
     } catch (err) {
       console.error("Error fetching user data:", err);
     }
-  }, [userId]);
+  }, [userId, updateUser]);
 
   const fetchUserChallenges = useCallback(async () => {
     try {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaSearch, FaTimes } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 import ChallengeCard from "../components/ChallengeCard";
 import Alert from "../components/Alert";
 import "../styles/ChallengesListPage.css";
@@ -14,6 +15,7 @@ const tipoMap = {
 };
 
 function ChallengesListPage() {
+  const { user } = useAuth();
   const { tipo } = useParams(); // "completados", "creados", "en-progreso"
   const [challenges, setChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +27,7 @@ function ChallengesListPage() {
   const [filteredDifficulty, setFilteredDifficulty] = useState("");
   const [filteredDuration, setFilteredDuration] = useState("");
 
-  const userId = localStorage.getItem("userId") || "69dbce705178f132188226ac";
+  const userId = user?._id || "69dbce705178f132188226ac";
 
   useEffect(() => {
     const fetchChallenges = async () => {

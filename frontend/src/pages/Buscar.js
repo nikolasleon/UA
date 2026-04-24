@@ -1,4 +1,4 @@
-import "./Buscar.css";
+import "../styles/Buscar.css";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
