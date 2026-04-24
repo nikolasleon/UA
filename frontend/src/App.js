@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
 
 import Header from "./components/Header";
+import ProtectedRoute from "./components/ProtectedRoute";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import HomePage from "./pages/HomePage";
@@ -32,10 +33,31 @@ function App() {
           <Route path="/buscar" element={<Buscar />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="/account" element={<AccountPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <AccountPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/formularios" element={<FormulariosPage />} />
-          <Route path="/my-challenges/:tipo" element={<ChallengesListPage />} />
+          <Route
+            path="/my-challenges/:tipo"
+            element={
+              <ProtectedRoute>
+                <ChallengesListPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
