@@ -59,7 +59,7 @@ function Header() {
   }
 };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("🔓 Salir - handleLogout ejecutado");
     // Cerrar menús primero
     setMenuOpen(false);
@@ -69,20 +69,23 @@ function Header() {
     // Ejecutar logout
     logout();
     
-    // Navegar inmediatamente
-    navigate("/", { replace: true });
+    // Esperar a que se complete el logout antes de navegar
+    setTimeout(() => {
+      console.log("🔄 Navegando a home después de logout");
+      navigate("/", { replace: true });
+    }, 600);
   };
 
   // Efecto para monitorear cambios de autenticación
   useEffect(() => {
-    if (!isLoggedIn) {
-      console.log("✅ Usuario deslogueado - isLoggedIn es false");
+    if (!isLoggedIn && user === null) {
+      console.log("✅ Usuario deslogueado - isLoggedIn es false, user es null");
       // Forzar cerrar menús cuando se deslog
       setMenuOpen(false);
       setProfileMenuOpen(false);
       setOptionsMenuOpen(false);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, user]);
 
   // Cerrar menú de perfil si se hace clic afuera
   useEffect(() => {

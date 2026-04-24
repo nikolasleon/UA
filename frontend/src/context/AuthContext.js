@@ -5,9 +5,15 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Cargar usuario al montar: primero localStorage (recordado), luego sessionStorage (temporal)
   useEffect(() => {
+    // Si estamos en proceso de logout, no cargar usuario
+    if (isLoggingOut) {
+      return;
+    }
+
     let storedUser = null;
     let storage = null;
 
@@ -41,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       setUser(storedUser);
     }
     setIsLoading(false);
-  }, []);
+  }, [isLoggingOut]);
 
   const login = (userData, rememberMe = false) => {
     const userToStore = {
@@ -66,20 +72,27 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     console.log("🔓 Ejecutando logout en AuthContext");
-    // Limpiar el estado primero
+    // Marcar que estamos en proceso de logout para evitar recargar user
+    setIsLoggingOut(true);
+    
+    // Limpiar el estado
     setUser(null);
     
     // Limpiar todos los almacenamientos
     try {
-      sessionStorage.removeItem("user");
+      sessionStorage.clear();
       localStorage.removeItem("user");
-      // Limpiar también el flag de rememberMe si existe
       localStorage.removeItem("rememberMe");
       localStorage.removeItem("rememberedEmail");
       console.log("✅ Almacenamientos limpiados correctamente");
     } catch (error) {
       console.error("❌ Error al limpiar almacenamientos:", error);
     }
+    
+    // Desmarcar logging out después de un delay pequeño
+    setTimeout(() => {
+      setIsLoggingOut(false);
+    }, 500);
   };
 
   const updateUser = (updatedData) => {
