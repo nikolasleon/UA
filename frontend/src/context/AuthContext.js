@@ -5,6 +5,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Cargar usuario SOLO al montar: primero localStorage (recordado), luego sessionStorage (temporal)
   useEffect(() => {
@@ -64,9 +65,12 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     console.log("🔓 Ejecutando logout en AuthContext");
     
+    // Marcar que estamos deslogueandonos para bloquear updateUser
+    setIsLoggingOut(true);
+    
     // Limpiar todos los almacenamientos PRIMERO
     try {
-      sessionStorage.removeItem("user");
+      sessionStorage.clear();
       localStorage.removeItem("user");
       localStorage.removeItem("rememberMe");
       localStorage.removeItem("rememberedEmail");
@@ -80,6 +84,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = (updatedData) => {
+    // NO actualizar si estamos deslogueandonos
+    if (isLoggingOut) {
+      console.log("⚠️ updateUser bloqueado - estamos en proceso de logout");
+      return;
+    }
+
     const updatedUser = { ...user, ...updatedData };
     setUser(updatedUser);
 

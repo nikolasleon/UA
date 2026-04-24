@@ -66,14 +66,14 @@ function Header() {
     setProfileMenuOpen(false);
     setOptionsMenuOpen(false);
     
-    // Ejecutar logout (limpia storage y setUser(null))
+    // Ejecutar logout (limpia storage, bloquea updateUser, y setUser(null))
     logout();
     
-    // Navegar a home con un delay un poco mayor para estabilizarse
+    // Navegar a home con delay para dar tiempo a que se estabilice
     setTimeout(() => {
       console.log("🔄 Navegando a home después de logout");
       navigate("/", { replace: true });
-    }, 150);
+    }, 200);
   };
 
   // Efecto para monitorear cambios de autenticación

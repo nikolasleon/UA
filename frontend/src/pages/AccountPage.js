@@ -33,6 +33,11 @@ function AccountPage() {
   const userId = authUser?._id;
 
   const fetchUserData = useCallback(async () => {
+    if (!userId) {
+      console.log("fetchUserData - no userId");
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/users/profile/${userId}`);
       if (response.ok) {
@@ -51,6 +56,12 @@ function AccountPage() {
   }, [userId, updateUser]);
 
   const fetchUserChallenges = useCallback(async () => {
+    if (!userId) {
+      console.log("fetchUserChallenges - no userId");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res1 = await fetch(`${API_URL}/api/challenges/user/${userId}?estado=creados`);
       const res2 = await fetch(`${API_URL}/api/challenges/user/${userId}?estado=enProgreso`);
@@ -70,6 +81,11 @@ function AccountPage() {
   }, [userId]);
 
   const fetchUserComments = useCallback(async () => {
+    if (!userId) {
+      console.log("fetchUserComments - no userId");
+      return;
+    }
+
     try {
       console.log(`Fetching comments for user: ${userId}`);
       const response = await fetch(`${API_URL}/api/users/${userId}/comments`);
