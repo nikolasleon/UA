@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
 import "../styles/FormulariosPage.css";
@@ -15,6 +15,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [loginForm, setLoginForm] = useState(initialLoginState);
+  const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
 
@@ -63,7 +64,8 @@ function LoginPage() {
         throw new Error(data.message || "No se pudo iniciar sesión");
       }
 
-      login(data.user);
+      // Pasar rememberMe a login() para que maneje la persistencia
+      login(data.user, rememberMe);
 
       setAlert({ message: "Login correcto", type: "success" });
       resetLoginForm();
@@ -85,28 +87,38 @@ function LoginPage() {
         <h2>Iniciar Sesión</h2>
         
         <div className="form-group">
-          <label htmlFor="login-email">Email:</label>
+          <label htmlFor="login-email">Email</label>
           <input
             id="login-email"
             type="email"
             name="email"
-            placeholder="tu@email.com"
+            placeholder="Introduce tu correo electronico"
             value={loginForm.email}
             onChange={handleLoginChange}
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="login-contraseña">Contraseña:</label>
+          <label htmlFor="login-contraseña">Contraseña</label>
           <input
             id="login-contraseña"
             type="password"
             name="contraseña"
-            placeholder="Tu contraseña"
+            placeholder="Introduce tu contraseña"
             value={loginForm.contraseña}
             onChange={handleLoginChange}
             onKeyPress={(e) => e.key === "Enter" && handleLogin()}
           />
+        </div>
+
+        <div className="form-group checkbox-group">
+          <input
+            id="remember-me"
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+          />
+          <label htmlFor="remember-me">Acuerdate de mi</label>
         </div>
 
         <button
@@ -114,8 +126,13 @@ function LoginPage() {
           onClick={handleLogin}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Iniciando sesión..." : "Iniciar Sesión"}
+          {isSubmitting ? "Accediendo..." : "Acceder"}
         </button>
+
+        <p className="login-footer">
+          ¿Aún no eres miembro?{" "}
+          <Link to="/formularios">crea una nueva cuenta aquí</Link>
+        </p>
       </div>
     </div>
   );

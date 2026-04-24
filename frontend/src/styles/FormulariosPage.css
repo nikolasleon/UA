@@ -150,6 +150,121 @@
   width: auto;
 }
 
+/* Form Block Styles */
+.form-block {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1.5rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-block h2 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.form-block .form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-block .form-group label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.form-block .form-group input[type="email"],
+.form-block .form-group input[type="password"] {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-block .form-group input[type="email"]:focus,
+.form-block .form-group input[type="password"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.form-block .checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+}
+
+.form-block .checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.form-block .checkbox-group label {
+  margin: 0;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-submit {
+  padding: 0.85rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.btn-submit:active:not(:disabled) {
+  background: #003d82;
+}
+
+.btn-submit:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.login-footer a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.login-footer a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
 @media (min-width: 768px) {
   .formularios-container {
     padding: 1.5rem;
@@ -179,6 +294,19 @@
   .formularios-actions {
     flex-direction: row;
     align-items: center;
+  }
+
+  .form-block {
+    padding: 2.5rem;
+  }
+
+  .form-block h2 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-block .form-group {
+    margin-bottom: 1.5rem;
   }
 }
 
