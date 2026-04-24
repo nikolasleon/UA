@@ -69,10 +69,11 @@ function Header() {
     // Ejecutar logout (limpia storage y setUser(null))
     logout();
     
-    // Navegar a home después de un pequeño delay para que se estabilice
+    // Navegar a home con un delay un poco mayor para estabilizarse
     setTimeout(() => {
+      console.log("🔄 Navegando a home después de logout");
       navigate("/", { replace: true });
-    }, 100);
+    }, 150);
   };
 
   // Efecto para monitorear cambios de autenticación

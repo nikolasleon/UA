@@ -93,10 +93,17 @@ function AccountPage() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    // Solo hacer fetch si hay userId y usuario autenticado
+    if (!userId) {
+      console.log("No hay userId, no se hace fetch");
+      setLoading(false);
+      return;
+    }
+    
     fetchUserData();
     fetchUserChallenges();
     fetchUserComments();
-  }, [fetchUserData, fetchUserChallenges, fetchUserComments]);
+  }, [userId, fetchUserData, fetchUserChallenges, fetchUserComments]);
 
   useEffect(() => {
     console.log("Retos del perfil:", {
