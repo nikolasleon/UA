@@ -68,7 +68,7 @@ function LoginPage() {
       setAlert({ message: "Login correcto", type: "success" });
       resetLoginForm();
       setTimeout(() => {
-        navigate("/login");
+        navigate("/account");
       }, 500);
     } catch (error) {
       setAlert({ message: error.message || "Error al iniciar sesión", type: "error" });
