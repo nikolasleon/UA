@@ -14,6 +14,7 @@ import SettingsPage from "./pages/SettingsPage";
 import ChallengesListPage from "./pages/ChallengesListPage";
 import FormulariosPage from "./pages/FormulariosPage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import Buscar from "./pages/Buscar";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/buscar" element={<Buscar />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />

@@ -138,7 +138,7 @@ function LoginPage() {
 
         <p className="login-footer">
           ¿Aún no eres miembro?{" "}
-          <Link to="/formularios">crea una nueva cuenta aquí</Link>
+          <Link to="/register">crea una nueva cuenta aquí</Link>
         </p>
       </div>
     </div>

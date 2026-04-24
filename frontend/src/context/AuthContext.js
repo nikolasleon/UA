@@ -65,9 +65,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    console.log("🔓 Ejecutando logout en AuthContext");
+    // Limpiar el estado primero
     setUser(null);
-    sessionStorage.removeItem("user");
-    localStorage.removeItem("user");
+    
+    // Limpiar todos los almacenamientos
+    try {
+      sessionStorage.removeItem("user");
+      localStorage.removeItem("user");
+      // Limpiar también el flag de rememberMe si existe
+      localStorage.removeItem("rememberMe");
+      localStorage.removeItem("rememberedEmail");
+      console.log("✅ Almacenamientos limpiados correctamente");
+    } catch (error) {
+      console.error("❌ Error al limpiar almacenamientos:", error);
+    }
   };
 
   const updateUser = (updatedData) => {

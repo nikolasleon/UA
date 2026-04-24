@@ -60,12 +60,29 @@ function Header() {
 };
 
   const handleLogout = () => {
-    logout();
+    console.log("🔓 Salir - handleLogout ejecutado");
+    // Cerrar menús primero
     setMenuOpen(false);
     setProfileMenuOpen(false);
     setOptionsMenuOpen(false);
-    navigate("/");
+    
+    // Ejecutar logout
+    logout();
+    
+    // Navegar inmediatamente
+    navigate("/", { replace: true });
   };
+
+  // Efecto para monitorear cambios de autenticación
+  useEffect(() => {
+    if (!isLoggedIn) {
+      console.log("✅ Usuario deslogueado - isLoggedIn es false");
+      // Forzar cerrar menús cuando se deslog
+      setMenuOpen(false);
+      setProfileMenuOpen(false);
+      setOptionsMenuOpen(false);
+    }
+  }, [isLoggedIn]);
 
   // Cerrar menú de perfil si se hace clic afuera
   useEffect(() => {
@@ -312,9 +329,14 @@ function Header() {
             Contacto
           </Link>
           {!isLoggedIn && (
-            <Link to="/login" onClick={() => setMenuOpen(false)} className="mobile-login">
-              Iniciar sesión
-            </Link>
+            <div className="auth-buttons-mobile">
+              <Link to="/login" onClick={() => setMenuOpen(false)} className="mobile-login">
+                Iniciar sesión
+              </Link>
+              <Link to="/register" onClick={() => setMenuOpen(false)} className="mobile-register">
+                Registrarse
+              </Link>
+            </div>
           )}
         </nav>
       )}
