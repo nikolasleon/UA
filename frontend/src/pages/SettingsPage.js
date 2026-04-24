@@ -9,7 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 function SettingsPage() {
   const { user: authUser, updateUser, logout } = useAuth();
-  const userId = authUser?._id || "69dbce705178f132188226ac";
+  const userId = authUser?._id;
   
   const [profile, setProfile] = useState({
     nombre: "",

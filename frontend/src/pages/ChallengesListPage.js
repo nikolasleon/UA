@@ -27,7 +27,7 @@ function ChallengesListPage() {
   const [filteredDifficulty, setFilteredDifficulty] = useState("");
   const [filteredDuration, setFilteredDuration] = useState("");
 
-  const userId = user?._id || "69dbce705178f132188226ac";
+  const userId = user?._id;
 
   useEffect(() => {
     const fetchChallenges = async () => {

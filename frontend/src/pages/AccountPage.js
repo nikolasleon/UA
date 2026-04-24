@@ -30,7 +30,7 @@ function AccountPage() {
   const creadosRef = useRef(null);
   const enProgresoRef = useRef(null);
 
-  const userId = authUser?._id || "69dbce705178f132188226ac";
+  const userId = authUser?._id;
 
   const fetchUserData = useCallback(async () => {
     try {
