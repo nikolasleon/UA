@@ -1,6 +1,6 @@
 import "./App.css";
-import { Route, Routes, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
 
 import Header from "./components/Header";
 import AboutPage from "./pages/AboutPage";
@@ -14,13 +14,9 @@ import FormulariosPage from "./pages/FormulariosPage";
 import Buscar from "./pages/Buscar";
 
 function App() {
-  const [message, setMessage] = useState("");
-
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
     fetch(`${apiUrl}/api/health`)
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message))
       .catch((err) => console.log(err));
   }, []);
 
