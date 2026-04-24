@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
@@ -13,11 +13,18 @@ const initialLoginState = {
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isLoggedIn } = useAuth();
   const [loginForm, setLoginForm] = useState(initialLoginState);
   const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
+
+  // Redirigir si ya está logueado
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/account", { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
