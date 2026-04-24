@@ -221,7 +221,7 @@ function Header() {
               </div>
             </div>
           ) : (
-            <Link to="/account" className="login-btn">
+            <Link to="/login" className="login-btn">
               Iniciar sesión
             </Link>
           )}
@@ -312,7 +312,7 @@ function Header() {
             Contacto
           </Link>
           {!isLoggedIn && (
-            <Link to="/account" onClick={() => setMenuOpen(false)} className="mobile-login">
+            <Link to="/login" onClick={() => setMenuOpen(false)} className="mobile-login">
               Iniciar sesión
             </Link>
           )}
