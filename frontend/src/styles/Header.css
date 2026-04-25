@@ -663,8 +663,8 @@
   }
 
   .header.search-active .mobile-menu {
-    top: 126px !important;
-    height: calc(100vh - 126px);
+    top: 130px !important;
+    height: calc(100vh - 130px);
   }
 
   .search-input-mobile {
@@ -695,12 +695,6 @@
     overflow-y: auto;
     transition: top 0.2s ease; 
   }
-
-
-  /* .header.search-active .mobile-menu {
-    top: 112px !important;
-    height: calc(100vh - 112px);
-  } */
 
 
   .header.search-active .logo,
