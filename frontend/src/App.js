@@ -16,6 +16,7 @@ import FormulariosPage from "./pages/FormulariosPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Buscar from "./pages/Buscar";
+import PublicProfilePage from "./pages/PublicProfilePage";
 
 function App() {
   useEffect(() => {
@@ -35,6 +36,7 @@ function App() {
           <Route path="/buscar" element={<Buscar />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/profile/:userId" element={<PublicProfilePage />} />
           <Route
             path="/account"
             element={

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
 import Modal from "./Modal";
 import "../styles/components/ChallengeCard.css";
 
 function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
+  const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleOpenDetails = () => {
@@ -20,6 +22,18 @@ function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
   const handleConfirmDelete = () => {
     setShowDeleteModal(false);
     onDelete(challenge._id);
+  };
+
+  const handleVisitProfile = (e) => {
+    e.stopPropagation();
+    // creadorId puede ser un string ID o un objeto con _id
+    const creatorId = typeof challenge.creadorId === 'string' 
+      ? challenge.creadorId 
+      : challenge.creadorId?._id;
+    
+    if (creatorId) {
+      navigate(`/profile/${creatorId}`);
+    }
   };
 
   return (
@@ -62,9 +76,27 @@ function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
             <div className="challenge-card__rating">
               ★ {challenge.valoracionPromedio.toFixed(1)}
             </div>
-            <span className="challenge-card__creator">
-              por {challenge.creador}
-            </span>
+            {challenge.creadorId ? (
+              <button
+                onClick={handleVisitProfile}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#007bff",
+                  cursor: "pointer",
+                  fontSize: "0.9rem",
+                  textDecoration: "underline",
+                  padding: 0,
+                }}
+                title="Ver perfil del creador"
+              >
+                por {challenge.creador}
+              </button>
+            ) : (
+              <span className="challenge-card__creator">
+                por {challenge.creador}
+              </span>
+            )}
           </div>
         </div>
       </div>

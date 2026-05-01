@@ -3,38 +3,40 @@
 .alert {
   position: fixed;
   top: 1rem;
-  right: 1rem;
-  left: 1rem;
-  max-width: 400px;
+  left: 50%;
+  right: auto;
+  width: calc(100vw - 2rem);
+  max-width: 520px;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
+  z-index: 200000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
   animation: slideInDown 0.3s ease-out;
+  transform: translateX(-50%);
 }
 
 @keyframes slideInDown {
   from {
-    transform: translateY(-100px);
+    transform: translateX(-50%) translateY(-100px);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
     opacity: 1;
   }
 }
 
 @keyframes slideOutUp {
   from {
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
     opacity: 1;
   }
   to {
-    transform: translateY(-100px);
+    transform: translateX(-50%) translateY(-100px);
     opacity: 0;
   }
 }
@@ -110,18 +112,15 @@
 /* Tablet */
 @media (min-width: 768px) {
   .alert {
-    top: 1.5rem;
-    right: 1.5rem;
-    left: auto;
-    max-width: 450px;
+    top: 1.25rem;
+    width: min(92vw, 520px);
   }
 }
 
 /* Desktop */
 @media (min-width: 1200px) {
   .alert {
-    top: 2rem;
-    right: 2rem;
-    max-width: 500px;
+    top: 1.5rem;
+    width: min(70vw, 520px);
   }
 }

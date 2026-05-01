@@ -93,13 +93,46 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Obtener perfil de un usuario
+// Obtener perfil de un usuario (respeta privacidad)
 router.get("/profile/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
+    
+    console.log("Backend GET - Usuario encontrado:", {
+      email: user.email,
+      privacidad_completa: user.privacidad,
+      privacidad_perfil: user.privacidad?.perfil,
+    });
+    
+    // Si el perfil es privado y no es el mismo usuario, devolver info limitada
+    const isPrivate = user.privacidad?.perfil === "privado";
+    const isSameUser = req.query.currentUserId === req.params.id;
+    
+    console.log("Backend GET - Check privacidad:", {
+      isPrivate,
+      isSameUser,
+      currentUserId: req.query.currentUserId,
+      userId: req.params.id,
+    });
+    
+    if (isPrivate && !isSameUser) {
+      console.log("Backend GET - Devolviendo perfil PRIVADO (limitado)");
+      // Devolver solo información básica pública
+      return res.json({
+        _id: user._id,
+        nombre: user.nombre,
+        apellido: user.apellido,
+        fotoPerfil: user.fotoPerfil,
+        bio: user.bio,
+        isPrivate: true,
+        message: "Este perfil es privado"
+      });
+    }
+    
+    console.log("Backend GET - Devolviendo perfil COMPLETO (público o mismo usuario)");
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: "Error al obtener usuario", error: err });
@@ -119,30 +152,46 @@ router.put("/profile/:id", async (req, res) => {
       fechaNacimiento,
       nacionalidad,
       email,
+      cuentaPrivada,
     } = req.body;
 
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        nombre,
-        apellido,
-        bio,
-        fotoPerfil,
-        tema,
-        telefono,
-        fechaNacimiento,
-        nacionalidad,
-        email,
-      },
-      { new: true }
-    );
+    console.log("Backend - Datos recibidos:", { nombre, email, cuentaPrivada });
+
+    const user = await User.findById(req.params.id);
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    res.json({ message: "Perfil actualizado", user });
+    if (nombre !== undefined) user.nombre = nombre;
+    if (apellido !== undefined) user.apellido = apellido;
+    if (bio !== undefined) user.bio = bio;
+    if (fotoPerfil !== undefined) user.fotoPerfil = fotoPerfil;
+    if (tema !== undefined) user.tema = tema;
+    if (telefono !== undefined) user.telefono = telefono;
+    if (fechaNacimiento !== undefined) user.fechaNacimiento = fechaNacimiento;
+    if (nacionalidad !== undefined) user.nacionalidad = nacionalidad;
+    if (email !== undefined) user.email = email;
+
+    if (cuentaPrivada !== undefined) {
+      const nuevoValor = cuentaPrivada ? "privado" : "publico";
+      console.log("Backend - Actualizando privacidad a:", nuevoValor);
+      user.privacidad = {
+        ...(user.privacidad ? user.privacidad.toObject?.() ?? user.privacidad : {}),
+        perfil: nuevoValor,
+      };
+    }
+
+    const savedUser = await user.save();
+
+    console.log("Backend - Usuario después de actualizar:", {
+      email: savedUser?.email,
+      privacidad: savedUser?.privacidad,
+    });
+
+    res.json({ message: "Perfil actualizado", user: savedUser });
   } catch (err) {
+    console.error("Backend - Error al actualizar:", err);
     res.status(500).json({ message: "Error al actualizar perfil", error: err });
   }
 });
@@ -176,17 +225,20 @@ router.put("/settings/:id/privacy", async (req, res) => {
   try {
     const { perfil } = req.body;
 
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      { "privacidad.perfil": perfil },
-      { new: true }
-    );
+    const user = await User.findById(req.params.id);
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    res.json({ message: "Privacidad actualizada", user });
+    user.privacidad = {
+      ...(user.privacidad ? user.privacidad.toObject?.() ?? user.privacidad : {}),
+      perfil: perfil === "privado" ? "privado" : "publico",
+    };
+
+    const savedUser = await user.save();
+
+    res.json({ message: "Privacidad actualizada", user: savedUser });
   } catch (err) {
     res.status(500).json({ message: "Error al actualizar privacidad", error: err });
   }

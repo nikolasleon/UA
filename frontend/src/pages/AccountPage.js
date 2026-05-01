@@ -39,7 +39,9 @@ function AccountPage() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/users/profile/${userId}`);
+      const response = await fetch(
+        `${API_URL}/api/users/profile/${userId}?currentUserId=${userId}`
+      );
       if (response.ok) {
         const data = await response.json();
         setUser(data);

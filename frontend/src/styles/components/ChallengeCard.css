@@ -221,3 +221,45 @@
     flex-wrap: wrap;
   }
 }
+
+/* Dark Mode */
+body.dark-mode .challenge-card {
+  background: #1f2937;
+  border: 1px solid #334155;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+body.dark-mode .challenge-card__image-wrapper {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+body.dark-mode .challenge-card__title {
+  color: #f8fafc;
+}
+
+body.dark-mode .challenge-card__description {
+  color: #cbd5e1;
+}
+
+body.dark-mode .challenge-card__tag {
+  background: #334155;
+  color: #dbeafe;
+}
+
+body.dark-mode .challenge-card__footer {
+  border-top-color: #334155;
+}
+
+body.dark-mode .challenge-card__creator {
+  color: #94a3b8;
+}
+
+body.dark-mode .challenge-card__btn-delete {
+  background: #3b1f25;
+  color: #fecaca;
+}
+
+body.dark-mode .challenge-card__btn-delete:hover {
+  background: #ef4444;
+  color: #fff;
+}

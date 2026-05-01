@@ -40,9 +40,19 @@ function SettingsPage() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/users/profile/${userId}`);
+        const response = await fetch(
+          `${API_URL}/api/users/profile/${userId}?currentUserId=${userId}`
+        );
         if (response.ok) {
           const data = await response.json();
+          console.log("Frontend - Datos cargados del backend:", {
+            privacidad: data.privacidad,
+            privacidad_perfil: data.privacidad?.perfil,
+          });
+          
+          const isPrivate = data.privacidad?.perfil === "privado";
+          console.log("Frontend - cuentaPrivada calculada:", isPrivate);
+          
           setProfile({
             nombre: data.nombre || "",
             apellido: data.apellido || "",
@@ -52,7 +62,7 @@ function SettingsPage() {
             nacionalidad: data.nacionalidad || "",
             bio: data.bio || "",
             fotoPerfil: data.fotoPerfil || "",
-            cuentaPrivada: data.cuentaPrivada || false,
+            cuentaPrivada: isPrivate,
           });
           setLoadError(false);
         } else {
@@ -125,6 +135,23 @@ function SettingsPage() {
   const handleSaveProfile = async () => {
     setIsSaving(true);
     try {
+      const profileToSave = {
+        nombre: profile.nombre,
+        apellido: profile.apellido,
+        email: profile.email,
+        telefono: profile.telefono,
+        fechaNacimiento: profile.fechaNacimiento,
+        nacionalidad: profile.nacionalidad,
+        bio: profile.bio,
+        fotoPerfil: profile.fotoPerfil,
+        cuentaPrivada: profile.cuentaPrivada,
+      };
+
+      console.log("Frontend - Guardando perfil:", {
+        cuentaPrivada: profileToSave.cuentaPrivada,
+        sera_guardado_como: profileToSave.cuentaPrivada ? "PRIVADO" : "PÚBLICO",
+      });
+
       const response = await fetch(
         `${API_URL}/api/users/profile/${userId}`,
         {
@@ -132,11 +159,35 @@ function SettingsPage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(profile),
+          body: JSON.stringify(profileToSave),
         }
       );
 
       if (!response.ok) throw new Error("Error al guardar");
+
+      const data = await response.json();
+      console.log("Frontend - Respuesta del servidor:", {
+        privacidad_perfil: data.user?.privacidad?.perfil,
+        estado: data.message,
+      });
+
+      // Refrescar el perfil desde BD para confirmar que se guardó correctamente
+      console.log("Frontend - Refrescando datos desde BD...");
+      const refreshResponse = await fetch(
+        `${API_URL}/api/users/profile/${userId}?currentUserId=${userId}`
+      );
+      if (refreshResponse.ok) {
+        const refreshData = await refreshResponse.json();
+        console.log("Frontend - Datos refrescados:", {
+          privacidad_perfil: refreshData.privacidad?.perfil,
+        });
+        
+        // Actualizar el estado local con los datos frescos
+        setProfile((prev) => ({
+          ...prev,
+          cuentaPrivada: refreshData.privacidad?.perfil === "privado",
+        }));
+      }
 
       // Actualizar el contexto de autenticación
       updateUser({
@@ -146,10 +197,13 @@ function SettingsPage() {
         fotoPerfil: profile.fotoPerfil,
       });
 
-      setAlert({ message: "✓ Perfil guardado correctamente", type: "success" });
+      setAlert({
+        message: "✓ Perfil guardado correctamente",
+        type: "success",
+      });
       setIsSaving(false);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Frontend - Error:", error);
       setAlert({ message: "✕ Error al guardar los cambios", type: "error" });
       setIsSaving(false);
     }
@@ -353,7 +407,9 @@ function SettingsPage() {
                 </label>
               </div>
               <p style={{ fontSize: "0.85rem", color: "#888", marginTop: "0.5rem" }}>
-                {profile.cuentaPrivada ? "Solo usuarios autorizados podrán ver tu perfil" : "Tu perfil es visible para todos"}
+                {profile.cuentaPrivada
+                  ? "Ningún usuario podrá ver tu perfil completo"
+                  : "Tu perfil es visible para todos"}
               </p>
             </div>
 

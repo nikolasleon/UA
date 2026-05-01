@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 const AuthContext = createContext();
 
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const login = (userData, rememberMe = false) => {
+  const login = useCallback((userData, rememberMe = false) => {
     const userToStore = {
       _id: userData._id,
       nombre: userData.nombre || "",
@@ -60,9 +60,9 @@ export const AuthProvider = ({ children }) => {
       sessionStorage.setItem("user", JSON.stringify(userToStore));
       localStorage.removeItem("user"); // Limpiar localStorage si existe
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     console.log("🔓 Ejecutando logout en AuthContext");
     
     // Marcar que estamos deslogueandonos para bloquear updateUser
@@ -81,25 +81,28 @@ export const AuthProvider = ({ children }) => {
     
     // Limpiar el estado
     setUser(null);
-  };
+  }, []);
 
-  const updateUser = (updatedData) => {
+  const updateUser = useCallback((updatedData) => {
     // NO actualizar si estamos deslogueandonos
     if (isLoggingOut) {
       console.log("⚠️ updateUser bloqueado - estamos en proceso de logout");
       return;
     }
 
-    const updatedUser = { ...user, ...updatedData };
-    setUser(updatedUser);
+    setUser((currentUser) => {
+      const updatedUser = { ...currentUser, ...updatedData };
 
-    // Actualizar donde esté guardado (localStorage o sessionStorage)
-    if (localStorage.getItem("user")) {
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-    } else {
-      sessionStorage.setItem("user", JSON.stringify(updatedUser));
-    }
-  };
+      // Actualizar donde esté guardado (localStorage o sessionStorage)
+      if (localStorage.getItem("user")) {
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      } else {
+        sessionStorage.setItem("user", JSON.stringify(updatedUser));
+      }
+
+      return updatedUser;
+    });
+  }, [isLoggingOut]);
 
   const isLoggedIn = !!user;
 

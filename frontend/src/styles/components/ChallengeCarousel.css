@@ -229,3 +229,35 @@
     gap: 1.5rem;
   }
 }
+
+/* Dark Mode */
+body.dark-mode .challenge-section {
+  background: #1f2937;
+  border-color: #334155;
+}
+
+body.dark-mode .challenge-section__title {
+  color: #f8fafc;
+}
+
+body.dark-mode .challenge-section__count {
+  color: #94a3b8;
+}
+
+body.dark-mode .challenge-section__empty {
+  color: #94a3b8;
+}
+
+body.dark-mode .challenge-more-card {
+  border-color: #3b82f6;
+  background: linear-gradient(180deg, #13233b 0%, #1a2f4d 100%);
+  color: #dbeafe;
+}
+
+body.dark-mode .challenge-slider-nav__status {
+  color: #bfdbfe;
+}
+
+body.dark-mode .challenge-slider-nav__dot {
+  background: #3b82f6;
+}
