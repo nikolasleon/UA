@@ -97,7 +97,7 @@ function HomePage() {
             <div className="daily-banner-header">
               <h2>{dailyChallenge?.titulo || "CARGANDO RETO..."}</h2>
               <span className="participants-count">
-                {dailyChallenge?.participantes || 0} personas participando[cite: 2]
+                {dailyChallenge?.participantes || 0} personas participando
               </span>
             </div>
 
