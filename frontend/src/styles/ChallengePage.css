@@ -1,0 +1,180 @@
+/* Paleta de colores y variables */
+:root {
+  --bg-crema: #fcf4ea;
+  --verde-header: #c4eba4;
+  --mostaza: #f4d068;
+  --cyan: #d1f5ee;
+  --rosa-tabs: #f9d6df;
+  --morado-btn: #9b8ce8;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.challenge-page-container {
+  background-color: var(--bg-crema);
+  min-height: 100vh;
+  padding-bottom: 2rem;
+}
+
+/* Layout Principal */
+.challenge-main-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Banner de Título (Móvil y Web) */
+.challenge-hero-banner {
+  background-color: var(--verde-header);
+  padding: 1.5rem;
+  text-align: center;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+}
+
+.challenge-hero-banner h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* Grid Responsive */
+.challenge-responsive-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Estilo de Tarjetas */
+.challenge-card-white {
+  background: white;
+  border: 1px solid #eee;
+  position: relative;
+  padding-top: 1rem;
+}
+
+.challenge-rating-badge {
+  position: absolute;
+  top: -10px;
+  right: 15px;
+  background: #fff0f0;
+  border-radius: 50%;
+  width: 65px;
+  height: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ffdada;
+  z-index: 5;
+}
+
+.rating-text { font-weight: bold; font-size: 1.1rem; }
+.rating-stars { font-size: 0.7rem; color: #666; }
+
+/* Contenido del Reto */
+.challenge-description {
+  background-color: #eafbea;
+  padding: 1.2rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border-radius: 4px;
+}
+
+.challenge-content-padding { padding: 1.5rem; }
+
+.challenge-footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tag-item {
+  color: #2e8b57;
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-right: 1rem;
+  text-transform: uppercase;
+}
+
+.btn-unirme {
+  background-color: var(--morado-btn);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Secciones de Comunidad */
+.section-header {
+  padding: 0.6rem;
+  text-align: center;
+}
+.section-header h2 { margin: 0; font-size: 1.1rem; letter-spacing: 2px; }
+
+.mustard { background-color: var(--mostaza); }
+.cyan { background-color: var(--cyan); }
+.pink { background-color: var(--rosa-tabs); }
+
+.rankings-list {
+  background: white;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #eee;
+}
+
+.ranking-item {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tabs-container { display: flex; border-bottom: 1px solid #ddd; }
+.tab { flex: 1; border: none; background: none; padding: 0.5rem; cursor: pointer; font-size: 0.8rem; }
+.tab.active { text-decoration: underline; font-weight: bold; }
+
+/* Challengers Feed */
+.challengers-feed { background: var(--bg-crema); padding: 1rem; }
+.challenger-card-mini {
+  display: flex;
+  gap: 1rem;
+  background: white;
+  padding: 1rem;
+  border: 1px solid #eee;
+  margin-top: 1rem;
+}
+
+.user-avatar { width: 60px; height: 80px; object-fit: cover; border-radius: 4px; }
+.user-title { margin: 0; font-size: 0.9rem; }
+.user-comment { font-size: 0.85rem; color: #444; margin: 0.4rem 0; }
+.btn-like { background: #f0f0f0; border: none; padding: 0.2rem 0.6rem; border-radius: 4px; cursor: pointer; }
+
+/* --- WEB VIEW (Desktop) --- */
+@media (min-width: 1024px) {
+  .challenge-responsive-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .challenge-community-column {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .challenge-hero-banner {
+    padding: 2.5rem;
+    font-size: 1.8rem;
+  }
+}
