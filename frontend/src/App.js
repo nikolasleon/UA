@@ -15,6 +15,7 @@ import ChallengesListPage from "./pages/ChallengesListPage";
 import FormulariosPage from "./pages/FormulariosPage";
 import LoginPage from "./pages/LoginPage";
 import Buscar from "./pages/Buscar";
+import ChallengePage from "./pages/ChallengePage";
 
 function App() {
   useEffect(() => {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/buscar" element={<Buscar />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/reto/:id" element={<ChallengePage />} />
           <Route
             path="/account"
             element={

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header"; // Asegúrate de que la ruta sea correcta[cite: 6]
 import ChallengeCard from "../components/ChallengeCard"; 
 import MediaCollage from "../components/MediaCollage";
-import "../styles/HomePage.css"; // Estilos personalizados que imiten tu captura
+import "../styles/HomePage.css"; 
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -11,34 +12,67 @@ function HomePage() {
   const [dailyChallenge, setDailyChallenge] = useState(null);
   const [challengersImages, setChallengersImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [timeLeft, setTimeLeft] = useState("");
   const navigate = useNavigate();
 
+  // 1. Lógica del Temporizador Dinámico
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0); // Establece el objetivo a las 00:00:00 del día siguiente
+
+      const diff = midnight - now;
+
+      if (diff > 0) {
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / 1000 / 60) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        // Formateo con ceros a la izquierda para mantener la estética
+        const hDisplay = hours.toString().padStart(2, "0");
+        const mDisplay = minutes.toString().padStart(2, "0");
+        const sDisplay = seconds.toString().padStart(2, "0");
+
+        setTimeLeft(`${hDisplay}h ${mDisplay}m ${sDisplay}s`);
+      } else {
+        setTimeLeft("00h 00m 00s");
+      }
+    };
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer); // Limpieza para evitar fugas de memoria
+  }, []);
+
+  // 2. Carga de datos desde la Base de Datos[cite: 2, 3]
   useEffect(() => {
     const loadData = async () => {
       try {
-        // 1. Obtener todos los retos activos para la sección inferior
+        setLoading(true);
+        
+        // Obtener retos populares
         const resPopulares = await fetch(`${API_URL}/api/challenges`);
         const dataPopulares = await resPopulares.json();
         
-        // Aseguramos que valoracionPromedio no rompa el ChallengeCard si viene undefined
         const formattedPopulares = dataPopulares.map(c => ({
           ...c,
           valoracionPromedio: c.valoracionPromedio || 0
         }));
         setPopularChallenges(formattedPopulares);
 
-        // 2. Obtener el reto diario y las imágenes de los participantes
-        // Nota: Crearemos este endpoint en el backend más abajo
+        // Obtener reto diario y fotos de comunidad
         const resDaily = await fetch(`${API_URL}/api/challenges/daily`);
         const dataDaily = await resDaily.json();
         
-        if(dataDaily.reto){
+        if (dataDaily.reto) {
           setDailyChallenge(dataDaily.reto);
           setChallengersImages(dataDaily.imagenesParticipantes || []);
         }
         
       } catch (error) {
-        console.error("Error al conectar con el backend", error);
+        console.error("Error al conectar con el backend:", error);
       } finally {
         setLoading(false);
       }
@@ -48,23 +82,22 @@ function HomePage() {
   }, []);
 
   const handleViewDetails = (id) => {
-    navigate(`/challenges/${id}`);
+    navigate(`/reto/${id}`); // Redirige a la página de detalle que configuramos
   };
 
   return (
     <div className="homepage-wrapper">
-      {/* 1. Header que ya tienes programado */}
 
       <main className="homepage-main">
-        {/* 2. Sección del Reto Diario (Caja verde de tu imagen) */}
+        {/* SECCIÓN RETO DIARIO - Diseño Responsive[cite: 1] */}
         <section className="daily-challenge-box">
           <h1 className="main-title">RETO DIARIO</h1>
 
           <div className="daily-banner">
             <div className="daily-banner-header">
-              <h2>{dailyChallenge?.titulo || "Cargando reto..."}</h2>
+              <h2>{dailyChallenge?.titulo || "CARGANDO RETO..."}</h2>
               <span className="participants-count">
-                {dailyChallenge?.participantes || 0} personas participando
+                {dailyChallenge?.participantes || 0} personas participando[cite: 2]
               </span>
             </div>
 
@@ -79,11 +112,11 @@ function HomePage() {
             </div>
           </div>
 
-          {/* Fila de temporizador y botón */}
+          {/* Temporizador y Acción */}
           <div className="daily-actions">
             <div className="timer-container">
               <span className="timer-label">TIEMPO RESTANTE</span>
-              <span className="timer-clock">14h 23m</span> {/* Puedes dinamizar esto con un setInterval */}
+              <span className="timer-clock">{timeLeft || "00h 00m 00s"}</span>
             </div>
             
             <button 
@@ -94,21 +127,18 @@ function HomePage() {
             </button>
           </div>
 
-          {/* 3. Componente MediaCollage usado para los Challengers */}
+          {/* Galería de Challengers[cite: 1] */}
           <div className="challengers-container">
             <h3>CHALLENGERS</h3>
             {challengersImages.length > 0 ? (
-              <MediaCollage 
-                images={challengersImages} 
-                onImageClick={(index) => console.log(`Click en imagen ${index}`)}
-              />
+              <MediaCollage images={challengersImages} />
             ) : (
               <p className="no-challengers">¡Sé el primero en participar!</p>
             )}
           </div>
         </section>
 
-        {/* 4. Sección de Retos Populares (Cards inferiores) */}
+        {/* SECCIÓN POPULARES - Grid de Tarjetas[cite: 1] */}
         <section className="popular-section">
           <div className="popular-header-bar">
             <h2>RETOS MÁS POPULARES</h2>
@@ -116,7 +146,7 @@ function HomePage() {
 
           <div className="challenges-grid">
             {loading ? (
-              <p>Cargando retos...</p>
+              <div className="loading-spinner">Cargando retos...</div>
             ) : popularChallenges.length > 0 ? (
               popularChallenges.map((challenge) => (
                 <ChallengeCard
@@ -126,7 +156,7 @@ function HomePage() {
                 />
               ))
             ) : (
-              <p>No hay retos disponibles en este momento.</p>
+              <p>No hay retos disponibles.</p>
             )}
           </div>
         </section>
