@@ -48,19 +48,16 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Error al obtener retos", error: err });
   }
 });
-// Obtener el reto del día
+// 1. OBTENER EL RETO DEL DÍA (Mover arriba para evitar conflicto con :id)
 router.get("/daily", async (req, res) => {
   try {
-    // 1. Buscamos el reto que tiene esRetoDia: true
     const dailyChallenge = await Challenge.findOne({ esRetoDia: true, estado: "activo" });
 
     if (!dailyChallenge) {
-      // Si no hay ninguno marcado, traemos el más reciente por si acaso
       const fallback = await Challenge.findOne({ estado: "activo" }).sort({ fechaCreacion: -1 });
       return res.json({ reto: fallback, imagenesParticipantes: [] });
     }
 
-    // 2. Traer fotos de personas que completaron este reto específico
     const participaciones = await UserChallenge.find({
       desafioId: dailyChallenge._id,
       estado: "aprobado"
@@ -68,7 +65,6 @@ router.get("/daily", async (req, res) => {
     .sort({ fechaEnvio: -1 })
     .limit(4);
 
-    // Extraemos la imagenEnvio de cada participación
     const imagenesParticipantes = participaciones.map(p => p.imagenEnvio);
 
     res.json({
@@ -79,7 +75,8 @@ router.get("/daily", async (req, res) => {
     res.status(500).json({ message: "Error en el servidor", error: err });
   }
 });
-// Obtener un reto específico
+
+// 2. OBTENER UN RETO ESPECÍFICO (Después de las rutas fijas)
 router.get("/:id", async (req, res) => {
   try {
     const challenge = await Challenge.findById(req.params.id).populate(
@@ -93,11 +90,11 @@ router.get("/:id", async (req, res) => {
 
     res.json(challenge);
   } catch (err) {
-    res.status(500).json({ message: "Error al obtener reto", error: err });
+    res.status(500).json({ message: "Error al obtener reto. Verifica que el ID sea correcto.", error: err });
   }
 });
 
-// Obtener participantes de un reto específico (LIMPIADO Y ÚNICO)
+// 3. OBTENER PARTICIPANTES
 router.get("/:id/participantes", async (req, res) => {
     try {
         const { id } = req.params;
