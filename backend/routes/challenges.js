@@ -48,24 +48,6 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Error al obtener retos", error: err });
   }
 });
-
-// Obtener un reto específico
-router.get("/:id", async (req, res) => {
-  try {
-    const challenge = await Challenge.findById(req.params.id).populate(
-      "creadorId",
-      "nombre apellido fotoPerfil bio"
-    );
-
-    if (!challenge) {
-      return res.status(404).json({ message: "Reto no encontrado" });
-    }
-
-    res.json(challenge);
-  } catch (err) {
-    res.status(500).json({ message: "Error al obtener reto", error: err });
-  }
-});
 // Obtener el reto del día
 router.get("/daily", async (req, res) => {
   try {
@@ -97,56 +79,48 @@ router.get("/daily", async (req, res) => {
     res.status(500).json({ message: "Error en el servidor", error: err });
   }
 });
-
-// Obtener participantes y comentarios de un reto específico
-router.get("/:id/participantes", async (req, res) => {
+// Obtener un reto específico
+router.get("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    
-    // Buscamos las participaciones aprobadas para este reto
-    const participaciones = await UserChallenge.find({
-      desafioId: id,
-      estado: "aprobado"
-    })
-    .populate("usuarioId", "nombre apellido fotoPerfil")
-    .sort({ fechaEnvio: 1 }); // Orden de llegada
+    const challenge = await Challenge.findById(req.params.id).populate(
+      "creadorId",
+      "nombre apellido fotoPerfil bio"
+    );
 
-    res.json({
-      participantes: participaciones.map(p => ({
-        id: p._id,
-        usuario: p.usuarioId,
-        imagenEnvio: p.imagenEnvio,
-        descripcionEnvio: p.descripcionEnvio,
-        fechaEnvio: p.fechaEnvio,
-        likes: Math.floor(Math.random() * 50) // Mock para likes/favoritos
-      }))
-    });
+    if (!challenge) {
+      return res.status(404).json({ message: "Reto no encontrado" });
+    }
+
+    res.json(challenge);
   } catch (err) {
-    res.status(500).json({ message: "Error al obtener participantes", error: err });
+    res.status(500).json({ message: "Error al obtener reto", error: err });
   }
-})
-// Obtener participantes de un reto específico (para el ranking y feed)
+});
+
+// Obtener participantes de un reto específico (LIMPIADO Y ÚNICO)
 router.get("/:id/participantes", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const participaciones = await UserChallenge.find({ 
-      desafioId: id, 
-      estado: "aprobado" // Solo los que completaron el reto
-    })
-    .populate("usuarioId", "nombre fotoPerfil") // Traer datos del usuario
-    .sort({ fechaEnvio: 1 }); // Orden de llegada
+    try {
+        const { id } = req.params;
+        const participaciones = await UserChallenge.find({ 
+            desafioId: id, 
+            estado: "aprobado" 
+        })
+        .populate("usuarioId", "nombre apellido fotoPerfil")
+        .sort({ fechaEnvio: 1 });
 
-    res.json({
-      participantes: participaciones.map(p => ({
-        usuario: p.usuarioId,
-        descripcionEnvio: p.descripcionEnvio,
-        imagenEnvio: p.imagenEnvio,
-        fecha: p.fechaEnvio
-      }))
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Error al obtener participantes", error: err });
-  }
+        res.json({
+            participantes: participaciones.map(p => ({
+                id: p._id,
+                usuario: p.usuarioId,
+                descripcionEnvio: p.descripcionEnvio,
+                imagenEnvio: p.imagenEnvio,
+                fecha: p.fechaEnvio,
+                likes: Math.floor(Math.random() * 50)
+            }))
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Error al obtener participantes", error: err });
+    }
 });
 // Crear nuevo reto
 router.post("/", async (req, res) => {
