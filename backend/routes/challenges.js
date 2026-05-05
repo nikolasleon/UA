@@ -79,7 +79,7 @@ router.get("/daily", async (req, res) => {
 //OBTENER UN RETO ESPECÍFICO
 router.get("/:id", async (req, res) => {
   try {
-    const challenge = await Challenge.findById(req.params.id).populate(
+    const challenge = await Challenge.findById(req.params).populate(
       "creadorId",
       "nombre apellido fotoPerfil bio"
     );
