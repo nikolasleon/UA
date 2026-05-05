@@ -94,7 +94,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// 3. OBTENER PARTICIPANTES
+// OBTENER PARTICIPANTES
 router.get("/:id/participantes", async (req, res) => {
     try {
         const { id } = req.params;

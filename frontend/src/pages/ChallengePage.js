@@ -20,13 +20,13 @@ function ChallengePage() {
       try {
         setLoading(true);
         // 1. Obtener detalles del reto desde GET /api/challenges/:id
-        const resChallenge = await fetch(`${API_URL}/challenges/${id}`);
+        const resChallenge = await fetch(`${API_URL}/api/challenges/${id}`);
         const dataChallenge = await resChallenge.json();
         setChallenge(dataChallenge);
 
         // 2. Simulamos u obtenemos los participantes (basado en UserChallenge)
         // Nota: En tu backend podrías crear un endpoint específico para esto
-        const resParticipantes = await fetch(`${API_URL}/challenges/${id}/participantes`);
+        const resParticipantes = await fetch(`${API_URL}/api/challenges/${id}/participantes`);
         if (resParticipantes.ok) {
           const dataParticipantes = await resParticipantes.json();
           setParticipantes(dataParticipantes.participantes);
@@ -49,7 +49,7 @@ function ChallengePage() {
 
     try {
       // POST /api/challenges/:id/participar
-      const response = await fetch(`${API_URL}/challenges/${id}/participar`, {
+      const response = await fetch(`${API_URL}/api/challenges/${id}/participar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -77,7 +77,7 @@ function ChallengePage() {
       <main className="challenge-container">
         {/* Banner dinámico con título del backend */}
         <div className="challenge-hero-banner">
-          <h1>{challenge.titulo.toUpperCase()}</h1>
+          <h1>{challenge?.titulo?.toUpperCase()}</h1>
         </div>
 
         <div className="challenge-grid-layout">
