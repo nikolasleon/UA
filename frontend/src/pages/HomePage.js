@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header"; // Asegúrate de que la ruta sea correcta[cite: 6]
 import ChallengeCard from "../components/ChallengeCard"; 
 import MediaCollage from "../components/MediaCollage";
 import "../styles/HomePage.css"; 

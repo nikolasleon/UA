@@ -48,7 +48,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Error al obtener retos", error: err });
   }
 });
-// 1. OBTENER EL RETO DEL DÍA (Mover arriba para evitar conflicto con :id)
+// OBTENER EL RETO DEL DÍA
 router.get("/daily", async (req, res) => {
   try {
     const dailyChallenge = await Challenge.findOne({ esRetoDia: true, estado: "activo" });
@@ -76,7 +76,7 @@ router.get("/daily", async (req, res) => {
   }
 });
 
-// 2. OBTENER UN RETO ESPECÍFICO (Después de las rutas fijas)
+//OBTENER UN RETO ESPECÍFICO
 router.get("/:id", async (req, res) => {
   try {
     const challenge = await Challenge.findById(req.params.id).populate(
