@@ -4,7 +4,7 @@ import ChallengeCard from "../components/ChallengeCard";
 import MediaCollage from "../components/MediaCollage";
 import "../styles/HomePage.css"; 
 
-const API_URL = "https://tu-api-backend.onrender.com";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 function HomePage() {
   const [popularChallenges, setPopularChallenges] = useState([]);
