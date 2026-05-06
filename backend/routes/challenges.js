@@ -32,6 +32,7 @@ router.get("/user/:userId", async (req, res) => {
     const challenges = await Challenge.find(query).populate("creadorId", "nombre apellido");
     res.json(challenges);
   } catch (err) {
+    console.error("Error fatal en la base de datos:", err);
     res.status(500).json({ message: "Error al obtener retos", error: err });
   }
 });
@@ -45,6 +46,7 @@ router.get("/", async (req, res) => {
     );
     res.json(challenges);
   } catch (err) {
+    console.error("Error fatal en la base de datos:", err);
     res.status(500).json({ message: "Error al obtener retos", error: err });
   }
 });
@@ -58,28 +60,34 @@ router.get("/daily", async (req, res) => {
       return res.json({ reto: fallback, imagenesParticipantes: [] });
     }
 
+    // Cambiamos el .find para que traiga los datos del usuario
     const participaciones = await UserChallenge.find({
       desafioId: dailyChallenge._id,
       estado: "aprobado"
     })
+    .populate("usuarioId", "nombre") // Traemos el nombre del usuario
     .sort({ fechaEnvio: -1 })
-    .limit(4);
+    .limit(3); // El mockup muestra 3 tarjetas
 
-    const imagenesParticipantes = participaciones.map(p => p.imagenEnvio);
+    // Enviamos el objeto completo en lugar de solo la URL
+    const datosParticipantes = participaciones.map(p => ({
+      url: p.imagenEnvio,
+      usuario: p.usuarioId?.nombre || "Usuario",
+      comentario: p.descripcionEnvio || "¡Reto completado!"
+    }));
 
     res.json({
       reto: dailyChallenge,
-      imagenesParticipantes: imagenesParticipantes
+      imagenesParticipantes: datosParticipantes
     });
   } catch (err) {
     res.status(500).json({ message: "Error en el servidor", error: err });
   }
 });
-
 //OBTENER UN RETO ESPECÍFICO
 router.get("/:id", async (req, res) => {
   try {
-    const challenge = await Challenge.findById(req.params).populate(
+    const challenge = await Challenge.findById(req.params.id).populate(
       "creadorId",
       "nombre apellido fotoPerfil bio"
     );
@@ -118,6 +126,33 @@ router.get("/:id/participantes", async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: "Error al obtener participantes", error: err });
     }
+});
+
+// OBTENER ESTADO DE PARTICIPACIÓN DE UN USUARIO EN UN RETO
+router.get("/:id/estado/:usuarioId", async (req, res) => {
+  try {
+    const { id, usuarioId } = req.params;
+    
+    // Buscamos la participación en la colección UserChallenge
+    const participacion = await UserChallenge.findOne({ 
+      desafioId: id, 
+      usuarioId: usuarioId 
+    });
+
+    if (!participacion) {
+      return res.json({ estado: "no_unido" });
+    }
+
+    // Si el estado es 'aprobado', significa que ya subió la respuesta y terminó
+    if (participacion.estado === "aprobado") {
+      return res.json({ estado: "completado" });
+    }
+
+    // Si existe pero no está aprobado (está 'pendiente'), es que se ha unido pero no ha terminado
+    res.json({ estado: "unido" });
+  } catch (err) {
+    res.status(500).json({ message: "Error al obtener estado de participación", error: err });
+  }
 });
 // Crear nuevo reto
 router.post("/", async (req, res) => {

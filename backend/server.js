@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
 
 const app = express();
 

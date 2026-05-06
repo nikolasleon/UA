@@ -14,14 +14,108 @@
   background-color: #f8fafc; /* Un gris muy suave para que el blanco resalte */
 }
 
-/* Caja del Reto Diario */
+/* Contenedor principal verde */
 .daily-challenge-box {
-  background: linear-gradient(135deg, #b3e283 0%, #9cd16a 100%); /* Mantengo el verde pero con gradiente */
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: var(--shadow-standard);
-  margin-bottom: 3rem;
-  text-align: center;
+  background-color: #b3e283; /* El verde lima del mockup */
+  border-radius: 20px;
+  padding: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto 3rem auto;
+}
+
+/* Tarjeta blanca central */
+.daily-white-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.daily-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.challenge-title {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0;
+}
+
+.participants-badge {
+  color: #ff4d4d; /* Rojo del mockup */
+  font-size: 0.9rem;
+  text-align: right;
+  line-height: 1;
+}
+
+.header-divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 10px 0;
+}
+
+.daily-card-body {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.challenge-illustration {
+  max-height: 120px;
+  object-fit: contain;
+}
+
+/* Fila de botones (Temporizador y Aceptar) */
+.daily-actions-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.timer-box {
+  background-color: #ff4d4d; /* Rojo */
+  color: white;
+  padding: 10px 30px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.timer-tag { font-size: 0.7rem; font-weight: bold; }
+.timer-val { font-size: 1.4rem; font-weight: 800; }
+
+.accept-challenge-btn {
+  background-color: #9395e6; /* Violeta del mockup */
+  color: white;
+  border: none;
+  padding: 0 40px;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.accept-challenge-btn:hover { transform: scale(1.05); }
+
+/* Separador y Challengers */
+.section-divider {
+  border: 0;
+  border-top: 2px solid rgba(0,0,0,0.1);
+  margin: 1.5rem 0;
+}
+
+.challengers-title {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
 }
 
 .main-title {
@@ -60,28 +154,57 @@
   font-size: 1.5rem;
 }
 
-.challenges-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
+/* Contenedor de la cuadrícula de challengers */
+.challengers-mockup-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 1.5rem;
 }
 
-/* Ajuste para el MediaCollage dentro de la Home */
-.challengers-container {
-  margin-top: 2rem;
-  background: rgba(255, 255, 255, 0.5);
-  padding: 1.5rem;
-  border-radius: 12px;
+/* La tarjeta blanca individual como en el mockup */
+.challenger-card-item {
+  background: white;
+  border-radius: 25px; /* Bordes muy redondeados */
+  padding: 10px;
+  width: 180px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.challengers-container h3 {
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 1rem;
+/* Contenedor de la foto dentro de la tarjeta */
+.challenger-photo-container {
+  width: 100%;
+  height: 150px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 10px;
 }
 
-.no-challengers {
-  color: #666;
-  font-style: italic;
+.challenger-photo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
+/* Texto del nombre debajo de la foto */
+.challenger-name-tag {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #333;
+  margin: 5px 0;
+  text-align: center;
+}
+
+/* Título de la sección Challengers */
+.challengers-title {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 1.8rem;
+  color: #000;
+  margin-top: 20px;
+  text-align: center;
+}
+

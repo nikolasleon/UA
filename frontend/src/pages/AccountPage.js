@@ -191,7 +191,7 @@ function AccountPage() {
   };
 
   const handleViewChallenge = (challengeId) => {
-    navigate(`/challenge/${challengeId}`);
+    navigate(`/reto/${challengeId}`);
   };
 
   const scrollToSection = (ref) => {

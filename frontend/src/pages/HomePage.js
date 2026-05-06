@@ -89,52 +89,72 @@ function HomePage() {
 
       <main className="homepage-main">
         {/* SECCIÓN RETO DIARIO - Diseño Responsive[cite: 1] */}
+{/* SECCIÓN RETO DIARIO */}
         <section className="daily-challenge-box">
           <h1 className="main-title">RETO DIARIO</h1>
 
-          <div className="daily-banner">
-            <div className="daily-banner-header">
-              <h2>{dailyChallenge?.titulo || "CARGANDO RETO..."}</h2>
-              <span className="participants-count">
-                {dailyChallenge?.participantes || 0} personas participando
+          {/* Tarjeta Blanca: Información del Reto */}
+          <div className="daily-white-card">
+            <div className="daily-card-header">
+              <h2 className="challenge-title">{dailyChallenge?.titulo || "CARGANDO..."}</h2>
+              <span className="participants-badge">
+                <strong>{dailyChallenge?.participantes || 0}</strong> personas participando
               </span>
             </div>
+            
+            <hr className="header-divider" />
 
-            <div className="daily-banner-content">
-              {dailyChallenge?.imagenDesafio && (
+            <div className="daily-card-body">
+              {/* Imagen dinámica desde la BD */}
+              {dailyChallenge?.imagenDesafio ? (
                 <img 
                   src={dailyChallenge.imagenDesafio} 
-                  alt="Ilustración del reto" 
-                  className="banner-image"
+                  alt={dailyChallenge.titulo} 
+                  className="challenge-main-image"
                 />
+              ) : (
+                <div className="image-placeholder">Sin imagen de reto</div>
               )}
             </div>
           </div>
 
-          {/* Temporizador y Acción */}
-          <div className="daily-actions">
-            <div className="timer-container">
-              <span className="timer-label">TIEMPO RESTANTE</span>
-              <span className="timer-clock">{timeLeft || "00h 00m 00s"}</span>
+          {/* Bloque de Acción: Timer y Botón */}
+          <div className="daily-actions-row">
+            <div className="timer-box">
+              <span className="timer-tag">TIEMPO RESTANTE</span>
+              <span className="timer-val">{timeLeft || "00h 00m 00s"}</span>
             </div>
             
             <button 
-              className="accept-btn"
+              className="accept-challenge-btn"
               onClick={() => dailyChallenge && handleViewDetails(dailyChallenge._id)}
             >
               ¡ACEPTAR RETO!
             </button>
           </div>
 
-          {/* Galería de Challengers[cite: 1] */}
-          <div className="challengers-container">
-            <h3>CHALLENGERS</h3>
+          <hr className="section-divider" />
+
+          {/* Galería de Challengers */}
+        <div className="challengers-section">
+          <h3 className="challengers-title">CHALLENGERS</h3>
+          <div className="challengers-mockup-grid">
             {challengersImages.length > 0 ? (
-              <MediaCollage images={challengersImages} />
+              challengersImages.map((p, index) => (
+                <div key={index} className="challenger-card-item">
+                  <div className="challenger-photo-container">
+                    <img src={p.url} alt={`Reto por ${p.usuario}`} />
+                  </div>
+                  <p className="challenger-name-tag">
+                    {p.usuario} - ¡Reto hecho!
+                  </p>
+                </div>
+              ))
             ) : (
               <p className="no-challengers">¡Sé el primero en participar!</p>
             )}
           </div>
+        </div>
         </section>
 
         {/* SECCIÓN POPULARES - Grid de Tarjetas[cite: 1] */}
