@@ -22,10 +22,12 @@ router.get("/user/:userId", async (req, res) => {
       }).populate("desafioId");
 
       return res.json(
-        userChallenges.map((uc) => ({
-          ...uc.desafioId.toObject(),
-          estadoParticipacion: uc.estado,
-        }))
+        userChallenges
+          .filter((uc) => uc.desafioId)
+          .map((uc) => ({
+            ...uc.desafioId.toObject(),
+            estadoParticipacion: uc.estado,
+          }))
       );
     }
 
