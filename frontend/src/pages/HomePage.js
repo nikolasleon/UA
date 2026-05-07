@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import ChallengeCard from "../components/ChallengeCard";
+import Alert from "../components/Alert";
 import { useAuth } from "../context/AuthContext";
 import "../styles/HomePage.css";
 
@@ -13,6 +14,8 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState("");
   const [dailyStatus, setDailyStatus] = useState("INVITADO");
+  const [isJoining, setIsJoining] = useState(false);
+  const [alert, setAlert] = useState({ message: "", type: "success" });
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -80,21 +83,49 @@ function HomePage() {
 
   const handleViewDetails = (id) => navigate(`/reto/${id}`);
 
+  const handleAcceptDaily = async () => {
+    if (!user) {
+      setAlert({ message: "Debes iniciar sesión para participar.", type: "error" });
+      return;
+    }
+    setIsJoining(true);
+    try {
+      const response = await fetch(`${API_URL}/api/challenges/${dailyChallenge._id}/participar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuarioId: user._id }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Error al unirse al reto");
+      setDailyStatus("SUBIR");
+      setAlert({ message: "¡Te has unido al reto diario!", type: "success" });
+    } catch (err) {
+      setAlert({ message: err.message || "Error al unirse al reto", type: "error" });
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
   const renderDailyButton = () => {
     switch (dailyStatus) {
       case "COMPLETADO":
-        return <button className="accept-challenge-btn">¡RETO COMPLETADO!</button>;
+        return <button className="accept-challenge-btn" disabled>¡RETO COMPLETADO!</button>;
       case "SUBIR":
         return (
-          <button className="accept-challenge-btn" onClick={() => handleViewDetails(dailyChallenge._id)}>
+          <button className="accept-challenge-btn" onClick={() => navigate(`/reto/${dailyChallenge._id}/responder`)}>
             SUBIR RESPUESTA
           </button>
         );
       case "UNIRSE":
+        return (
+          <button className="accept-challenge-btn" onClick={handleAcceptDaily} disabled={isJoining}>
+            {isJoining ? "Uniéndose..." : "¡ACEPTAR RETO!"}
+          </button>
+        );
       default:
         return (
           <button className="accept-challenge-btn" onClick={() => handleViewDetails(dailyChallenge._id)}>
-            ¡ACEPTAR RETO!
+            VER RETO
           </button>
         );
     }
@@ -102,6 +133,7 @@ function HomePage() {
 
   return (
     <div className="homepage-wrapper">
+      <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
       <main className="homepage-main">
 
         <section className="daily-challenge-box">
