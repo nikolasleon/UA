@@ -107,11 +107,12 @@ function CreateChallengePage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Error al crear el reto");
-
       const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Error al crear el reto");
+
       navigate(`/reto/${data.reto._id}`);
     } catch (err) {
+      console.error("Error al crear reto:", err);
       setAlert({ message: err.message || "Error al crear el reto", type: "error" });
       setIsSubmitting(false);
     }
@@ -119,7 +120,7 @@ function CreateChallengePage() {
 
   return (
     <div className="create-challenge-container">
-      <Alert message={alert.message} type={alert.type} />
+      <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
       <h1 className="create-challenge-title">Crear reto</h1>
 
       <form className="create-challenge-form" onSubmit={handleSubmit}>
