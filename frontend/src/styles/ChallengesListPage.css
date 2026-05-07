@@ -8,7 +8,7 @@
 .btn-back {
   background: none;
   border: none;
-  color: #007bff;
+  color: var(--color-action);
   cursor: pointer;
   font-size: 0.95rem;
   margin-bottom: 1rem;
@@ -21,20 +21,20 @@
 }
 
 .btn-back:active {
-  color: #0056b3;
+  color: var(--color-action-alt);
 }
 
 .challenges-list-container h1 {
   margin: 0.5rem 0 1.5rem 0;
   font-size: 1.3rem;
-  color: #333;
-  border-bottom: 2px solid #007bff;
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-action);
   padding-bottom: 0.75rem;
 }
 
 /* Filtros */
 .filters-section {
-  background: white;
+  background: var(--color-white);
   padding: 1rem;
   border-radius: 12px;
   margin-bottom: 1.5rem;
@@ -44,7 +44,7 @@
 .search-bar-filters {
   display: flex;
   align-items: center;
-  background: #f1f3f6;
+  background: var(--color-surface-alt);
   border-radius: 10px;
   padding: 0.75rem;
   margin-bottom: 1rem;
@@ -52,7 +52,7 @@
 }
 
 .icon-left {
-  color: #999;
+  color: var(--color-text-disabled);
   font-size: 1rem;
 }
 
@@ -62,22 +62,22 @@
   background: transparent;
   outline: none;
   font-size: 0.95rem;
-  color: #333;
+  color: var(--color-text);
 }
 
 .search-input-filters::placeholder {
-  color: #ccc;
+  color: var(--color-muted-light);
 }
 
 .icon-right {
-  color: #999;
+  color: var(--color-text-disabled);
   cursor: pointer;
   font-size: 1rem;
   transition: color 0.2s;
 }
 
 .icon-right:hover {
-  color: #555;
+  color: var(--color-text-soft);
 }
 
 .filters-row {
@@ -90,10 +90,10 @@
   flex: 1;
   min-width: 140px;
   padding: 0.6rem 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  background: white;
-  color: #333;
+  background: var(--color-white);
+  color: var(--color-text);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -102,14 +102,14 @@
 }
 
 .filter-select:hover {
-  border-color: #007bff;
-  background: #f0f7ff;
+  border-color: var(--color-action);
+  background: var(--color-action-subtle);
   box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: var(--color-action);
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
 }
 
@@ -121,7 +121,7 @@
 
 .empty-message {
   text-align: center;
-  color: #999;
+  color: var(--color-text-disabled);
   padding: 2rem 1rem;
   font-size: 1rem;
 }

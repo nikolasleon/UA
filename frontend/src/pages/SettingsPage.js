@@ -301,7 +301,7 @@ function SettingsPage() {
 
       {!loading && !loadError && (
         <>
-          <div className="settings-card">
+          <div className="settings-card personal-info-card">
             <h2>Información Personal</h2>
 
             <div className="form-group">

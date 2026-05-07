@@ -81,32 +81,32 @@
 
 /* Success Alert */
 .alert-success {
-  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-  color: #155724;
-  border: 2px solid #28a745;
+  background: linear-gradient(135deg, var(--color-success-bg) 0%, var(--color-success-border) 100%);
+  color: var(--color-success-text);
+  border: 2px solid var(--color-success);
 }
 
 .alert-success .alert-icon {
-  color: #28a745;
+  color: var(--color-success);
 }
 
 .alert-success .alert-close {
-  color: #155724;
+  color: var(--color-success-text);
 }
 
 /* Error Alert */
 .alert-error {
-  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-  color: #721c24;
-  border: 2px solid #dc3545;
+  background: linear-gradient(135deg, var(--color-danger-bg) 0%, var(--color-danger-border) 100%);
+  color: var(--color-danger-text);
+  border: 2px solid var(--color-danger);
 }
 
 .alert-error .alert-icon {
-  color: #dc3545;
+  color: var(--color-danger);
 }
 
 .alert-error .alert-close {
-  color: #721c24;
+  color: var(--color-danger-text);
 }
 
 /* Tablet */
