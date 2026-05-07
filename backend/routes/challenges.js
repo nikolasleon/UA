@@ -352,6 +352,10 @@ router.post("/:id/participar", async (req, res) => {
       return res.status(404).json({ message: "Reto no encontrado" });
     }
 
+    if (String(challenge.creadorId) === String(usuarioId)) {
+      return res.status(403).json({ message: "No puedes participar en tu propio reto" });
+    }
+
     const userChallenge = new UserChallenge({
       usuarioId,
       desafioId: id,

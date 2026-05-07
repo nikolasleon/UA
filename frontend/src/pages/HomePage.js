@@ -107,6 +107,10 @@ function HomePage() {
   };
 
   const renderDailyButton = () => {
+    const isOwner = user && dailyChallenge &&
+      String(user._id) === String(dailyChallenge.creadorId?._id || dailyChallenge.creadorId);
+    if (isOwner) return null;
+
     switch (dailyStatus) {
       case "COMPLETADO":
         return <button className="accept-challenge-btn" disabled>¡RETO COMPLETADO!</button>;
