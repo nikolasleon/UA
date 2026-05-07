@@ -52,36 +52,50 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Error al obtener retos", error: err });
   }
 });
-// OBTENER EL RETO DEL DÍA
+// OBTENER EL RETO DEL DÍA (rota automáticamente cada 24h)
 router.get("/daily", async (req, res) => {
   try {
-    const dailyChallenge = await Challenge.findOne({ esRetoDia: true, estado: "activo" });
+    const ahora = new Date();
+    const hace24h = new Date(ahora - 24 * 60 * 60 * 1000);
 
-    if (!dailyChallenge) {
-      const fallback = await Challenge.findOne({ estado: "activo" }).sort({ fechaCreacion: -1 });
-      return res.json({ reto: fallback, imagenesParticipantes: [] });
+    let daily = await Challenge.findOne({ esRetoDia: true, estado: "activo" });
+
+    // Rotar si no hay ninguno o si han pasado más de 24h desde que se asignó
+    if (!daily || !daily.fechaRetoDia || daily.fechaRetoDia < hace24h) {
+      // Quitar la bandera al anterior
+      if (daily) {
+        await Challenge.findByIdAndUpdate(daily._id, { esRetoDia: false });
+      }
+
+      // Elegir el reto activo con la fecha de reto del día más antigua (o null), para rotar de forma justa
+      const candidato = await Challenge.findOne({ estado: "activo" })
+        .sort({ fechaRetoDia: 1 }); // null va primero, luego el más antiguo
+
+      if (!candidato) return res.json({ reto: null, imagenesParticipantes: [] });
+
+      await Challenge.findByIdAndUpdate(candidato._id, {
+        esRetoDia: true,
+        fechaRetoDia: ahora,
+      });
+
+      daily = await Challenge.findById(candidato._id);
     }
 
-    // Cambiamos el .find para que traiga los datos del usuario
     const participaciones = await UserChallenge.find({
-      desafioId: dailyChallenge._id,
-      estado: "aprobado"
+      desafioId: daily._id,
+      estado: "aprobado",
     })
-    .populate("usuarioId", "nombre") // Traemos el nombre del usuario
-    .sort({ fechaEnvio: -1 })
-    .limit(3); // El mockup muestra 3 tarjetas
+      .populate("usuarioId", "nombre")
+      .sort({ fechaEnvio: -1 })
+      .limit(3);
 
-    // Enviamos el objeto completo en lugar de solo la URL
     const datosParticipantes = participaciones.map(p => ({
       url: p.imagenEnvio,
       usuario: p.usuarioId?.nombre || "Usuario",
-      comentario: p.descripcionEnvio || "¡Reto completado!"
+      comentario: p.descripcionEnvio || "¡Reto completado!",
     }));
 
-    res.json({
-      reto: dailyChallenge,
-      imagenesParticipantes: datosParticipantes
-    });
+    res.json({ reto: daily, imagenesParticipantes: datosParticipantes });
   } catch (err) {
     res.status(500).json({ message: "Error en el servidor", error: err });
   }
@@ -161,7 +175,7 @@ router.get("/:id/estado/:usuarioId", async (req, res) => {
 // Crear nuevo reto
 router.post("/", async (req, res) => {
   try {
-    const { titulo, descripcion, imagenDesafio, creadorId, dificultad, categoria, duracion, esRetoDia, multimedia } = req.body;
+    const { titulo, descripcion, imagenDesafio, creadorId, dificultad, categoria, duracion, multimedia } = req.body;
 
     if (!titulo || !descripcion || !creadorId) {
       return res.status(400).json({ message: "Título, descripción y creador son obligatorios" });
@@ -181,7 +195,6 @@ router.post("/", async (req, res) => {
       dificultad,
       categoria,
       duracion,
-      esRetoDia: Boolean(esRetoDia),
       multimedia: multimedia || [],
     });
 

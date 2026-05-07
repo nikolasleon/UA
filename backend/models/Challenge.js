@@ -30,6 +30,10 @@ const challengeSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  fechaRetoDia: {
+    type: Date,
+    default: null,
+  },
   dificultad: {
     type: String,
     enum: ["fácil", "medio", "intenso"],
