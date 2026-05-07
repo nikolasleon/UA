@@ -62,11 +62,15 @@
 }
 
 .daily-card-body {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
   padding: 1rem 0;
+}
+
+.challenge-main-image {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
 }
 
 .challenge-illustration {
@@ -191,6 +195,18 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.challenger-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #c0eca4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #3a7d44;
 }
 
 /* Texto del nombre debajo de la foto */

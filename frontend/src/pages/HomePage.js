@@ -157,9 +157,15 @@ function HomePage() {
                     challengersImages.map((p, index) => (
                       <div key={index} className="challenger-card-item">
                         <div className="challenger-photo-container">
-                          <img src={p.url} alt={`Reto por ${p.usuario}`} />
+                          {p.fotoPerfil ? (
+                            <img src={p.fotoPerfil} alt={p.usuario} />
+                          ) : (
+                            <div className="challenger-photo-placeholder">
+                              {p.usuario.charAt(0).toUpperCase()}
+                            </div>
+                          )}
                         </div>
-                        <p className="challenger-name-tag">{p.usuario} - ¡Reto hecho!</p>
+                        <p className="challenger-name-tag">{p.usuario}</p>
                       </div>
                     ))
                   ) : (

@@ -85,12 +85,12 @@ router.get("/daily", async (req, res) => {
       desafioId: daily._id,
       estado: "aprobado",
     })
-      .populate("usuarioId", "nombre")
+      .populate("usuarioId", "nombre fotoPerfil")
       .sort({ fechaEnvio: -1 })
       .limit(3);
 
     const datosParticipantes = participaciones.map(p => ({
-      url: p.imagenEnvio,
+      fotoPerfil: p.usuarioId?.fotoPerfil || null,
       usuario: p.usuarioId?.nombre || "Usuario",
       comentario: p.descripcionEnvio || "¡Reto completado!",
     }));
