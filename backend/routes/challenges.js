@@ -19,7 +19,13 @@ router.get("/user/:userId", async (req, res) => {
       const userChallenges = await UserChallenge.find({
         usuarioId: userId,
         estado: estado === "completados" ? "aprobado" : "pendiente",
-      }).populate("desafioId");
+      }).populate({
+        path: "desafioId",
+        populate: {
+          path: "creadorId",
+          select: "nombre apellido fotoPerfil",
+        },
+      });
 
       return res.json(
         userChallenges
