@@ -34,6 +34,18 @@
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
+.daily-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.daily-card-link:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
 .daily-card-header {
   display: flex;
   justify-content: space-between;

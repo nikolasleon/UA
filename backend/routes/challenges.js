@@ -90,6 +90,7 @@ router.get("/daily", async (req, res) => {
       .limit(3);
 
     const datosParticipantes = participaciones.map(p => ({
+      usuarioId: p.usuarioId?._id || null,
       fotoPerfil: p.usuarioId?.fotoPerfil || null,
       usuario: p.usuarioId?.nombre || "Usuario",
       comentario: p.descripcionEnvio || "¡Reto completado!",

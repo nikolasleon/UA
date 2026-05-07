@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import ChallengeCard from "../components/ChallengeCard";
 import { useAuth } from "../context/AuthContext";
 import "../styles/HomePage.css";
@@ -117,7 +117,7 @@ function HomePage() {
             </div>
           ) : (
             <>
-              <div className="daily-white-card">
+              <Link to={`/reto/${dailyChallenge._id}`} className="daily-white-card daily-card-link">
                 <div className="daily-card-header">
                   <h2 className="challenge-title">{dailyChallenge.titulo}</h2>
                   <span className="participants-badge">
@@ -138,7 +138,7 @@ function HomePage() {
                     <div className="image-placeholder">Sin imagen de reto</div>
                   )}
                 </div>
-              </div>
+              </Link>
 
               <div className="daily-actions-row">
                 <div className="timer-box">
@@ -155,7 +155,12 @@ function HomePage() {
                 <div className="challengers-mockup-grid">
                   {challengersImages.length > 0 ? (
                     challengersImages.map((p, index) => (
-                      <div key={index} className="challenger-card-item">
+                      <Link
+                        key={index}
+                        to={p.usuarioId ? `/profile/${p.usuarioId}` : "#"}
+                        className="challenger-card-item"
+                        style={{ textDecoration: "none" }}
+                      >
                         <div className="challenger-photo-container">
                           {p.fotoPerfil ? (
                             <img src={p.fotoPerfil} alt={p.usuario} />
@@ -166,7 +171,7 @@ function HomePage() {
                           )}
                         </div>
                         <p className="challenger-name-tag">{p.usuario}</p>
-                      </div>
+                      </Link>
                     ))
                   ) : (
                     <p className="no-challengers">¡Sé el primero en participar!</p>
