@@ -96,7 +96,10 @@ function ChallengePage() {
     }
   };
 
-  const isOwner = user && challenge && String(user._id) === String(challenge.creadorId?._id || challenge.creadorId);
+  const creadorIdStr = String(challenge?.creadorId?._id || challenge?.creadorId || "");
+  const userIdStr = String(user?._id || "");
+  console.log("isOwner check →", { userIdStr, creadorIdStr, igual: userIdStr === creadorIdStr });
+  const isOwner = !!user && !!challenge && userIdStr === creadorIdStr;
 
   // Función para renderizar el botón dinámico según el mockup
   const renderButton = () => {
