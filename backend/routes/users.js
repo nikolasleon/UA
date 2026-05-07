@@ -297,8 +297,32 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Borrar todos los retos creados por el usuario
+    // Borrar participaciones en retos creados por el usuario y luego los retos
+    const retosCreados = await Challenge.find({ creadorId: req.params.id }, "_id");
+    const retosIds = retosCreados.map((r) => r._id);
+    await UserChallenge.deleteMany({ desafioId: { $in: retosIds } });
     await Challenge.deleteMany({ creadorId: req.params.id });
+
+    // Encontrar retos ajenos en los que el usuario participó
+    const participaciones = await UserChallenge.find({ usuarioId: req.params.id }, "desafioId");
+    const desafiosAfectados = [...new Set(participaciones.map((p) => String(p.desafioId)))];
+
+    // Borrar las participaciones propias del usuario
+    await UserChallenge.deleteMany({ usuarioId: req.params.id });
+
+    // Recalcular contadores y valoraciones de los retos afectados
+    for (const desafioId of desafiosAfectados) {
+      const restantes = await UserChallenge.find({ desafioId });
+      const conValoracion = restantes.filter((p) => p.estado === "aprobado" && p.valoracion != null);
+      const promedio =
+        conValoracion.length > 0
+          ? conValoracion.reduce((acc, p) => acc + p.valoracion, 0) / conValoracion.length
+          : 0;
+      await Challenge.findByIdAndUpdate(desafioId, {
+        participantes: restantes.length,
+        valoracionPromedio: Math.round(promedio * 10) / 10,
+      });
+    }
 
     res.json({ message: "Cuenta eliminada exitosamente" });
   } catch (err) {

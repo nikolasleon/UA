@@ -270,6 +270,9 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ message: "Reto no encontrado" });
     }
 
+    // Borrar todas las participaciones del reto
+    await UserChallenge.deleteMany({ desafioId: req.params.id });
+
     res.json({ message: "Reto eliminado exitosamente" });
   } catch (err) {
     res.status(500).json({ message: "Error al eliminar reto", error: err });
