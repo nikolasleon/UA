@@ -37,7 +37,8 @@ function EditChallengePage() {
         const res = await fetch(`${API_URL}/api/challenges/${id}`);
         const data = await res.json();
 
-        if (String(data.creadorId) !== String(user?._id)) {
+        const creadorId = String(data.creadorId?._id || data.creadorId);
+        if (creadorId !== String(user?._id)) {
           navigate(`/reto/${id}`);
           return;
         }
