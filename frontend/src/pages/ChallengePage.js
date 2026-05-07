@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import MediaCollage from "../components/MediaCollage";
 import "../styles/ChallengePage.css";
@@ -166,8 +166,10 @@ function ChallengePage() {
               {participantes.length > 0 ? (
                 participantes.map((p, index) => (
                   <li key={index} className="ranking-item">
-                    <span>{p.usuario?.nombre || "Usuario"}</span>
-                    <span className="ranking-arrow">›</span>
+                    <Link to={`/profile/${p.usuario?._id}`} style={{ textDecoration: "none", color: "inherit", display: "contents" }}>
+                      <span>{p.usuario?.nombre} {p.usuario?.apellido}</span>
+                      <span className="ranking-arrow">›</span>
+                    </Link>
                   </li>
                 ))
               ) : (
@@ -185,13 +187,20 @@ function ChallengePage() {
               {participantes.filter(p => p.imagenEnvio).length > 0 ? (
                 participantes.filter(p => p.imagenEnvio).slice(0, 3).map((p, index) => (
                   <div key={index} className="challenger-card-mini">
-                    <img 
-                      src={p.usuario?.fotoPerfil || "https://via.placeholder.com/80x100"} 
-                      alt="avatar" 
-                      className="user-avatar" 
-                    />
+                    <Link to={`/profile/${p.usuario?._id}`}>
+                      <img
+                        src={p.usuario?.fotoPerfil || "https://via.placeholder.com/80x100"}
+                        alt="avatar"
+                        className="user-avatar"
+                      />
+                    </Link>
                     <div className="user-post-content">
-                      <h4 className="user-title">{p.usuario?.nombre} - ¡Muy liberador!</h4>
+                      <h4 className="user-title">
+                        <Link to={`/profile/${p.usuario?._id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                          {p.usuario?.nombre} {p.usuario?.apellido}
+                        </Link>
+                        {" "}- ¡Muy liberador!
+                      </h4>
                       <p className="user-comment">{p.descripcionEnvio || "¡He completado el desafío!"}</p>
                       <button className="btn-like">👍</button>
                     </div>
