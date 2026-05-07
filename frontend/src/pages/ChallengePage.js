@@ -6,13 +6,12 @@ import "../styles/ChallengePage.css";
 
 function ChallengePage() {
   const { id } = useParams();
-  const { user } = useAuth(); // Asumimos que trae user._id si está logueado
+  const { user } = useAuth(); 
   const [challenge, setChallenge] = useState(null);
   const [participantes, setParticipantes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("llegada");
   
-  // Estado para controlar el botón: "INVITADO", "UNIRSE", "SUBIR", "COMPLETADO"
   const [userStatus, setUserStatus] = useState("INVITADO");
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -33,18 +32,19 @@ function ChallengePage() {
           const lista = dataParticipantes.participantes || [];
           setParticipantes(lista);
 
+          const estadoRes = await fetch(`${API_URL}/api/challenges/${id}/estado/${user?._id || ""}`);
+          const estado = await estadoRes.json();
           // 3. Determinar el estado del usuario actual respecto al reto
           if (!user) {
             setUserStatus("INVITADO");
-          } else {
-            const miParticipacion = lista.find(p => p.usuario?._id === user._id);
-            
-            if (!miParticipacion) {
+          } else {    
+            console.log("Estado de participación:", estado);
+            if (estado.estado === "no_unido") {
               setUserStatus("UNIRSE");
-            } else if (miParticipacion.completado || miParticipacion.imagenEnvio) {
-              setUserStatus("COMPLETADO");
-            } else {
+            } else if (estado.estado === "pendiente") {
               setUserStatus("SUBIR");
+            } else {
+              setUserStatus("COMPLETADO");
             }
           }
         }
@@ -79,7 +79,7 @@ function ChallengePage() {
         console.error("Error al participar:", err);
       }
     } else if (userStatus === "SUBIR") {
-      // Aquí abrirías un modal o redirigirías a la página de carga de fotos
+
       alert("Redirigiendo a subir tu foto/video...");
     }
   };
@@ -88,11 +88,10 @@ function ChallengePage() {
   const renderButton = () => {
     switch (userStatus) {
       case "COMPLETADO":
-        return <button className="btn-action btn-completado">RETO COMPLETADO!</button>;
+        return <button className="btn-action btn-completado">¡RETO COMPLETADO!</button>;
       case "SUBIR":
         return <button className="btn-action btn-subir" onClick={handleAction}>SUBIR RESPUESTA</button>;
       case "UNIRSE":
-      case "INVITADO":
       default:
         return <button className="btn-action btn-unirme" onClick={handleAction}>¡ACEPTAR RETO!</button>;
     }
@@ -103,37 +102,31 @@ function ChallengePage() {
 
   return (
     <div className="challenge-page-container">
-      {/* 1. HERO BANNER (VERDE) */}
       <div className="challenge-hero-banner">
         <h1>{challenge.titulo?.toUpperCase() || "RETO"}</h1>
       </div>
 
       <main className="challenge-responsive-grid">
         
-        {/* COLUMNA IZQUIERDA: DETALLE (Principal en móvil) */}
         <div className="challenge-info-column">
           <div className="challenge-card-white">
             
-            {/* Valoración (estrellas) */}
             <div className="challenge-rating-badge">
               <span className="rating-score">4/5</span>
               <span className="rating-stars">★★★★☆</span>
             </div>
 
             <div className="challenge-content-padding">
-              {/* Imagen o Collage central */}
               <div className="challenge-media-container">
                 <MediaCollage images={challenge.imagenDesafio ? [challenge.imagenDesafio] : []} />
               </div>
 
               <p className="challenge-sub-text">Reto popular</p>
 
-              {/* Recuadro de Descripción (VERDE CLARO) */}
               <div className="challenge-description">
                 <p>{challenge.descripcion}</p>
               </div>
 
-              {/* Tags y Botón de Acción */}
               <div className="challenge-footer-actions">
                 <div className="challenge-tags">
                   <span className="tag-item">YOGA</span>
@@ -147,10 +140,8 @@ function ChallengePage() {
           </div>
         </div>
 
-        {/* COLUMNA DERECHA: COMUNIDAD (Debajo en móvil, lateral en PC) */}
         <aside className="challenge-community-column">
           
-          {/* SECCIÓN RANKINGS */}
           <section className="community-section">
             <div className="section-header mustard">
               <h2>RANKINGS</h2>
@@ -185,7 +176,6 @@ function ChallengePage() {
             </ul>
           </section>
 
-          {/* SECCIÓN CHALLENGERS */}
           <section className="community-section">
             <div className="section-header cyan">
               <h2>CHALLENGERS</h2>

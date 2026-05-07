@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ChallengeCard from "../components/ChallengeCard"; 
 import MediaCollage from "../components/MediaCollage";
+import { useAuth } from "../context/AuthContext";
 import "../styles/HomePage.css"; 
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -12,6 +13,8 @@ function HomePage() {
   const [challengersImages, setChallengersImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState("");
+  const { user } = useAuth();
+  const [dailyStatus, setDailyStatus] = useState("INVITADO");
   const navigate = useNavigate();
 
   // 1. Lógica del Temporizador Dinámico
@@ -45,7 +48,63 @@ function HomePage() {
     return () => clearInterval(timer); // Limpieza para evitar fugas de memoria
   }, []);
 
-  // 2. Carga de datos desde la Base de Datos[cite: 2, 3]
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+
+        const resPopulares = await fetch(`${API_URL}/api/challenges`);
+        const dataPopulares = await resPopulares.json();
+
+        setPopularChallenges(dataPopulares);
+
+        const resDaily = await fetch(`${API_URL}/api/challenges/daily`);
+        const dataDaily = await resDaily.json();
+
+        if (dataDaily.reto) {
+          setDailyChallenge(dataDaily.reto);
+          setChallengersImages(dataDaily.imagenesParticipantes || []);
+        }
+
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    const loadStatus = async () => {
+      if (!dailyChallenge || !user?._id) return;
+
+      try {
+        const res = await fetch(
+          `${API_URL}/api/challenges/${dailyChallenge._id}/estado/${user._id}`
+        );
+        const data = await res.json();
+
+        const estado = data.estado;
+
+        if (estado === "no_unido") {
+          setDailyStatus("UNIRSE");
+        } else if (estado === "pendiente") {
+          setDailyStatus("SUBIR");
+        } else {
+          setDailyStatus("COMPLETADO");
+        }
+
+      } catch (err) {
+        console.error("Error estado:", err);
+      }
+    };
+
+    loadStatus();
+  }, [dailyChallenge, user]);
+
+  // 2. Carga de datos desde la Base de Datos
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -69,6 +128,28 @@ function HomePage() {
           setDailyChallenge(dataDaily.reto);
           setChallengersImages(dataDaily.imagenesParticipantes || []);
         }
+
+        if (dataDaily.reto && user?._id) {
+          try {
+            const estadoRes = await fetch(
+              `${API_URL}/api/challenges/${dataDaily.reto._id}/estado/${user._id}`
+            );
+            const dataEstado = await estadoRes.json();
+
+            const estado = dataEstado.estado; // 👈 importante
+
+            if (estado === "no_unido") {
+              setDailyStatus("UNIRSE");
+            } else if (estado === "pendiente") {
+              setDailyStatus("SUBIR");
+            } else {
+              setDailyStatus("COMPLETADO");
+            }
+
+          } catch (err) {
+            console.error("Error obteniendo estado diario:", err);
+          }
+        }
         
       } catch (error) {
         console.error("Error al conectar con el backend:", error);
@@ -81,19 +162,45 @@ function HomePage() {
   }, []);
 
   const handleViewDetails = (id) => {
-    navigate(`/reto/${id}`); // Redirige a la página de detalle que configuramos
+    navigate(`/reto/${id}`); 
+  };
+
+  const renderDailyButton = () => {
+    switch (dailyStatus) {
+      case "COMPLETADO":
+        return <button className="accept-challenge-btn">¡RETO COMPLETADO!</button>;
+
+      case "SUBIR":
+        return (
+          <button
+            className="accept-challenge-btn"
+            onClick={() => handleViewDetails(dailyChallenge._id)}
+          >
+            SUBIR RESPUESTA
+          </button>
+        );
+
+      case "UNIRSE":
+      default:
+        return (
+          <button
+            className="accept-challenge-btn"
+            onClick={() => handleViewDetails(dailyChallenge._id)}
+          >
+            ¡ACEPTAR RETO!
+          </button>
+        );
+    }
   };
 
   return (
     <div className="homepage-wrapper">
 
       <main className="homepage-main">
-        {/* SECCIÓN RETO DIARIO - Diseño Responsive[cite: 1] */}
-{/* SECCIÓN RETO DIARIO */}
+
         <section className="daily-challenge-box">
           <h1 className="main-title">RETO DIARIO</h1>
 
-          {/* Tarjeta Blanca: Información del Reto */}
           <div className="daily-white-card">
             <div className="daily-card-header">
               <h2 className="challenge-title">{dailyChallenge?.titulo || "CARGANDO..."}</h2>
@@ -105,7 +212,6 @@ function HomePage() {
             <hr className="header-divider" />
 
             <div className="daily-card-body">
-              {/* Imagen dinámica desde la BD */}
               {dailyChallenge?.imagenDesafio ? (
                 <img 
                   src={dailyChallenge.imagenDesafio} 
@@ -118,24 +224,17 @@ function HomePage() {
             </div>
           </div>
 
-          {/* Bloque de Acción: Timer y Botón */}
           <div className="daily-actions-row">
             <div className="timer-box">
               <span className="timer-tag">TIEMPO RESTANTE</span>
               <span className="timer-val">{timeLeft || "00h 00m 00s"}</span>
             </div>
             
-            <button 
-              className="accept-challenge-btn"
-              onClick={() => dailyChallenge && handleViewDetails(dailyChallenge._id)}
-            >
-              ¡ACEPTAR RETO!
-            </button>
+            {renderDailyButton()}
           </div>
 
           <hr className="section-divider" />
 
-          {/* Galería de Challengers */}
         <div className="challengers-section">
           <h3 className="challengers-title">CHALLENGERS</h3>
           <div className="challengers-mockup-grid">
@@ -156,8 +255,7 @@ function HomePage() {
           </div>
         </div>
         </section>
-
-        {/* SECCIÓN POPULARES - Grid de Tarjetas[cite: 1] */}
+          
         <section className="popular-section">
           <div className="popular-header-bar">
             <h2>RETOS MÁS POPULARES</h2>

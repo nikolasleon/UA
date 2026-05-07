@@ -149,7 +149,7 @@ router.get("/:id/estado/:usuarioId", async (req, res) => {
     }
 
     // Si existe pero no está aprobado (está 'pendiente'), es que se ha unido pero no ha terminado
-    res.json({ estado: "unido" });
+    return res.json({ estado: "pendiente" });
   } catch (err) {
     res.status(500).json({ message: "Error al obtener estado de participación", error: err });
   }
