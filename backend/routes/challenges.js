@@ -140,6 +140,7 @@ router.get("/:id/participantes", async (req, res) => {
                 descripcionEnvio: p.descripcionEnvio,
                 imagenEnvio: p.imagenEnvio,
                 multimediaEnvio: p.multimediaEnvio || [],
+                valoracion: p.valoracion,
                 fecha: p.fechaEnvio,
                 likes: p.likes.length,
                 likedByMe: userId ? p.likes.map(String).includes(String(userId)) : false,
