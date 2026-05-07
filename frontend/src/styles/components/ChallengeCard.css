@@ -146,6 +146,53 @@
   white-space: nowrap;
 }
 
+.challenge-card__creator-link {
+  background: none;
+  border: none;
+  color: var(--color-primary-text);
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  min-width: 0;
+  max-width: 58%;
+}
+
+.challenge-card__creator-link:hover .challenge-card__creator-name {
+  color: var(--color-action-active);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.challenge-card__creator-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.challenge-card__creator-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(74, 39, 45, 0.18);
+}
+
+.challenge-card__creator-avatar--initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-alt);
+  color: var(--color-primary-text);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
 .challenge-card__btn-delete {
   padding: 0.7rem 1rem;
   border: none;
@@ -265,6 +312,23 @@ body.dark-mode .challenge-card__footer {
 
 body.dark-mode .challenge-card__creator {
   color: var(--color-text-faint);
+}
+
+body.dark-mode .challenge-card__creator-link {
+  color: var(--color-challenge-cyan);
+}
+
+body.dark-mode .challenge-card__creator-link:hover .challenge-card__creator-name {
+  color: var(--color-text-strong);
+}
+
+body.dark-mode .challenge-card__creator-avatar {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .challenge-card__creator-avatar--initial {
+  background: var(--color-surface-muted);
+  color: var(--color-text-strong);
 }
 
 body.dark-mode .challenge-card__btn-delete {

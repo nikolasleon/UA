@@ -8,6 +8,10 @@ function ChallengeCard({ challenge, onEdit, onDelete, onDeleteResponse, onViewDe
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteResponseModal, setShowDeleteResponseModal] = useState(false);
+  const creator = typeof challenge.creadorId === "object" ? challenge.creadorId : null;
+  const creatorName = challenge.creador || [creator?.nombre, creator?.apellido].filter(Boolean).join(" ");
+  const creatorInitial = creatorName?.trim().charAt(0).toUpperCase() || "?";
+  const creatorPhoto = creator?.fotoPerfil;
 
   const handleOpenDetails = () => {
     onViewDetails(challenge._id);
@@ -85,22 +89,25 @@ function ChallengeCard({ challenge, onEdit, onDelete, onDeleteResponse, onViewDe
             {challenge.creadorId ? (
               <button
                 onClick={handleVisitProfile}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#007bff",
-                  cursor: "pointer",
-                  fontSize: "0.9rem",
-                  textDecoration: "underline",
-                  padding: 0,
-                }}
+                className="challenge-card__creator-link"
                 title="Ver perfil del creador"
               >
-                por {challenge.creador}
+                <span className="challenge-card__creator-name">por {creatorName}</span>
+                {creatorPhoto ? (
+                  <img
+                    src={creatorPhoto}
+                    alt={`Foto de perfil de ${creatorName}`}
+                    className="challenge-card__creator-avatar"
+                  />
+                ) : (
+                  <span className="challenge-card__creator-avatar challenge-card__creator-avatar--initial">
+                    {creatorInitial}
+                  </span>
+                )}
               </button>
             ) : (
               <span className="challenge-card__creator">
-                por {challenge.creador}
+                por {creatorName}
               </span>
             )}
           </div>

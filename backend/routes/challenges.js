@@ -31,7 +31,7 @@ router.get("/user/:userId", async (req, res) => {
       );
     }
 
-    const challenges = await Challenge.find(query).populate("creadorId", "nombre apellido");
+    const challenges = await Challenge.find(query).populate("creadorId", "nombre apellido fotoPerfil");
     res.json(challenges);
   } catch (err) {
     console.error("Error fatal en la base de datos:", err);

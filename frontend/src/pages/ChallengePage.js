@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
 import Modal from "../components/Modal";
 import MediaCollage from "../components/MediaCollage";
+import ResponseCard from "../components/ResponseCard";
 import "../styles/ChallengePage.css";
 
 function ChallengePage() {
@@ -291,71 +292,12 @@ function ChallengePage() {
             <div className="challengers-feed">
               {participantes.length > 0 ? (
                 participantes.slice(0, 3).map((p, index) => (
-                  <div key={index} className="challenger-card-full">
-                    <div className="challenger-card-header">
-                      {p.usuario?._id ? (
-                        <Link to={`/profile/${p.usuario._id}`}>
-                          {p.usuario.fotoPerfil ? (
-                            <img src={p.usuario.fotoPerfil} alt="avatar" className="challenger-avatar-sm" />
-                          ) : (
-                            <div className="challenger-avatar-initials">
-                              {p.usuario.nombre?.charAt(0).toUpperCase() || "?"}
-                            </div>
-                          )}
-                        </Link>
-                      ) : (
-                        <div className="challenger-avatar-initials">?</div>
-                      )}
-                      <div className="challenger-meta">
-                        {p.usuario?._id ? (
-                          <Link to={`/profile/${p.usuario._id}`} className="challenger-name-link">
-                            {p.usuario.nombre} {p.usuario.apellido}
-                          </Link>
-                        ) : (
-                          <span className="challenger-name-link">Usuario eliminado</span>
-                        )}
-                        {p.titulo && <span className="challenger-titulo"> — {p.titulo}</span>}
-                      </div>
-                    </div>
-                    {p.descripcionEnvio && (
-                      <p className="challenger-descripcion">{p.descripcionEnvio}</p>
-                    )}
-                    {p.multimediaEnvio && p.multimediaEnvio.length > 0 && (
-                      <div className="challenger-multimedia">
-                        {p.multimediaEnvio.map((m, mi) => (
-                          <div key={mi} className="challenger-media-item">
-                            {m.tipo === "imagen" && (
-                              <img src={m.url} alt={`envio-${mi}`} className="challenger-media-img" />
-                            )}
-                            {m.tipo === "video" && (
-                              <video src={m.url} controls className="challenger-media-video" />
-                            )}
-                            {m.tipo === "audio" && (
-                              <div className="multimedia-audio-wrap">
-                                <span className="multimedia-audio-name">{m.url.split("/").pop().split("?")[0]}</span>
-                                <audio src={m.url} controls className="multimedia-audio" />
-                              </div>
-                            )}
-                            {m.tipo === "pdf" && (
-                              <div className="multimedia-download-item">
-                                <span className="multimedia-tipo">📄</span>
-                                <span className="multimedia-nombre">{m.url.split("/").pop().split("?")[0]}</span>
-                                <a href={m.url} download target="_blank" rel="noreferrer" className="btn-download">Descargar</a>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {!p.isOwn && (
-                      <button
-                        className={`btn-like ${p.likedByMe ? "btn-like--active" : ""}`}
-                        onClick={() => handleLike(p.id)}
-                      >
-                        👍 {p.likes > 0 && <span>{p.likes}</span>}
-                      </button>
-                    )}
-                  </div>
+                  <React.Fragment key={p.id || index}>
+                    <ResponseCard
+                      response={p}
+                      onLike={handleLike}
+                    />
+                  </React.Fragment>
                 ))
               ) : (
                 <p className="no-data-padding">Aún no hay publicaciones.</p>
