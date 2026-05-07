@@ -202,9 +202,103 @@
 
 .user-avatar {
   width: 90px;
-  height: 120px; /* Más estilizado y alto */
+  height: 120px;
   object-fit: cover;
   border-radius: 6px;
+}
+
+/* New challenger card with multimedia */
+.challenger-card-full {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.challenger-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.challenger-avatar-sm {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.challenger-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+}
+
+.challenger-name-link {
+  font-weight: 700;
+  color: #222;
+  text-decoration: none;
+}
+
+.challenger-name-link:hover {
+  text-decoration: underline;
+}
+
+.challenger-titulo {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.challenger-descripcion {
+  font-size: 0.9rem;
+  color: #444;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.challenger-multimedia {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.challenger-media-item {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.challenger-media-img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #000;
+}
+
+.challenger-media-video {
+  width: 100%;
+  border-radius: 8px;
+  background: #000;
+}
+
+.btn-like {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  align-self: flex-start;
+  transition: background 0.15s;
+}
+
+.btn-like:hover {
+  background: #f0f0f0;
 }
 
 /* --- MEDIA QUERY PARA PC --- */

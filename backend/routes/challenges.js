@@ -119,8 +119,10 @@ router.get("/:id/participantes", async (req, res) => {
             participantes: participaciones.map(p => ({
                 id: p._id,
                 usuario: p.usuarioId,
+                titulo: p.titulo,
                 descripcionEnvio: p.descripcionEnvio,
                 imagenEnvio: p.imagenEnvio,
+                multimediaEnvio: p.multimediaEnvio || [],
                 fecha: p.fechaEnvio,
                 likes: Math.floor(Math.random() * 50)
             }))
@@ -238,6 +240,42 @@ router.delete("/:id", async (req, res) => {
     res.json({ message: "Reto eliminado exitosamente" });
   } catch (err) {
     res.status(500).json({ message: "Error al eliminar reto", error: err });
+  }
+});
+
+// Enviar respuesta a un reto (actualizar participación con multimedia)
+router.put("/:id/respuesta", async (req, res) => {
+  try {
+    const { usuarioId, titulo, descripcionEnvio, valoracion, multimediaEnvio } = req.body;
+    const { id } = req.params;
+
+    const participacion = await UserChallenge.findOne({ desafioId: id, usuarioId });
+    if (!participacion) {
+      return res.status(404).json({ message: "No estás unido a este reto" });
+    }
+
+    participacion.titulo = titulo || "";
+    participacion.descripcionEnvio = descripcionEnvio || "";
+    participacion.valoracion = valoracion || null;
+    participacion.multimediaEnvio = multimediaEnvio || [];
+    if (participacion.multimediaEnvio.length > 0) {
+      const primera = participacion.multimediaEnvio.find(m => m.tipo === "imagen");
+      if (primera) participacion.imagenEnvio = primera.url;
+    }
+    participacion.estado = "aprobado";
+
+    await participacion.save();
+
+    // Actualizar valoración promedio del reto
+    if (valoracion) {
+      const todas = await UserChallenge.find({ desafioId: id, estado: "aprobado", valoracion: { $ne: null } });
+      const promedio = todas.reduce((acc, p) => acc + p.valoracion, 0) / todas.length;
+      await Challenge.findByIdAndUpdate(id, { valoracionPromedio: Math.round(promedio * 10) / 10 });
+    }
+
+    res.json({ message: "Respuesta enviada", participacion });
+  } catch (err) {
+    res.status(500).json({ message: "Error al enviar respuesta", error: err });
   }
 });
 

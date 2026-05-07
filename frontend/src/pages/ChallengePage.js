@@ -78,8 +78,7 @@ function ChallengePage() {
         console.error("Error al participar:", err);
       }
     } else if (userStatus === "SUBIR") {
-
-      alert("Redirigiendo a subir tu foto/video...");
+      navigate(`/reto/${id}/responder`);
     }
   };
 
@@ -248,26 +247,55 @@ function ChallengePage() {
             </div>
             
             <div className="challengers-feed">
-              {participantes.filter(p => p.imagenEnvio).length > 0 ? (
-                participantes.filter(p => p.imagenEnvio).slice(0, 3).map((p, index) => (
-                  <div key={index} className="challenger-card-mini">
-                    <Link to={`/profile/${p.usuario?._id}`}>
-                      <img
-                        src={p.usuario?.fotoPerfil || "https://via.placeholder.com/80x100"}
-                        alt="avatar"
-                        className="user-avatar"
-                      />
-                    </Link>
-                    <div className="user-post-content">
-                      <h4 className="user-title">
-                        <Link to={`/profile/${p.usuario?._id}`} style={{ textDecoration: "none", color: "inherit" }}>
+              {participantes.length > 0 ? (
+                participantes.slice(0, 3).map((p, index) => (
+                  <div key={index} className="challenger-card-full">
+                    <div className="challenger-card-header">
+                      <Link to={`/profile/${p.usuario?._id}`}>
+                        <img
+                          src={p.usuario?.fotoPerfil || "https://via.placeholder.com/40x40"}
+                          alt="avatar"
+                          className="challenger-avatar-sm"
+                        />
+                      </Link>
+                      <div className="challenger-meta">
+                        <Link to={`/profile/${p.usuario?._id}`} className="challenger-name-link">
                           {p.usuario?.nombre} {p.usuario?.apellido}
                         </Link>
-                        {" "}- ¡Muy liberador!
-                      </h4>
-                      <p className="user-comment">{p.descripcionEnvio || "¡He completado el desafío!"}</p>
-                      <button className="btn-like">👍</button>
+                        {p.titulo && <span className="challenger-titulo"> — {p.titulo}</span>}
+                      </div>
                     </div>
+                    {p.descripcionEnvio && (
+                      <p className="challenger-descripcion">{p.descripcionEnvio}</p>
+                    )}
+                    {p.multimediaEnvio && p.multimediaEnvio.length > 0 && (
+                      <div className="challenger-multimedia">
+                        {p.multimediaEnvio.map((m, mi) => (
+                          <div key={mi} className="challenger-media-item">
+                            {m.tipo === "imagen" && (
+                              <img src={m.url} alt={`envio-${mi}`} className="challenger-media-img" />
+                            )}
+                            {m.tipo === "video" && (
+                              <video src={m.url} controls className="challenger-media-video" />
+                            )}
+                            {m.tipo === "audio" && (
+                              <div className="multimedia-audio-wrap">
+                                <span className="multimedia-audio-name">{m.url.split("/").pop().split("?")[0]}</span>
+                                <audio src={m.url} controls className="multimedia-audio" />
+                              </div>
+                            )}
+                            {m.tipo === "pdf" && (
+                              <div className="multimedia-download-item">
+                                <span className="multimedia-tipo">📄</span>
+                                <span className="multimedia-nombre">{m.url.split("/").pop().split("?")[0]}</span>
+                                <a href={m.url} download target="_blank" rel="noreferrer" className="btn-download">Descargar</a>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <button className="btn-like">👍</button>
                   </div>
                 ))
               ) : (

@@ -20,6 +20,7 @@ import PublicProfilePage from "./pages/PublicProfilePage";
 import ChallengePage from "./pages/ChallengePage";
 import CreateChallengePage from "./pages/CreateChallengePage";
 import EditChallengePage from "./pages/EditChallengePage";
+import SubmitResponsePage from "./pages/SubmitResponsePage";
 import "./styles/CreateChallengePage.css";
 
 function FAB() {
@@ -51,6 +52,14 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/profile/:userId" element={<PublicProfilePage />} />
           <Route path="/reto/:id" element={<ChallengePage />} />
+          <Route
+            path="/reto/:id/responder"
+            element={
+              <ProtectedRoute>
+                <SubmitResponsePage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/account"
             element={
