@@ -1,5 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const User = require("./models/User");
 const Challenge = require("./models/Challenge");
 const UserChallenge = require("./models/UserChallenge");
@@ -205,7 +206,7 @@ async function seedOtherUsersAndChallenges() {
           apellido: userData.apellido,
           email: userData.email,
           telefono: userData.telefono,
-          contraseña: "contraseña123", // Contraseña por defecto
+          contraseña: await bcrypt.hash("contraseña123", 10),
           fotoPerfil: `https://via.placeholder.com/150?text=${userData.nombre}`,
           tema: "claro",
         });

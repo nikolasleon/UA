@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const bcrypt = require("bcrypt");
 const { createClient } = require("@supabase/supabase-js");
 const User = require("../models/User");
 const Challenge = require("../models/Challenge");
 const UserChallenge = require("../models/UserChallenge");
+
+const SALT_ROUNDS = 10;
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -72,11 +75,13 @@ router.post("/register", async (req, res) => {
       return res.status(409).json({ message: "El email ya está registrado" });
     }
 
+    const hash = await bcrypt.hash(contraseña, SALT_ROUNDS);
+
     const newUser = await User.create({
       nombre: nombre.trim(),
       apellido: apellido.trim(),
       email: email.toLowerCase(),
-      contraseña,
+      contraseña: hash,
       bio: bio ? bio.trim() : "",
       fotoPerfil: fotoPerfil ? fotoPerfil.trim() : null,
       telefono: telefono ? telefono.trim() : null,
@@ -116,7 +121,8 @@ router.post("/login", async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
 
-    if (!user || user.contraseña !== contraseña) {
+    const passwordMatch = user && (await bcrypt.compare(contraseña, user.contraseña));
+    if (!passwordMatch) {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
@@ -274,12 +280,11 @@ router.put("/settings/:id/password", async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // En producción usar bcrypt para verificar contraseña
-    if (user.contraseña !== contraseñaActual) {
+    if (!(await bcrypt.compare(contraseñaActual, user.contraseña))) {
       return res.status(401).json({ message: "Contraseña actual incorrecta" });
     }
 
-    user.contraseña = contraseñaNueva;
+    user.contraseña = await bcrypt.hash(contraseñaNueva, SALT_ROUNDS);
     await user.save();
 
     res.json({ message: "Contraseña actualizada" });
