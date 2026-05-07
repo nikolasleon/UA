@@ -142,6 +142,7 @@ router.get("/:id/participantes", async (req, res) => {
                 fecha: p.fechaEnvio,
                 likes: p.likes.length,
                 likedByMe: userId ? p.likes.map(String).includes(String(userId)) : false,
+                isOwn: userId ? String(p.usuarioId?._id || p.usuarioId) === String(userId) : false,
             }))
         });
     } catch (err) {
@@ -159,6 +160,10 @@ router.post("/:id/participaciones/:participacionId/like", async (req, res) => {
 
         const participacion = await UserChallenge.findById(participacionId);
         if (!participacion) return res.status(404).json({ message: "Participación no encontrada" });
+
+        if (String(participacion.usuarioId) === String(usuarioId)) {
+            return res.status(403).json({ message: "No puedes dar like a tu propia respuesta" });
+        }
 
         const yaLiked = participacion.likes.map(String).includes(String(usuarioId));
         if (yaLiked) {

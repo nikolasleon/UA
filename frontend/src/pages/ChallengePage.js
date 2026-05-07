@@ -324,12 +324,14 @@ function ChallengePage() {
                         ))}
                       </div>
                     )}
-                    <button
-                      className={`btn-like ${p.likedByMe ? "btn-like--active" : ""}`}
-                      onClick={() => handleLike(p.id)}
-                    >
-                      👍 {p.likes > 0 && <span>{p.likes}</span>}
-                    </button>
+                    {!p.isOwn && (
+                      <button
+                        className={`btn-like ${p.likedByMe ? "btn-like--active" : ""}`}
+                        onClick={() => handleLike(p.id)}
+                      >
+                        👍 {p.likes > 0 && <span>{p.likes}</span>}
+                      </button>
+                    )}
                   </div>
                 ))
               ) : (
