@@ -151,7 +151,7 @@ function Header() {
   );
 
   return (
-    <header className="header">
+    <header className={`header ${searchOpen ? "search-active" : ""}`}>
       <div className="header-container">
         {/* Logo */}
         <Link to="/" className="logo">

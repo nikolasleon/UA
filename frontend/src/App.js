@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
 import Header from "./components/Header";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
@@ -43,6 +44,7 @@ function App() {
       <div>
         <Header />
         <FAB />
+        <ScrollToTopButton />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />

@@ -611,19 +611,25 @@
 
 .gallery-close-btn-enhanced {
   position: fixed;
-  top: 80px;
-  right: 15px;
-  background: none;
+  top: 1rem;
+  right: 1rem;
+  background: var(--overlay-dark-60);
   border: none;
   color: var(--color-white);
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  z-index: 1002;
+  z-index: 100002;
   padding: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-shadow: 0 0 10px var(--overlay-dark-80);
-  min-width: auto;
-  min-height: auto;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .gallery-close-btn-enhanced:hover {
@@ -647,7 +653,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 101;
+  z-index: 100000;
   animation: fadeIn 0.3s ease;
   cursor: pointer;
 }
@@ -687,7 +693,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  z-index: 103;
+  z-index: 100001;
   min-width: 50px;
   min-height: 50px;
   padding: 0;
@@ -721,7 +727,7 @@
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.9rem;
-  z-index: 103;
+  z-index: 100001;
 }
 
 @keyframes fadeIn {
@@ -909,7 +915,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  z-index: 50;
+  z-index: 1000;
   animation: slideUp 0.3s ease;
 }
 

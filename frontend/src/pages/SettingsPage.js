@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FaArrowUp } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
@@ -35,7 +34,6 @@ function SettingsPage() {
     nueva: "",
     confirmar: "",
   });
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   // Cargar datos al montar el componente
   useEffect(() => {
@@ -73,27 +71,6 @@ function SettingsPage() {
     
     fetchUserProfile();
   }, [userId]);
-
-  // Scroll to top button handler
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollToTop(true);
-      } else {
-        setShowScrollToTop(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -524,17 +501,6 @@ function SettingsPage() {
         </Modal>
       )}
 
-      {/* Botón flotante para volver arriba */}
-      {showScrollToTop && (
-        <button
-          onClick={scrollToTop}
-          className="scroll-to-top-btn"
-          aria-label="Volver al inicio"
-          title="Volver al inicio"
-        >
-          <FaArrowUp size={20} />
-        </button>
-      )}
     </div>
   );
 }

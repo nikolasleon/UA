@@ -149,3 +149,61 @@ body.dark-mode .tags span {
   background: var(--color-border);
   color: var(--color-white);
 }
+
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  left: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-action) 0%, var(--color-action-alt) 100%);
+  border: none;
+  color: var(--color-white);
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  animation: scrollButtonSlideUp 0.3s ease;
+}
+
+.scroll-to-top-btn:hover {
+  background: linear-gradient(135deg, var(--color-action-alt) 0%, var(--color-action-active) 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.5);
+}
+
+.scroll-to-top-btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+.scroll-to-top-btn:focus-visible {
+  outline: 3px solid var(--color-white);
+  outline-offset: 2px;
+}
+
+@keyframes scrollButtonSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-to-top-btn {
+    bottom: 1.5rem;
+    left: 1rem;
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+  }
+}

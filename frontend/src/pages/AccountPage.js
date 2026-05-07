@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlus, FaStar, FaSearch, FaTimes, FaArrowUp, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaPlus, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import ChallengeCarousel from "../components/ChallengeCarousel";
 import Alert from "../components/Alert";
@@ -19,7 +19,6 @@ function AccountPage() {
   const [dateFrom, setDateFrom] = useState(""); // "YYYY-MM-DD"
   const [dateTo, setDateTo] = useState(""); // "YYYY-MM-DD"
   const [activeTab, setActiveTab] = useState("retos");
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [expandedGallery, setExpandedGallery] = useState(null); // {images: [], currentIndex: 0}
   const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState({ message: "", type: "success" });
@@ -107,27 +106,6 @@ function AccountPage() {
     fetchUserChallenges();
     fetchUserComments();
   }, [userId, fetchUserData, fetchUserChallenges, fetchUserComments]);
-
-  // Scroll to top button handler
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollToTop(true);
-      } else {
-        setShowScrollToTop(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  };
 
   const openGallery = (images, startIndex = 0) => {
     setExpandedGallery({
@@ -573,17 +551,6 @@ function AccountPage() {
         </div>
       )}
 
-      {/* Botón flotante para volver arriba */}
-      {showScrollToTop && (
-        <button
-          onClick={scrollToTop}
-          className="scroll-to-top-btn"
-          aria-label="Volver al inicio"
-          title="Volver al inicio"
-        >
-          <FaArrowUp size={20} />
-        </button>
-      )}
     </div>
   );
 }
