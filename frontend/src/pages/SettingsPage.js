@@ -28,6 +28,7 @@ function SettingsPage() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [pendingPhotoFile, setPendingPhotoFile] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
   const [password, setPassword] = useState({
@@ -119,22 +120,29 @@ function SettingsPage() {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Mostrar previsualización
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoPreview(reader.result);
-        setProfile((prev) => ({
-          ...prev,
-          fotoPerfil: reader.result, // Guardar como base64
-        }));
-      };
-      reader.readAsDataURL(file);
+      setPendingPhotoFile(file);
+      setPhotoPreview(URL.createObjectURL(file));
     }
   };
 
   const handleSaveProfile = async () => {
     setIsSaving(true);
     try {
+      let fotoPerfilUrl = profile.fotoPerfil;
+
+      if (pendingPhotoFile) {
+        const formData = new FormData();
+        formData.append("archivo", pendingPhotoFile);
+        const uploadRes = await fetch(`${API_URL}/api/users/upload`, {
+          method: "POST",
+          body: formData,
+        });
+        if (!uploadRes.ok) throw new Error("Error al subir la imagen");
+        const uploadData = await uploadRes.json();
+        fotoPerfilUrl = uploadData.url;
+        setPendingPhotoFile(null);
+      }
+
       const profileToSave = {
         nombre: profile.nombre,
         apellido: profile.apellido,
@@ -143,7 +151,7 @@ function SettingsPage() {
         fechaNacimiento: profile.fechaNacimiento,
         nacionalidad: profile.nacionalidad,
         bio: profile.bio,
-        fotoPerfil: profile.fotoPerfil,
+        fotoPerfil: fotoPerfilUrl,
         cuentaPrivada: profile.cuentaPrivada,
       };
 
@@ -185,6 +193,7 @@ function SettingsPage() {
         // Actualizar el estado local con los datos frescos
         setProfile((prev) => ({
           ...prev,
+          fotoPerfil: fotoPerfilUrl,
           cuentaPrivada: refreshData.privacidad?.perfil === "privado",
         }));
       }
@@ -194,7 +203,7 @@ function SettingsPage() {
         nombre: profile.nombre,
         apellido: profile.apellido,
         email: profile.email,
-        fotoPerfil: profile.fotoPerfil,
+        fotoPerfil: fotoPerfilUrl,
       });
 
       setAlert({

@@ -1,8 +1,49 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const { createClient } = require("@supabase/supabase-js");
 const User = require("../models/User");
 const Challenge = require("../models/Challenge");
 const UserChallenge = require("../models/UserChallenge");
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ["image/", "video/", "audio/", "application/pdf"];
+    if (!allowed.some((t) => file.mimetype.startsWith(t))) {
+      return cb(new Error("Tipo de archivo no permitido"));
+    }
+    cb(null, true);
+  },
+});
+
+// Subir archivo (foto, vídeo, audio, PDF)
+router.post("/upload", upload.single("archivo"), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No se recibió ningún archivo" });
+  }
+  try {
+    const ext = req.file.originalname.split(".").pop();
+    const filename = `upload_${Date.now()}.${ext}`;
+
+    const { error } = await supabase.storage
+      .from("uploads")
+      .upload(filename, req.file.buffer, { contentType: req.file.mimetype });
+
+    if (error) throw error;
+
+    const { data } = supabase.storage.from("uploads").getPublicUrl(filename);
+    res.json({ url: data.publicUrl });
+  } catch (err) {
+    res.status(500).json({ message: "Error al subir el archivo", error: err.message });
+  }
+});
 
 // Registrar usuario
 router.post("/register", async (req, res) => {
@@ -86,6 +127,7 @@ router.post("/login", async (req, res) => {
         nombre: user.nombre,
         apellido: user.apellido,
         email: user.email,
+        fotoPerfil: user.fotoPerfil || "",
       },
     });
   } catch (err) {

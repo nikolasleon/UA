@@ -12,11 +12,13 @@
     "seed:participations": "node seedDatabase.js participations"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.105.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongodb": "^7.1.1",
-    "mongoose": "^9.6.1"
+    "mongoose": "^9.6.1",
+    "multer": "^2.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
