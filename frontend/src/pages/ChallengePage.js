@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import MediaCollage from "../components/MediaCollage";
 import "../styles/ChallengePage.css";
 
 function ChallengePage() {
   const { id } = useParams();
-  const { user } = useAuth(); 
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [challenge, setChallenge] = useState(null);
   const [participantes, setParticipantes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,6 +85,19 @@ function ChallengePage() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("¿Seguro que quieres borrar este reto?")) return;
+    try {
+      const res = await fetch(`${API_URL}/api/challenges/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      navigate("/account");
+    } catch {
+      alert("Error al borrar el reto");
+    }
+  };
+
+  const isOwner = user && challenge && String(user._id) === String(challenge.creadorId);
+
   // Función para renderizar el botón dinámico según el mockup
   const renderButton = () => {
     switch (userStatus) {
@@ -104,6 +118,12 @@ function ChallengePage() {
     <div className="challenge-page-container">
       <div className="challenge-hero-banner">
         <h1>{challenge.titulo?.toUpperCase() || "RETO"}</h1>
+        {isOwner && (
+          <div className="challenge-owner-actions">
+            <Link to={`/editar-reto/${id}`} className="btn-owner btn-edit">Editar</Link>
+            <button onClick={handleDelete} className="btn-owner btn-delete">Borrar</button>
+          </div>
+        )}
       </div>
 
       <main className="challenge-responsive-grid">

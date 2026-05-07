@@ -174,9 +174,9 @@ router.post("/", async (req, res) => {
       imagenDesafio: imagenDesafio || null,
       creadorId,
       creador: `${user.nombre} ${user.apellido}`,
-      dificultad: dificultad || "medio",
-      categoria: categoria || "general",
-      duracion: duracion || "15min",
+      dificultad,
+      categoria,
+      duracion,
       esRetoDia: Boolean(esRetoDia),
       multimedia: multimedia || [],
     });
@@ -199,11 +199,11 @@ router.post("/", async (req, res) => {
 // Actualizar reto
 router.put("/:id", async (req, res) => {
   try {
-    const { titulo, descripcion, imagenDesafio, dificultad, categoria } = req.body;
+    const { titulo, descripcion, imagenDesafio, dificultad, categoria, duracion, multimedia } = req.body;
 
     const challenge = await Challenge.findByIdAndUpdate(
       req.params.id,
-      { titulo, descripcion, imagenDesafio, dificultad, categoria },
+      { titulo, descripcion, imagenDesafio, dificultad, categoria, duracion, multimedia },
       { new: true }
     );
 

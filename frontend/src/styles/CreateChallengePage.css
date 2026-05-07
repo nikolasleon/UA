@@ -132,6 +132,43 @@
   cursor: not-allowed;
 }
 
+/* Botones editar/borrar del propietario */
+.challenge-owner-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+  justify-content: center;
+}
+
+.btn-owner {
+  padding: 0.4rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-edit {
+  background: #f5a623;
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background: #e09415;
+}
+
+.btn-delete {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.btn-delete:hover {
+  background: #c0392b;
+}
+
 /* FAB - Floating Action Button */
 .fab {
   position: fixed;

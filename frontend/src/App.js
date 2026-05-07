@@ -19,6 +19,7 @@ import Buscar from "./pages/Buscar";
 import PublicProfilePage from "./pages/PublicProfilePage";
 import ChallengePage from "./pages/ChallengePage";
 import CreateChallengePage from "./pages/CreateChallengePage";
+import EditChallengePage from "./pages/EditChallengePage";
 import "./styles/CreateChallengePage.css";
 
 function FAB() {
@@ -72,6 +73,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ChallengesListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editar-reto/:id"
+            element={
+              <ProtectedRoute>
+                <EditChallengePage />
               </ProtectedRoute>
             }
           />
