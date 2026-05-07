@@ -96,6 +96,15 @@ function ChallengePage() {
     }
   };
 
+  const tipoIcon = (tipo) => {
+    switch (tipo) {
+      case "video": return "🎥";
+      case "audio": return "🎵";
+      case "pdf":   return "📄";
+      default:      return "🖼️";
+    }
+  };
+
   const isOwner = !!user && !!challenge &&
     String(user._id) === String(challenge.creadorId?._id || challenge.creadorId);
 
@@ -134,8 +143,8 @@ function ChallengePage() {
           <div className="challenge-card-white">
             
             <div className="challenge-rating-badge">
-              <span className="rating-score">4/5</span>
-              <span className="rating-stars">★★★★☆</span>
+              <span className="rating-score">{challenge.valoracionPromedio?.toFixed(1) || "—"}/5</span>
+              <span className="rating-stars">{"★".repeat(Math.round(challenge.valoracionPromedio || 0))}{"☆".repeat(5 - Math.round(challenge.valoracionPromedio || 0))}</span>
             </div>
 
             <div className="challenge-content-padding">
@@ -143,19 +152,54 @@ function ChallengePage() {
                 <MediaCollage images={challenge.imagenDesafio ? [challenge.imagenDesafio] : []} />
               </div>
 
-              <p className="challenge-sub-text">Reto popular</p>
+              <p className="challenge-sub-text">
+                {challenge.participantes || 0} participante{challenge.participantes !== 1 ? "s" : ""}
+              </p>
 
               <div className="challenge-description">
                 <p>{challenge.descripcion}</p>
               </div>
 
+              {challenge.multimedia?.length > 0 && (
+                <div className="challenge-multimedia">
+                  <h3 className="multimedia-title">Contenido multimedia</h3>
+                  <div className="multimedia-grid">
+                    {challenge.multimedia.map((m, i) => (
+                      <div key={i} className="multimedia-media-item">
+                        {m.tipo === "imagen" && (
+                          <img src={m.url} alt={`multimedia-${i}`} className="multimedia-img" />
+                        )}
+                        {m.tipo === "video" && (
+                          <video src={m.url} controls className="multimedia-video" />
+                        )}
+                        {m.tipo === "audio" && (
+                          <div className="multimedia-audio-wrap">
+                            <span className="multimedia-audio-name">{m.url.split("/").pop().split("?")[0]}</span>
+                            <audio src={m.url} controls className="multimedia-audio" />
+                          </div>
+                        )}
+                        {m.tipo === "pdf" && (
+                          <div className="multimedia-download-item">
+                            <span className="multimedia-tipo">📄</span>
+                            <span className="multimedia-nombre">{m.url.split("/").pop().split("?")[0]}</span>
+                            <a href={m.url} download target="_blank" rel="noreferrer" className="btn-download">
+                              Descargar
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="challenge-footer-actions">
                 <div className="challenge-tags">
-                  <span className="tag-item">YOGA</span>
-                  <span className="tag-item">5 MINUTOS</span>
-                  <span className="tag-item">FÁCIL</span>
+                  {challenge.categoria && <span className="tag-item">{challenge.categoria.toUpperCase()}</span>}
+                  {challenge.duracion && <span className="tag-item">{challenge.duracion.toUpperCase()}</span>}
+                  {challenge.dificultad && <span className="tag-item">{challenge.dificultad.toUpperCase()}</span>}
                 </div>
-                
+
                 {renderButton()}
               </div>
             </div>
