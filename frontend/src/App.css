@@ -11,7 +11,7 @@
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f8f9fa;
+  background: var(--color-page);
 } */
 
  body {
@@ -24,8 +24,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background: #f8f9fa;
-  color: #111827;
+  background: var(--color-page);
+  color: var(--color-text-strong);
 
   transition: background 0.3s ease, color 0.3s ease;
 }
@@ -38,9 +38,9 @@
 
 /* Navigation */
 nav {
-  background: #007bff;
+  background: var(--color-action);
   padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--overlay-dark-10);
 }
 
 nav ul {
@@ -53,7 +53,7 @@ nav ul {
 }
 
 nav a {
-  color: white;
+  color: var(--color-white);
   text-decoration: none;
   padding: 0.75rem;
   border-radius: 6px;
@@ -63,7 +63,7 @@ nav a {
 }
 
 nav a:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--overlay-light-20);
 }
 
 /* Main content */
@@ -101,20 +101,20 @@ main {
 /* ===== MODO OSCURO ===== */
 
 body.dark-mode {
-  background: #0f172a;
-  color: #f8fafc;
+  background: var(--color-page);
+  color: var(--color-text-strong);
 }
 
 body.dark-mode .App,
 body.dark-mode .page,
 body.dark-mode main,
 body.dark-mode .content {
-  background: #0f172a;
+  background: var(--color-page);
 }
 
 /* Header */
 body.dark-mode .header {
-  background: linear-gradient(90deg, #111827, #1e293b);
+  background: var(--gradient-primary);
 }
 
 /* Tarjetas */
@@ -122,30 +122,30 @@ body.dark-mode .card,
 body.dark-mode .search-block,
 body.dark-mode .profile-dropdown,
 body.dark-mode .options-dropdown {
-  background: #1e293b;
-  color: white;
+  background: var(--color-surface-muted);
+  color: var(--color-white);
 }
 
 /* Inputs */
 body.dark-mode input,
 body.dark-mode select {
-  background: #334155;
-  color: white;
+  background: var(--color-border);
+  color: var(--color-white);
 }
 
 /* Buscar */
 body.dark-mode .search-bar {
-  background: #1e293b;
+  background: var(--color-surface-muted);
 }
 
 /* Menú móvil */
 body.dark-mode .mobile-menu,
 body.dark-mode .search-mobile {
-  background: #111827 !important;
+  background: var(--color-surface-muted) !important;
 }
 
 /* Tags */
 body.dark-mode .tags span {
-  background: #334155;
-  color: white;
+  background: var(--color-border);
+  color: var(--color-white);
 }

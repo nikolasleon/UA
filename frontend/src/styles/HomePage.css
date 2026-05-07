@@ -1,22 +1,22 @@
 /* Paleta de colores extraída de Header.css */
 :root {
-  --primary-blue: #1e73d8;
-  --dark-blue: #155bb5;
-  --accent-red: #ff6b6b;
-  --bg-hover: #f0f3f7;
-  --shadow-standard: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --primary-blue: var(--color-primary);
+  --dark-blue: var(--color-primary-dark);
+  --accent-red: var(--color-danger-soft);
+  --bg-hover: var(--color-surface-soft);
+  --shadow-standard: 0 4px 12px var(--overlay-dark-10);
 }
 
 .homepage-main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  background-color: #f8fafc; /* Un gris muy suave para que el blanco resalte */
+  background-color: var(--color-page-soft); /* Un gris muy suave para que el blanco resalte */
 }
 
 /* Contenedor principal verde */
 .daily-challenge-box {
-  background-color: #b3e283; /* El verde lima del mockup */
+  background-color: var(--color-home-highlight); /* El verde lima del mockup */
   border-radius: 20px;
   padding: 1.5rem;
   max-width: 800px;
@@ -26,7 +26,7 @@
 
 /* Tarjeta blanca central */
 .daily-white-card {
-  background: white;
+  background: var(--color-white);
   border-radius: 12px;
   padding: 1.5rem;
   text-align: center;
@@ -44,12 +44,12 @@
 
 .challenge-title {
   font-size: 1.8rem;
-  color: #333;
+  color: var(--color-text);
   margin: 0;
 }
 
 .participants-badge {
-  color: #ff4d4d; /* Rojo del mockup */
+  color: var(--color-danger-bright); /* Rojo del mockup */
   font-size: 0.9rem;
   text-align: right;
   line-height: 1;
@@ -57,7 +57,7 @@
 
 .header-divider {
   border: 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--color-border-subtle);
   margin: 10px 0;
 }
 
@@ -83,8 +83,8 @@
 }
 
 .timer-box {
-  background-color: #ff4d4d; /* Rojo */
-  color: white;
+  background-color: var(--color-danger-bright); /* Rojo */
+  color: var(--color-white);
   padding: 10px 30px;
   border-radius: 15px;
   display: flex;
@@ -95,9 +95,9 @@
 .timer-val { font-size: 1.4rem; font-weight: 800; }
 
 .accept-challenge-btn {
-  background-color: #9395e6; /* Violeta del mockup */
-  color: white;
-  border: none;
+  background-color: var(--color-accent); /* Violeta del mockup */
+  color: var(--color-primary-text);
+  border: 1px solid var(--color-border-muted);
   padding: 0 40px;
   border-radius: 15px;
   font-size: 1.2rem;
@@ -118,12 +118,12 @@
 .challengers-title {
   font-size: 1.5rem;
   letter-spacing: 1px;
-  color: #1a1a1a;
+  color: var(--color-text-heading);
   margin-bottom: 1rem;
 }
 
 .main-title {
-  color: #2c3e50;
+  color: var(--color-text-navy);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -132,8 +132,8 @@
 
 /* Botón de Aceptar Reto - Usando el estilo del Login Button */
 .accept-btn {
-  background-color: var(--primary-blue);
-  color: white;
+  background-color: var(--color-action);
+  color: var(--color-white);
   border: none;
   padding: 0.8rem 2rem;
   border-radius: 25px; /* Redondeado como el login-btn */
@@ -144,15 +144,15 @@
 }
 
 .accept-btn:hover {
-  background-color: var(--dark-blue);
+  background-color: var(--color-action-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(30, 115, 216, 0.4);
 }
 
 /* Sección de Retos Populares */
 .popular-header-bar h2 {
-  color: var(--primary-blue);
-  border-left: 5px solid var(--primary-blue);
+  color: var(--color-primary-text);
+  border-left: 5px solid var(--color-primary);
   padding-left: 1rem;
   margin-bottom: 2rem;
   font-size: 1.5rem;
@@ -168,11 +168,11 @@
 
 /* La tarjeta blanca individual como en el mockup */
 .challenger-card-item {
-  background: white;
+  background: var(--color-white);
   border-radius: 25px; /* Bordes muy redondeados */
   padding: 10px;
   width: 180px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px var(--overlay-dark-10);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -198,7 +198,7 @@
   font-family: 'Arial', sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text);
   margin: 5px 0;
   text-align: center;
 }
@@ -207,8 +207,59 @@
 .challengers-title {
   font-family: 'Arial Black', sans-serif;
   font-size: 1.8rem;
-  color: #000;
+  color: var(--color-black);
   margin-top: 20px;
   text-align: center;
+}
+
+body.dark-mode .homepage-main {
+  background:
+    radial-gradient(circle at top left, rgba(216, 164, 232, 0.12), transparent 34%),
+    linear-gradient(180deg, var(--color-page-soft), var(--color-page));
+}
+
+body.dark-mode .daily-challenge-box {
+  background: linear-gradient(135deg, var(--color-home-highlight), #1d3440);
+  border: 1px solid rgba(188, 233, 124, 0.28);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+}
+
+body.dark-mode .daily-white-card,
+body.dark-mode .challenger-card-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+body.dark-mode .challenge-title,
+body.dark-mode .challenger-name-tag,
+body.dark-mode .challengers-title,
+body.dark-mode .main-title {
+  color: var(--color-text-strong);
+}
+
+body.dark-mode .participants-badge {
+  color: #f6bfc6;
+}
+
+body.dark-mode .timer-box {
+  background: #742532;
+  color: var(--color-text-strong);
+}
+
+body.dark-mode .accept-challenge-btn {
+  background: var(--gradient-action);
+  color: var(--color-text-strong);
+  border-color: rgba(216, 164, 232, 0.38);
+}
+
+body.dark-mode .accept-btn {
+  background: var(--gradient-action);
+  color: var(--color-text-strong);
+}
+
+body.dark-mode .popular-header-bar h2 {
+  color: var(--color-info-text);
+  border-left-color: var(--color-info-accent);
 }
 

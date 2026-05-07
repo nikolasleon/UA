@@ -6,7 +6,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-dark-50);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -19,12 +19,12 @@
     background: rgba(0, 0, 0, 0);
   }
   to {
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--overlay-dark-50);
   }
 }
 
 .modal-content {
-  background: white;
+  background: var(--color-white);
   border-radius: 16px 16px 0 0;
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
   width: 100%;
@@ -49,10 +49,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-border-soft);
   position: sticky;
   top: 0;
-  background: white;
+  background: var(--color-white);
   z-index: 10;
 }
 
@@ -60,7 +60,7 @@
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text);
 }
 
 .modal-close {
@@ -68,7 +68,7 @@
   border: none;
   font-size: 1.3rem;
   cursor: pointer;
-  color: #999;
+  color: var(--color-text-disabled);
   padding: 0.6rem 0.8rem;
   min-width: 44px;
   min-height: 44px;
@@ -81,13 +81,13 @@
 }
 
 .modal-close:hover {
-  background: #f0f0f0;
-  color: #333;
+  background: var(--color-border-soft);
+  color: var(--color-text);
 }
 
 .modal-close:active {
-  background: #e0e0e0;
-  color: #333;
+  background: var(--color-border-muted);
+  color: var(--color-text);
 }
 
 .modal-body {
@@ -101,8 +101,8 @@
   flex-direction: column-reverse;
   gap: 0.75rem;
   padding: 1rem;
-  border-top: 1px solid #f0f0f0;
-  background: white;
+  border-top: 1px solid var(--color-border-soft);
+  background: var(--color-white);
   position: sticky;
   bottom: 0;
   z-index: 10;
@@ -124,44 +124,44 @@
 }
 
 .modal-footer .btn-primary {
-  background: #007bff;
-  color: white;
+  background: var(--color-action);
+  color: var(--color-white);
 }
 
 .modal-footer .btn-primary:hover {
-  background: #0047b3;
+  background: var(--color-action-hover);
 }
 
 .modal-footer .btn-primary:active {
-  background: #003080;
+  background: var(--color-action-active);
   transform: scale(0.98);
 }
 
 .modal-footer .btn-secondary {
-  background: #f0f0f0;
-  color: #333;
+  background: var(--color-border-soft);
+  color: var(--color-text);
 }
 
 .modal-footer .btn-secondary:hover {
-  background: #d0d0d0;
+  background: var(--color-neutral-300);
 }
 
 .modal-footer .btn-secondary:active {
-  background: #b0b0b0;
+  background: var(--color-neutral-400);
   transform: scale(0.98);
 }
 
 .modal-footer .btn-danger {
-  background: #dc3545;
-  color: white;
+  background: var(--color-danger);
+  color: var(--color-white);
 }
 
 .modal-footer .btn-danger:hover {
-  background: #b02a33;
+  background: var(--color-danger-hover);
 }
 
 .modal-footer .btn-danger:active {
-  background: #7d1a21;
+  background: var(--color-danger-active);
   transform: scale(0.98);
 }
 

@@ -112,6 +112,9 @@ function Header() {
     if (savedTheme === "dark") {
       document.body.classList.add("dark-mode");
       setDarkModeEnabled(true);
+    } else {
+      document.body.classList.remove("dark-mode");
+      setDarkModeEnabled(false);
     }
   }, []);
 

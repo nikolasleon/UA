@@ -410,7 +410,7 @@ function AccountPage() {
             {comments.length > 0 && (
               <div className="comments-filters">
                 <div className="search-bar-filters">
-                  <FaSearch style={{ position: "absolute", left: "1rem", color: "#007bff" }} />
+                  <FaSearch className="comments-search-icon" />
                   <input
                     type="text"
                     placeholder="Buscar en comentarios..."
@@ -421,7 +421,7 @@ function AccountPage() {
                   {searchComment && (
                     <FaTimes
                       onClick={() => setSearchComment("")}
-                      style={{ position: "absolute", right: "1rem", cursor: "pointer", color: "#999" }}
+                      className="comments-clear-icon"
                     />
                   )}
                 </div>
