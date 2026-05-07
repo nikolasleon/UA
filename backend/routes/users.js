@@ -317,14 +317,14 @@ router.delete("/:id", async (req, res) => {
 
     // Recalcular contadores y valoraciones de los retos afectados
     for (const desafioId of desafiosAfectados) {
-      const restantes = await UserChallenge.find({ desafioId });
-      const conValoracion = restantes.filter((p) => p.estado === "aprobado" && p.valoracion != null);
+      const aprobados = await UserChallenge.find({ desafioId, estado: "aprobado" });
+      const conValoracion = aprobados.filter((p) => p.valoracion != null);
       const promedio =
         conValoracion.length > 0
           ? conValoracion.reduce((acc, p) => acc + p.valoracion, 0) / conValoracion.length
           : 0;
       await Challenge.findByIdAndUpdate(desafioId, {
-        participantes: restantes.length,
+        participantes: aprobados.length,
         valoracionPromedio: Math.round(promedio * 10) / 10,
       });
     }

@@ -324,9 +324,15 @@ router.put("/:id/respuesta", async (req, res) => {
       const primera = participacion.multimediaEnvio.find(m => m.tipo === "imagen");
       if (primera) participacion.imagenEnvio = primera.url;
     }
+    const yaEstabaAprobado = participacion.estado === "aprobado";
     participacion.estado = "aprobado";
 
     await participacion.save();
+
+    // Incrementar participantes solo si es la primera vez que se aprueba
+    if (!yaEstabaAprobado) {
+      await Challenge.findByIdAndUpdate(id, { $inc: { participantes: 1 } });
+    }
 
     // Actualizar valoración promedio del reto
     if (valoracion) {
@@ -365,12 +371,23 @@ router.post("/:id/participar", async (req, res) => {
 
     await userChallenge.save();
 
-    // Actualizar contador de participantes
-    await Challenge.findByIdAndUpdate(id, { $inc: { participantes: 1 } });
-
     res.status(201).json({ message: "Participación registrada", participacion: userChallenge });
   } catch (err) {
     res.status(500).json({ message: "Error al participar", error: err });
+  }
+});
+
+// Recalcular participantes de todos los retos según respuestas aprobadas
+router.post("/recalcular-participantes", async (req, res) => {
+  try {
+    const retos = await Challenge.find({}, "_id");
+    for (const reto of retos) {
+      const aprobados = await UserChallenge.countDocuments({ desafioId: reto._id, estado: "aprobado" });
+      await Challenge.findByIdAndUpdate(reto._id, { participantes: aprobados });
+    }
+    res.json({ message: `Recalculados ${retos.length} retos` });
+  } catch (err) {
+    res.status(500).json({ message: "Error al recalcular", error: err });
   }
 });
 
