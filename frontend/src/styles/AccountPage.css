@@ -895,7 +895,7 @@
 .scroll-to-top-btn {
   position: fixed;
   bottom: 2rem;
-  right: 1.5rem;
+  left: 1.5rem;
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -944,7 +944,7 @@
 @media (max-width: 480px) {
   .scroll-to-top-btn {
     bottom: 1.5rem;
-    right: 1rem;
+    left: 1rem;
     width: 45px;
     height: 45px;
     font-size: 1rem;

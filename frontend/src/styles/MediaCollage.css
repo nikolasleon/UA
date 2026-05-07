@@ -128,7 +128,7 @@
 }
 
 .collage-expand-icon:hover {
-  background: rgba(0, 123, 255, 1);
+  background: var(--color-action);
   transform: scale(1.1);
 }
 
@@ -221,15 +221,20 @@
 /* Botón cerrar */
 .gallery-close-btn-enhanced {
   position: absolute;
-  top: -50px;
-  right: 0;
-  background: none;
+  top: 10px;
+  right: 10px;
+  background: var(--overlay-dark-60);
   border: none;
   color: var(--color-white);
   font-size: 2rem;
   cursor: pointer;
   transition: all 0.2s ease;
   z-index: 102;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gallery-close-btn-enhanced:hover {
