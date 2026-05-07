@@ -339,6 +339,20 @@ body.dark-mode .challenger-card-mini {
   object-fit: cover;
 }
 
+.challenger-avatar-initials {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #c0eca4;
+  color: #3a7d44;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
 .challenger-meta {
   display: flex;
   flex-wrap: wrap;

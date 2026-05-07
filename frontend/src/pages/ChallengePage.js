@@ -255,9 +255,13 @@ function ChallengePage() {
                   .map((p, index) => (
                     <li key={p.id} className="ranking-item">
                       <span className="ranking-pos">{index + 1}.</span>
-                      <Link to={`/profile/${p.usuario?._id}`} style={{ textDecoration: "none", color: "inherit", flex: 1 }}>
-                        {p.usuario?.nombre} {p.usuario?.apellido}
-                      </Link>
+                      {p.usuario?._id ? (
+                        <Link to={`/profile/${p.usuario._id}`} style={{ textDecoration: "none", color: "inherit", flex: 1 }}>
+                          {p.usuario.nombre} {p.usuario.apellido}
+                        </Link>
+                      ) : (
+                        <span style={{ flex: 1 }}>Usuario eliminado</span>
+                      )}
                       {activeTab === "favoritos" && (
                         <span className="ranking-likes">👍 {p.likes}</span>
                       )}
@@ -280,17 +284,27 @@ function ChallengePage() {
                 participantes.slice(0, 3).map((p, index) => (
                   <div key={index} className="challenger-card-full">
                     <div className="challenger-card-header">
-                      <Link to={`/profile/${p.usuario?._id}`}>
-                        <img
-                          src={p.usuario?.fotoPerfil || "https://via.placeholder.com/40x40"}
-                          alt="avatar"
-                          className="challenger-avatar-sm"
-                        />
-                      </Link>
-                      <div className="challenger-meta">
-                        <Link to={`/profile/${p.usuario?._id}`} className="challenger-name-link">
-                          {p.usuario?.nombre} {p.usuario?.apellido}
+                      {p.usuario?._id ? (
+                        <Link to={`/profile/${p.usuario._id}`}>
+                          {p.usuario.fotoPerfil ? (
+                            <img src={p.usuario.fotoPerfil} alt="avatar" className="challenger-avatar-sm" />
+                          ) : (
+                            <div className="challenger-avatar-initials">
+                              {p.usuario.nombre?.charAt(0).toUpperCase() || "?"}
+                            </div>
+                          )}
                         </Link>
+                      ) : (
+                        <div className="challenger-avatar-initials">?</div>
+                      )}
+                      <div className="challenger-meta">
+                        {p.usuario?._id ? (
+                          <Link to={`/profile/${p.usuario._id}`} className="challenger-name-link">
+                            {p.usuario.nombre} {p.usuario.apellido}
+                          </Link>
+                        ) : (
+                          <span className="challenger-name-link">Usuario eliminado</span>
+                        )}
                         {p.titulo && <span className="challenger-titulo"> — {p.titulo}</span>}
                       </div>
                     </div>
