@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Alert from "../components/Alert";
+import Modal from "../components/Modal";
 import MediaCollage from "../components/MediaCollage";
 import "../styles/ChallengePage.css";
 
@@ -14,6 +16,8 @@ function ChallengePage() {
   const [activeTab, setActiveTab] = useState("llegada");
   
   const [userStatus, setUserStatus] = useState("INVITADO");
+  const [alert, setAlert] = useState({ message: "", type: "success" });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -60,7 +64,7 @@ function ChallengePage() {
 
   const handleAction = async () => {
     if (userStatus === "INVITADO") {
-      alert("Debes iniciar sesión para participar.");
+      setAlert({ message: "Debes iniciar sesión para participar.", type: "error" });
       return;
     }
 
@@ -72,7 +76,7 @@ function ChallengePage() {
           body: JSON.stringify({ usuarioId: user._id }),
         });
         if (response.ok) {
-          alert("¡Te has unido al reto!");
+          setAlert({ message: "¡Te has unido al reto!", type: "success" });
           setUserStatus("SUBIR");
         }
       } catch (err) {
@@ -84,7 +88,7 @@ function ChallengePage() {
   };
 
   const handleLike = async (participacionId) => {
-    if (!user) { alert("Debes iniciar sesión para dar like."); return; }
+    if (!user) { setAlert({ message: "Debes iniciar sesión para dar like.", type: "error" }); return; }
     try {
       const res = await fetch(`${API_URL}/api/challenges/${id}/participaciones/${participacionId}/like`, {
         method: "POST",
@@ -102,13 +106,13 @@ function ChallengePage() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("¿Seguro que quieres borrar este reto?")) return;
     try {
       const res = await fetch(`${API_URL}/api/challenges/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
       navigate("/account");
     } catch {
-      alert("Error al borrar el reto");
+      setShowDeleteModal(false);
+      setAlert({ message: "Error al borrar el reto", type: "error" });
     }
   };
 
@@ -134,12 +138,26 @@ function ChallengePage() {
 
   return (
     <div className="challenge-page-container">
+      <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
+
+      {showDeleteModal && (
+        <Modal
+          title="Borrar reto"
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDelete}
+          confirmText="Borrar"
+          isDanger
+        >
+          ¿Seguro que quieres borrar este reto? Esta acción no se puede deshacer.
+        </Modal>
+      )}
+
       <div className="challenge-hero-banner">
         <h1>{challenge.titulo?.toUpperCase() || "RETO"}</h1>
         {isOwner && (
           <div className="challenge-owner-actions">
             <Link to={`/editar-reto/${id}`} className="btn-owner btn-edit">Editar</Link>
-            <button onClick={handleDelete} className="btn-owner btn-delete">Borrar</button>
+            <button onClick={() => setShowDeleteModal(true)} className="btn-owner btn-delete">Borrar</button>
           </div>
         )}
       </div>
