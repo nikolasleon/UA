@@ -52,6 +52,8 @@
   text-transform: uppercase;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: var(--color-tag-purple-bg);
+  color: var(--color-tag-purple-text);
 }
 
 .challenge-card__difficulty-badge[data-difficulty="fácil"] {
@@ -65,6 +67,17 @@
 }
 
 .challenge-card__difficulty-badge[data-difficulty="difícil"] {
+  background: var(--color-tag-purple-bg);
+  color: var(--color-tag-purple-text);
+}
+
+.challenge-card__difficulty-badge[data-difficulty="fácil"] {
+  background: var(--color-tag-success-bg);
+  color: var(--color-tag-success-text);
+}
+
+.challenge-card__difficulty-badge[data-difficulty="difícil"],
+.challenge-card__difficulty-badge[data-difficulty="intenso"] {
   background: var(--color-tag-purple-bg);
   color: var(--color-tag-purple-text);
 }

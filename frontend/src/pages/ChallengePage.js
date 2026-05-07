@@ -112,15 +112,6 @@ function ChallengePage() {
     }
   };
 
-  const tipoIcon = (tipo) => {
-    switch (tipo) {
-      case "video": return "🎥";
-      case "audio": return "🎵";
-      case "pdf":   return "📄";
-      default:      return "🖼️";
-    }
-  };
-
   const isOwner = !!user && !!challenge &&
     String(user._id) === String(challenge.creadorId?._id || challenge.creadorId);
 

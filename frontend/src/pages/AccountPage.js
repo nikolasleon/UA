@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlus, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaPlus, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import ChallengeCarousel from "../components/ChallengeCarousel";
 import Alert from "../components/Alert";
-import MediaCollage from "../components/MediaCollage";
+import ResponseCard from "../components/ResponseCard";
 import "../styles/AccountPage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -84,7 +84,7 @@ function AccountPage() {
       const response = await fetch(`${API_URL}/api/users/${userId}/comments`);
       if (response.ok) {
         const data = await response.json();
-        const validComments = data.filter(c => c.descripcionEnvio || c.imagenEnvio || c.multimediaEnvio?.length > 0);
+        const validComments = data.filter(c => c.titulo || c.descripcionEnvio || c.imagenEnvio || c.multimediaEnvio?.length > 0);
         setComments(validComments.slice(0, 5));
       }
     } catch (err) {
@@ -154,9 +154,16 @@ function AccountPage() {
 
   const getFilteredComments = () => {
     return comments.filter((comment) => {
-      // Filtro de búsqueda por texto (solo en descripcionEnvio)
       const searchLower = searchComment.toLowerCase();
-      const matchesSearch = comment.descripcionEnvio?.toLowerCase().includes(searchLower);
+      const searchableText = [
+        comment.titulo,
+        comment.descripcionEnvio,
+        comment.desafioId?.titulo,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      const matchesSearch = searchableText.includes(searchLower);
 
       // Filtro de valoración
       const matchesRating =
@@ -434,59 +441,18 @@ function AccountPage() {
             {getFilteredComments().length > 0 ? (
               <div className="comments-grid">
                 {getFilteredComments().map((comment, index) => (
-                  <div 
-                    key={index} 
-                    className="comment-card"
-                    onClick={() => comment.desafioId && handleViewChallenge(comment.desafioId._id)}
-                    style={{ cursor: comment.desafioId ? 'pointer' : 'default' }}
-                  >
-                    {(() => {
-                      const imagenes = (comment.multimediaEnvio || [])
-                        .filter(m => m.tipo === "imagen")
-                        .map(m => m.url);
-                      const urls = imagenes.length > 0 ? imagenes : (comment.imagenEnvio ? [comment.imagenEnvio] : []);
-                      return urls.length > 0 ? (
-                        <div className="comment-image-wrapper" onClick={(e) => e.stopPropagation()}>
-                          <MediaCollage
-                            images={urls}
-                            onImageClick={(index) => openGallery(urls, index)}
-                          />
-                        </div>
-                      ) : null;
-                    })()}
-                    <div className="comment-content">
-                      <p className="comment-date">
-                        {new Date(comment.fechaEnvio).toLocaleDateString('es-ES', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </p>
-                      <div className="comment-rating">
-                        {comment.valoracion && (
-                          <div className="rating-stars">
-                            {[...Array(5)].map((_, i) => (
-                              <FaStar
-                                key={i}
-                                size={16}
-                                color={i < comment.valoracion ? "#FFD700" : "#e0e0e0"}
-                              />
-                            ))}
-                          </div>
-                        )}
-                        <span className="rating-value">
-                          {comment.valoracion ? `${comment.valoracion}/5` : "Sin valorar"}
-                        </span>
-                      </div>
-                      {comment.descripcionEnvio && (
-                        <div className="comment-user-section">
-                          <p className="comment-description">{comment.descripcionEnvio}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <ResponseCard
+                    key={comment._id || index}
+                    response={{
+                      ...comment,
+                      isOwn: true,
+                    }}
+                    userInfo={user}
+                    challengeTitle={comment.desafioId?.titulo}
+                    showChallengeTitle
+                    onOpenChallenge={comment.desafioId ? () => handleViewChallenge(comment.desafioId._id) : null}
+                    onMediaImageClick={openGallery}
+                  />
                 ))}
               </div>
             ) : (

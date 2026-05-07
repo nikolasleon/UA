@@ -346,9 +346,15 @@ router.get("/:id/comments", async (req, res) => {
     })
       .populate("desafioId", "titulo")
       .sort({ fechaEnvio: -1 })
-      .limit(10);
+      .limit(10)
+      .lean();
 
-    res.json(userComments);
+    res.json(
+      userComments.map((comment) => ({
+        ...comment,
+        likesCount: comment.likes?.length || 0,
+      }))
+    );
   } catch (err) {
     res.status(500).json({ message: "Error al obtener comentarios", error: err });
   }
