@@ -187,13 +187,6 @@ router.post("/", async (req, res) => {
 
     await newChallenge.save();
 
-    // Actualizar contador de retos creados del usuario
-    await User.findByIdAndUpdate(
-      creadorId,
-      { $inc: { "estilo.retosCreados": 1 } },
-      { new: true }
-    );
-
     res.status(201).json({ message: "Reto creado exitosamente", reto: newChallenge });
   } catch (err) {
     res.status(500).json({ message: "Error al crear reto", error: err });
@@ -229,13 +222,6 @@ router.delete("/:id", async (req, res) => {
     if (!challenge) {
       return res.status(404).json({ message: "Reto no encontrado" });
     }
-
-    // Actualizar contador de retos creados
-    await User.findByIdAndUpdate(
-      challenge.creadorId,
-      { $inc: { "estilo.retosCreados": -1 } },
-      { new: true }
-    );
 
     res.json({ message: "Reto eliminado exitosamente" });
   } catch (err) {

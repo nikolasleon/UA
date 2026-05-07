@@ -19,10 +19,6 @@ const userChallengeSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  imagenesEnvio: {
-    type: [String],
-    default: [],
-  },
   multimediaEnvio: {
     type: [{ url: String, tipo: { type: String, enum: ["imagen", "video", "audio", "pdf"] } }],
     default: [],
@@ -45,10 +41,6 @@ const userChallengeSchema = new mongoose.Schema({
     min: 1,
     max: 5,
     default: null,
-  },
-  comentarios: {
-    type: String,
-    default: "",
   },
 });
 

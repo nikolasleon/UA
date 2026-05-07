@@ -58,33 +58,11 @@ const userSchema = new mongoose.Schema({
       enum: ["publico", "privado"],
       default: "publico",
     },
-    descargas: {
-      type: Number,
-      default: 0,
-    },
   },
   tema: {
     type: String,
     enum: ["claro", "oscuro"],
     default: "claro",
-  },
-  estilo: {
-    retosCompletados: {
-      type: Number,
-      default: 0,
-    },
-    retosCreados: {
-      type: Number,
-      default: 0,
-    },
-    retosEnProgreso: {
-      type: Number,
-      default: 0,
-    },
-    puntuacionTotal: {
-      type: Number,
-      default: 0,
-    },
   },
 });
 

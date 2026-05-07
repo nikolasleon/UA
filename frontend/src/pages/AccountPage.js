@@ -95,8 +95,7 @@ function AccountPage() {
       if (response.ok) {
         const data = await response.json();
         console.log("Comments data:", data);
-        // Filtrar comentarios que tengan descripción o imagen (los que realmente tengan contenido)
-        const validComments = data.filter(c => c.descripcionEnvio || c.imagenEnvio);
+        const validComments = data.filter(c => c.descripcionEnvio || c.imagenEnvio || c.multimediaEnvio?.length > 0);
         console.log("Valid comments:", validComments);
         setComments(validComments.slice(0, 5));
       } else {
@@ -488,14 +487,20 @@ function AccountPage() {
                     onClick={() => comment.desafioId && handleViewChallenge(comment.desafioId._id)}
                     style={{ cursor: comment.desafioId ? 'pointer' : 'default' }}
                   >
-                    {comment.imagenEnvio || (comment.imagenesEnvio && comment.imagenesEnvio.length > 0) ? (
-                      <div className="comment-image-wrapper" onClick={(e) => e.stopPropagation()}>
-                        <MediaCollage 
-                          images={comment.imagenesEnvio && comment.imagenesEnvio.length > 0 ? comment.imagenesEnvio : [comment.imagenEnvio]}
-                          onImageClick={(index) => openGallery(comment.imagenesEnvio && comment.imagenesEnvio.length > 0 ? comment.imagenesEnvio : [comment.imagenEnvio], index)}
-                        />
-                      </div>
-                    ) : null}
+                    {(() => {
+                      const imagenes = (comment.multimediaEnvio || [])
+                        .filter(m => m.tipo === "imagen")
+                        .map(m => m.url);
+                      const urls = imagenes.length > 0 ? imagenes : (comment.imagenEnvio ? [comment.imagenEnvio] : []);
+                      return urls.length > 0 ? (
+                        <div className="comment-image-wrapper" onClick={(e) => e.stopPropagation()}>
+                          <MediaCollage
+                            images={urls}
+                            onImageClick={(index) => openGallery(urls, index)}
+                          />
+                        </div>
+                      ) : null;
+                    })()}
                     <div className="comment-content">
                       <p className="comment-date">
                         {new Date(comment.fechaEnvio).toLocaleDateString('es-ES', {
