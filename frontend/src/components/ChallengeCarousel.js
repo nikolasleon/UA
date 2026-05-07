@@ -7,6 +7,7 @@ function ChallengeCarousel({
   challenges,
   onEdit,
   onDelete,
+  onDeleteResponse,
   onViewDetails,
   onViewAll,
   children,
@@ -54,6 +55,7 @@ function ChallengeCarousel({
                   challenge={challenge}
                   onEdit={onEdit}
                   onDelete={onDelete}
+                  onDeleteResponse={onDeleteResponse}
                   onViewDetails={onViewDetails}
                 />
               ))}

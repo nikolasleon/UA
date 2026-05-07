@@ -230,6 +230,22 @@ function AccountPage() {
     });
   };
 
+  const handleDeleteResponse = async (challengeId) => {
+    try {
+      const res = await fetch(`${API_URL}/api/challenges/${challengeId}/respuesta/${userId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Error al borrar");
+      setChallenges(prev => ({
+        ...prev,
+        completados: prev.completados.filter(c => c._id !== challengeId),
+      }));
+      setAlert({ message: "✓ Respuesta borrada correctamente", type: "success" });
+    } catch {
+      setAlert({ message: "✕ Error al borrar la respuesta", type: "error" });
+    }
+  };
+
   const handleDeleteChallenge = async (challengeId) => {
     try {
       const response = await fetch(`${API_URL}/api/challenges/${challengeId}`, {
@@ -352,6 +368,7 @@ function AccountPage() {
             <ChallengeCarousel
               title="Retos Completados"
               challenges={challenges.completados}
+              onDeleteResponse={handleDeleteResponse}
               onViewDetails={handleViewChallenge}
               onViewAll={() => navigate("/my-challenges/completados")}
             />

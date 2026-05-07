@@ -4,9 +4,10 @@ import { FaTrash } from "react-icons/fa";
 import Modal from "./Modal";
 import "../styles/components/ChallengeCard.css";
 
-function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
+function ChallengeCard({ challenge, onEdit, onDelete, onDeleteResponse, onViewDetails }) {
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteResponseModal, setShowDeleteResponseModal] = useState(false);
 
   const handleOpenDetails = () => {
     onViewDetails(challenge._id);
@@ -22,6 +23,11 @@ function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
   const handleConfirmDelete = () => {
     setShowDeleteModal(false);
     onDelete(challenge._id);
+  };
+
+  const handleConfirmDeleteResponse = () => {
+    setShowDeleteResponseModal(false);
+    onDeleteResponse(challenge._id);
   };
 
   const handleVisitProfile = (e) => {
@@ -125,6 +131,33 @@ function ChallengeCard({ challenge, onEdit, onDelete, onViewDetails }) {
           <p>¿Estás seguro de que quieres eliminar el reto <strong>"{challenge.titulo}"</strong>?</p>
           <p style={{ color: "#666", fontSize: "0.9rem" }}>
             Esta acción no se puede deshacer.
+          </p>
+        </Modal>
+      )}
+
+      {onDeleteResponse && (
+        <button
+          type="button"
+          onClick={() => setShowDeleteResponseModal(true)}
+          className="challenge-card__btn-delete"
+          aria-label={`Borrar mi respuesta del reto ${challenge.titulo}`}
+        >
+          <FaTrash style={{ marginRight: "0.3rem" }} />
+          Borrar respuesta
+        </button>
+      )}
+
+      {showDeleteResponseModal && (
+        <Modal
+          title="Borrar respuesta"
+          onClose={() => setShowDeleteResponseModal(false)}
+          onConfirm={handleConfirmDeleteResponse}
+          confirmText="Borrar"
+          isDanger={true}
+        >
+          <p>¿Seguro que quieres borrar tu respuesta de <strong>"{challenge.titulo}"</strong>?</p>
+          <p style={{ color: "#666", fontSize: "0.9rem" }}>
+            Perderás tu progreso y podrás volver a unirte al reto.
           </p>
         </Modal>
       )}

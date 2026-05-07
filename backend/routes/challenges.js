@@ -243,6 +243,32 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// Borrar respuesta/participación de un usuario en un reto
+router.delete("/:id/respuesta/:usuarioId", async (req, res) => {
+  try {
+    const { id, usuarioId } = req.params;
+
+    const participacion = await UserChallenge.findOneAndDelete({ desafioId: id, usuarioId });
+    if (!participacion) {
+      return res.status(404).json({ message: "Participación no encontrada" });
+    }
+
+    // Decrementar contador de participantes
+    await Challenge.findByIdAndUpdate(id, { $inc: { participantes: -1 } });
+
+    // Recalcular valoración promedio
+    const restantes = await UserChallenge.find({ desafioId: id, estado: "aprobado", valoracion: { $ne: null } });
+    const promedio = restantes.length > 0
+      ? restantes.reduce((acc, p) => acc + p.valoracion, 0) / restantes.length
+      : 0;
+    await Challenge.findByIdAndUpdate(id, { valoracionPromedio: Math.round(promedio * 10) / 10 });
+
+    res.json({ message: "Respuesta eliminada" });
+  } catch (err) {
+    res.status(500).json({ message: "Error al eliminar respuesta", error: err });
+  }
+});
+
 // Enviar respuesta a un reto (actualizar participación con multimedia)
 router.put("/:id/respuesta", async (req, res) => {
   try {
