@@ -36,6 +36,10 @@ const userChallengeSchema = new mongoose.Schema({
     enum: ["pendiente", "aprobado", "rechazado"],
     default: "pendiente",
   },
+  likes: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    default: [],
+  },
   valoracion: {
     type: Number,
     min: 1,

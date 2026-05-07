@@ -122,9 +122,11 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/participantes", async (req, res) => {
     try {
         const { id } = req.params;
-        const participaciones = await UserChallenge.find({ 
-            desafioId: id, 
-            estado: "aprobado" 
+        const { userId } = req.query;
+
+        const participaciones = await UserChallenge.find({
+            desafioId: id,
+            estado: "aprobado"
         })
         .populate("usuarioId", "nombre apellido fotoPerfil")
         .sort({ fechaEnvio: 1 });
@@ -138,11 +140,37 @@ router.get("/:id/participantes", async (req, res) => {
                 imagenEnvio: p.imagenEnvio,
                 multimediaEnvio: p.multimediaEnvio || [],
                 fecha: p.fechaEnvio,
-                likes: Math.floor(Math.random() * 50)
+                likes: p.likes.length,
+                likedByMe: userId ? p.likes.map(String).includes(String(userId)) : false,
             }))
         });
     } catch (err) {
         res.status(500).json({ message: "Error al obtener participantes", error: err });
+    }
+});
+
+// DAR / QUITAR LIKE A UNA PARTICIPACIÓN
+router.post("/:id/participaciones/:participacionId/like", async (req, res) => {
+    try {
+        const { participacionId } = req.params;
+        const { usuarioId } = req.body;
+
+        if (!usuarioId) return res.status(400).json({ message: "usuarioId requerido" });
+
+        const participacion = await UserChallenge.findById(participacionId);
+        if (!participacion) return res.status(404).json({ message: "Participación no encontrada" });
+
+        const yaLiked = participacion.likes.map(String).includes(String(usuarioId));
+        if (yaLiked) {
+            participacion.likes.pull(usuarioId);
+        } else {
+            participacion.likes.push(usuarioId);
+        }
+        await participacion.save();
+
+        res.json({ likes: participacion.likes.length, likedByMe: !yaLiked });
+    } catch (err) {
+        res.status(500).json({ message: "Error al procesar like", error: err });
     }
 });
 

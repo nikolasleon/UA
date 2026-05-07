@@ -27,7 +27,8 @@ function ChallengePage() {
         setChallenge(dataChallenge);
 
         // 2. Cargar participantes
-        const resParticipantes = await fetch(`${API_URL}/api/challenges/${id}/participantes`);
+        const userParam = user?._id ? `?userId=${user._id}` : "";
+        const resParticipantes = await fetch(`${API_URL}/api/challenges/${id}/participantes${userParam}`);
         if (resParticipantes.ok) {
           const dataParticipantes = await resParticipantes.json();
           const lista = dataParticipantes.participantes || [];
@@ -79,6 +80,24 @@ function ChallengePage() {
       }
     } else if (userStatus === "SUBIR") {
       navigate(`/reto/${id}/responder`);
+    }
+  };
+
+  const handleLike = async (participacionId) => {
+    if (!user) { alert("Debes iniciar sesión para dar like."); return; }
+    try {
+      const res = await fetch(`${API_URL}/api/challenges/${id}/participaciones/${participacionId}/like`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuarioId: user._id }),
+      });
+      if (!res.ok) return;
+      const { likes, likedByMe } = await res.json();
+      setParticipantes(prev =>
+        prev.map(p => p.id === participacionId ? { ...p, likes, likedByMe } : p)
+      );
+    } catch (err) {
+      console.error("Error al dar like:", err);
     }
   };
 
@@ -227,14 +246,24 @@ function ChallengePage() {
 
             <ul className="rankings-list">
               {participantes.length > 0 ? (
-                participantes.map((p, index) => (
-                  <li key={index} className="ranking-item">
-                    <Link to={`/profile/${p.usuario?._id}`} style={{ textDecoration: "none", color: "inherit", display: "contents" }}>
-                      <span>{p.usuario?.nombre} {p.usuario?.apellido}</span>
+                [...participantes]
+                  .sort((a, b) =>
+                    activeTab === "favoritos"
+                      ? b.likes - a.likes
+                      : new Date(a.fecha) - new Date(b.fecha)
+                  )
+                  .map((p, index) => (
+                    <li key={p.id} className="ranking-item">
+                      <span className="ranking-pos">{index + 1}.</span>
+                      <Link to={`/profile/${p.usuario?._id}`} style={{ textDecoration: "none", color: "inherit", flex: 1 }}>
+                        {p.usuario?.nombre} {p.usuario?.apellido}
+                      </Link>
+                      {activeTab === "favoritos" && (
+                        <span className="ranking-likes">👍 {p.likes}</span>
+                      )}
                       <span className="ranking-arrow">›</span>
-                    </Link>
-                  </li>
-                ))
+                    </li>
+                  ))
               ) : (
                 <li className="no-data-item">Sé el primero en llegar</li>
               )}
@@ -295,7 +324,12 @@ function ChallengePage() {
                         ))}
                       </div>
                     )}
-                    <button className="btn-like">👍</button>
+                    <button
+                      className={`btn-like ${p.likedByMe ? "btn-like--active" : ""}`}
+                      onClick={() => handleLike(p.id)}
+                    >
+                      👍 {p.likes > 0 && <span>{p.likes}</span>}
+                    </button>
                   </div>
                 ))
               ) : (
