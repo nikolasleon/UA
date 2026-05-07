@@ -33,13 +33,11 @@ function ChallengePage() {
           const lista = dataParticipantes.participantes || [];
           setParticipantes(lista);
 
-          const estadoRes = await fetch(`${API_URL}/api/challenges/${id}/estado/${user?._id || ""}`);
-          const estado = await estadoRes.json();
-          // 3. Determinar el estado del usuario actual respecto al reto
           if (!user) {
             setUserStatus("INVITADO");
-          } else {    
-            console.log("Estado de participación:", estado);
+          } else {
+            const estadoRes = await fetch(`${API_URL}/api/challenges/${id}/estado/${user._id}`);
+            const estado = await estadoRes.json();
             if (estado.estado === "no_unido") {
               setUserStatus("UNIRSE");
             } else if (estado.estado === "pendiente") {
