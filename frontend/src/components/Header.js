@@ -118,6 +118,58 @@ function Header() {
     }
   }, []);
 
+  const renderOptionsDropdown = () => (
+    <div className="options-menu" ref={optionsMenuRef}>
+      <button
+        className="options-btn"
+        onClick={toggleOptionsMenu}
+        aria-label="Más opciones"
+      >
+        <FaBars />
+      </button>
+
+      {optionsMenuOpen && (
+        <div className="options-dropdown">
+          <Link
+            to="/"
+            className="options-link"
+            onClick={() => setOptionsMenuOpen(false)}
+          >
+            <FaHome className="dropdown-icon" />
+            Inicio
+          </Link>
+          <button
+            className="options-link"
+            onClick={() => {
+              navigate("/buscar");
+              setOptionsMenuOpen(false);
+            }}
+          >
+            <FaSearch className="dropdown-icon" />
+            Buscar
+          </button>
+          <div className="options-divider"></div>
+          <Link
+            to="/about"
+            className="options-link"
+            onClick={() => setOptionsMenuOpen(false)}
+          >
+            <FaInfoCircle className="dropdown-icon" />
+            Acerca de
+          </Link>
+          <Link
+            to="/contact"
+            className="options-link"
+            onClick={() => setOptionsMenuOpen(false)}
+          >
+            <FaEnvelope className="dropdown-icon" />
+            Contacto
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <header className="header">
       <div className="header-container">
@@ -194,61 +246,15 @@ function Header() {
               </div>
 
               {/* Options Menu */}
-              <div className="options-menu" ref={optionsMenuRef}>
-                <button
-                  className="options-btn"
-                  onClick={toggleOptionsMenu}
-                  aria-label="Más opciones"
-                >
-                  <FaBars />
-                </button>
-
-                {optionsMenuOpen && (
-                  <div className="options-dropdown">
-                    <Link
-                      to="/"
-                      className="options-link"
-                      onClick={() => setOptionsMenuOpen(false)}
-                    >
-                      <FaHome className="dropdown-icon" />
-                      Inicio
-                    </Link>
-                    {/* <button className="options-link" onClick={() => setOptionsMenuOpen(false)}>
-                      <FaSearch className="dropdown-icon" />
-                      Buscar
-                    </button> */}
-                    <button className="options-link" onClick={() => { navigate("/buscar");
-                      setOptionsMenuOpen(false);
-                    }}
-                  >
-                    <FaSearch className="dropdown-icon" />
-                    Buscar
-                  </button>
-                    <div className="options-divider"></div>
-                    <Link
-                      to="/about"
-                      className="options-link"
-                      onClick={() => setOptionsMenuOpen(false)}
-                    >
-                      <FaInfoCircle className="dropdown-icon" />
-                      Acerca de
-                    </Link>
-                    <Link
-                      to="/contact"
-                      className="options-link"
-                      onClick={() => setOptionsMenuOpen(false)}
-                    >
-                      <FaEnvelope className="dropdown-icon" />
-                      Contacto
-                    </Link>
-                  </div>
-                )}
-              </div>
+              {renderOptionsDropdown()}
             </div>
           ) : (
-            <Link to="/login" className="login-btn">
-              Iniciar sesión
-            </Link>
+            <div className="user-desktop-section">
+              <Link to="/login" className="login-btn">
+                Iniciar sesión
+              </Link>
+              {renderOptionsDropdown()}
+            </div>
           )}
         </div>
 

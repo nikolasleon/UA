@@ -452,6 +452,14 @@ body.dark-mode .search-mobile .search-input-mobile::placeholder {
   color: rgba(248, 250, 252, 0.68);
 }
 
+body.dark-mode .login-btn {
+  color: var(--color-black);
+}
+
+body.dark-mode .mobile-menu .mobile-login {
+  color: var(--color-black);
+}
+
 /* MOBILE MENU */
 .mobile-menu {
   display: none;
