@@ -96,10 +96,11 @@ function ChallengePage() {
     }
   };
 
-  const isOwner = user && challenge && String(user._id) === String(challenge.creadorId);
+  const isOwner = user && challenge && String(user._id) === String(challenge.creadorId?._id || challenge.creadorId);
 
   // Función para renderizar el botón dinámico según el mockup
   const renderButton = () => {
+    if (isOwner) return null;
     switch (userStatus) {
       case "COMPLETADO":
         return <button className="btn-action btn-completado">¡RETO COMPLETADO!</button>;
