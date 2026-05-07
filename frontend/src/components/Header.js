@@ -74,7 +74,8 @@ function Header() {
       console.log("🔄 Navegando a home después de logout");
       navigate("/", { replace: true });
     }, 200);
-    
+
+    window.location.reload();
   };
 
   // Efecto para monitorear cambios de autenticación
