@@ -187,7 +187,7 @@ function AccountPage() {
   };
 
   const handleCreateChallenge = () => {
-    navigate("/create-challenge");
+    navigate("/crear-reto");
   };
 
   const handleViewChallenge = (challengeId) => {

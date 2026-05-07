@@ -1,7 +1,7 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -18,6 +18,16 @@ import RegisterPage from "./pages/RegisterPage";
 import Buscar from "./pages/Buscar";
 import PublicProfilePage from "./pages/PublicProfilePage";
 import ChallengePage from "./pages/ChallengePage";
+import CreateChallengePage from "./pages/CreateChallengePage";
+import "./styles/CreateChallengePage.css";
+
+function FAB() {
+  const { isLoggedIn } = useAuth();
+  if (!isLoggedIn) return null;
+  return (
+    <Link to="/crear-reto" className="fab" title="Crear reto">+</Link>
+  );
+}
 
 function App() {
   useEffect(() => {
@@ -30,6 +40,7 @@ function App() {
     <AuthProvider>
       <div>
         <Header />
+        <FAB />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -61,6 +72,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ChallengesListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/crear-reto"
+            element={
+              <ProtectedRoute>
+                <CreateChallengePage />
               </ProtectedRoute>
             }
           />
