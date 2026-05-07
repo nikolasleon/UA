@@ -251,6 +251,9 @@ body.dark-mode .ranking-item {
 body.dark-mode .challenger-card-mini {
   color: var(--color-text-soft);
 }
+
+.section-header h2 {
+  margin: 0;
   font-size: 1.3rem;
   letter-spacing: 2px;
 }
