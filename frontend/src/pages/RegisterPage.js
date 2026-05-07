@@ -8,6 +8,7 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 const initialRegisterState = {
   usuario: "",
+  apellido: "",
   email: "",
   contraseña: "",
   confirmarContraseña: "",
@@ -43,10 +44,10 @@ function RegisterPage() {
   const handleRegister = async () => {
     if (isSubmitting) return;
 
-    const { usuario, email, contraseña, confirmarContraseña } = registerForm;
+    const { usuario, apellido, email, contraseña, confirmarContraseña } = registerForm;
 
     // Validaciones
-    if (!usuario.trim() || !email.trim() || !contraseña || !confirmarContraseña) {
+    if (!usuario.trim() || !apellido.trim() || !email.trim() || !contraseña || !confirmarContraseña) {
       setAlert({ message: "Todos los campos son obligatorios", type: "error" });
       return;
     }
@@ -71,6 +72,7 @@ function RegisterPage() {
         },
         body: JSON.stringify({
           nombre: usuario.trim(),
+          apellido: apellido.trim(),
           email: email.trim(),
           contraseña,
         }),
@@ -115,6 +117,18 @@ function RegisterPage() {
             name="usuario"
             placeholder="Introduce tu usuario"
             value={registerForm.usuario}
+            onChange={handleRegisterChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="register-apellido">Apellido</label>
+          <input
+            id="register-apellido"
+            type="text"
+            name="apellido"
+            placeholder="Introduce tu apellido"
+            value={registerForm.apellido}
             onChange={handleRegisterChange}
           />
         </div>
