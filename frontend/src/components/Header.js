@@ -40,18 +40,8 @@ function Header() {
     setSearchQuery(e.target.value);
   };
 
-  // const handleSearchSubmit = (e) => {
-  //   if (e.key === "Enter" && searchQuery.trim()) {
-  //     console.log("Buscando:", searchQuery);
-  //     setSearchQuery("");
-  //     setSearchOpen(false);
-  //   }
-  // };
-
   const handleSearchSubmit = (e) => {
   if (e.key === "Enter" && searchQuery.trim()) {
-    console.log("Buscando:", searchQuery);
-
     navigate(`/buscar?query=${encodeURIComponent(searchQuery)}`);
 
     setSearchQuery("");
@@ -60,29 +50,19 @@ function Header() {
 };
 
   const handleLogout = () => {
-    console.log("🔓 Salir - handleLogout ejecutado");
-    // Cerrar menús primero
     setMenuOpen(false);
     setProfileMenuOpen(false);
     setOptionsMenuOpen(false);
-    
-    // Ejecutar logout (limpia storage, bloquea updateUser, y setUser(null))
     logout();
-    
-    // Navegar a home con delay para dar tiempo a que se estabilice
     setTimeout(() => {
-      console.log("🔄 Navegando a home después de logout");
       navigate("/", { replace: true });
     }, 200);
 
     window.location.reload();
   };
 
-  // Efecto para monitorear cambios de autenticación
   useEffect(() => {
     if (!isLoggedIn) {
-      console.log("✅ Usuario deslogueado - isLoggedIn es false");
-      // Forzar cerrar menús cuando se deslog
       setMenuOpen(false);
       setProfileMenuOpen(false);
       setOptionsMenuOpen(false);
@@ -322,10 +302,6 @@ function Header() {
             <FaHome className="mobile-menu-icon" />
             Inicio
           </Link>
-          {/* <button 
-            className="mobile-menu-search"
-            onClick={() => setMenuOpen(false)}
-          > */}
           <button
             className="mobile-menu-search" onClick={() => { navigate("/buscar");
               setMenuOpen(false);

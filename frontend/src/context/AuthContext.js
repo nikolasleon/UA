@@ -63,32 +63,21 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = useCallback(() => {
-    console.log("🔓 Ejecutando logout en AuthContext");
-    
-    // Marcar que estamos deslogueandonos para bloquear updateUser
     setIsLoggingOut(true);
-    
-    // Limpiar todos los almacenamientos PRIMERO
     try {
       sessionStorage.clear();
       localStorage.removeItem("user");
       localStorage.removeItem("rememberMe");
       localStorage.removeItem("rememberedEmail");
-      console.log("✅ Almacenamientos limpiados correctamente");
     } catch (error) {
-      console.error("❌ Error al limpiar almacenamientos:", error);
+      console.error(error);
     }
-    
-    // Limpiar el estado
     setUser(null);
   }, []);
 
   const updateUser = useCallback((updatedData) => {
     // NO actualizar si estamos deslogueandonos
-    if (isLoggingOut) {
-      console.log("⚠️ updateUser bloqueado - estamos en proceso de logout");
-      return;
-    }
+    if (isLoggingOut) return;
 
     setUser((currentUser) => {
       const updatedUser = { ...currentUser, ...updatedData };

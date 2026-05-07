@@ -46,13 +46,7 @@ function SettingsPage() {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log("Frontend - Datos cargados del backend:", {
-            privacidad: data.privacidad,
-            privacidad_perfil: data.privacidad?.perfil,
-          });
-          
           const isPrivate = data.privacidad?.perfil === "privado";
-          console.log("Frontend - cuentaPrivada calculada:", isPrivate);
           
           setProfile({
             nombre: data.nombre || "",
@@ -155,11 +149,6 @@ function SettingsPage() {
         cuentaPrivada: profile.cuentaPrivada,
       };
 
-      console.log("Frontend - Guardando perfil:", {
-        cuentaPrivada: profileToSave.cuentaPrivada,
-        sera_guardado_como: profileToSave.cuentaPrivada ? "PRIVADO" : "PÚBLICO",
-      });
-
       const response = await fetch(
         `${API_URL}/api/users/profile/${userId}`,
         {
@@ -173,24 +162,13 @@ function SettingsPage() {
 
       if (!response.ok) throw new Error("Error al guardar");
 
-      const data = await response.json();
-      console.log("Frontend - Respuesta del servidor:", {
-        privacidad_perfil: data.user?.privacidad?.perfil,
-        estado: data.message,
-      });
+      await response.json();
 
-      // Refrescar el perfil desde BD para confirmar que se guardó correctamente
-      console.log("Frontend - Refrescando datos desde BD...");
       const refreshResponse = await fetch(
         `${API_URL}/api/users/profile/${userId}?currentUserId=${userId}`
       );
       if (refreshResponse.ok) {
         const refreshData = await refreshResponse.json();
-        console.log("Frontend - Datos refrescados:", {
-          privacidad_perfil: refreshData.privacidad?.perfil,
-        });
-        
-        // Actualizar el estado local con los datos frescos
         setProfile((prev) => ({
           ...prev,
           fotoPerfil: fotoPerfilUrl,

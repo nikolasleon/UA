@@ -33,10 +33,7 @@ function AccountPage() {
   const userId = authUser?._id;
 
   const fetchUserData = useCallback(async () => {
-    if (!userId) {
-      console.log("fetchUserData - no userId");
-      return;
-    }
+    if (!userId) return;
 
     try {
       const response = await fetch(
@@ -53,13 +50,12 @@ function AccountPage() {
         });
       }
     } catch (err) {
-      console.error("Error fetching user data:", err);
+      console.error(err);
     }
   }, [userId, updateUser]);
 
   const fetchUserChallenges = useCallback(async () => {
     if (!userId) {
-      console.log("fetchUserChallenges - no userId");
       setLoading(false);
       return;
     }
@@ -77,32 +73,23 @@ function AccountPage() {
       }
       setLoading(false);
     } catch (err) {
-      console.error("Error fetching challenges:", err);
+      console.error(err);
       setLoading(false);
     }
   }, [userId]);
 
   const fetchUserComments = useCallback(async () => {
-    if (!userId) {
-      console.log("fetchUserComments - no userId");
-      return;
-    }
+    if (!userId) return;
 
     try {
-      console.log(`Fetching comments for user: ${userId}`);
       const response = await fetch(`${API_URL}/api/users/${userId}/comments`);
-      console.log(`Response status: ${response.status}`);
       if (response.ok) {
         const data = await response.json();
-        console.log("Comments data:", data);
         const validComments = data.filter(c => c.descripcionEnvio || c.imagenEnvio || c.multimediaEnvio?.length > 0);
-        console.log("Valid comments:", validComments);
         setComments(validComments.slice(0, 5));
-      } else {
-        console.error("Error response:", response.statusText);
       }
     } catch (err) {
-      console.error("Error fetching comments:", err);
+      console.error(err);
       // Si hay error, dejar comments vacío
       setComments([]);
     }
@@ -112,7 +99,6 @@ function AccountPage() {
   useEffect(() => {
     // Solo hacer fetch si hay userId y usuario autenticado
     if (!userId) {
-      console.log("No hay userId, no se hace fetch");
       setLoading(false);
       return;
     }
@@ -121,17 +107,6 @@ function AccountPage() {
     fetchUserChallenges();
     fetchUserComments();
   }, [userId, fetchUserData, fetchUserChallenges, fetchUserComments]);
-
-  useEffect(() => {
-    console.log("Retos del perfil:", {
-      creados: challenges.creados.length,
-      enProgreso: challenges.enProgreso.length,
-      completados: challenges.completados.length,
-      creadosData: challenges.creados,
-      enProgresoData: challenges.enProgreso,
-      completadosData: challenges.completados,
-    });
-  }, [challenges]);
 
   // Scroll to top button handler
   useEffect(() => {

@@ -143,25 +143,11 @@ router.get("/profile/:id", async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
     
-    console.log("Backend GET - Usuario encontrado:", {
-      email: user.email,
-      privacidad_completa: user.privacidad,
-      privacidad_perfil: user.privacidad?.perfil,
-    });
-    
     // Si el perfil es privado y no es el mismo usuario, devolver info limitada
     const isPrivate = user.privacidad?.perfil === "privado";
     const isSameUser = req.query.currentUserId === req.params.id;
     
-    console.log("Backend GET - Check privacidad:", {
-      isPrivate,
-      isSameUser,
-      currentUserId: req.query.currentUserId,
-      userId: req.params.id,
-    });
-    
     if (isPrivate && !isSameUser) {
-      console.log("Backend GET - Devolviendo perfil PRIVADO (limitado)");
       // Devolver solo información básica pública
       return res.json({
         _id: user._id,
@@ -174,7 +160,6 @@ router.get("/profile/:id", async (req, res) => {
       });
     }
     
-    console.log("Backend GET - Devolviendo perfil COMPLETO (público o mismo usuario)");
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: "Error al obtener usuario", error: err });
@@ -197,8 +182,6 @@ router.put("/profile/:id", async (req, res) => {
       cuentaPrivada,
     } = req.body;
 
-    console.log("Backend - Datos recibidos:", { nombre, email, cuentaPrivada });
-
     const user = await User.findById(req.params.id);
 
     if (!user) {
@@ -217,7 +200,6 @@ router.put("/profile/:id", async (req, res) => {
 
     if (cuentaPrivada !== undefined) {
       const nuevoValor = cuentaPrivada ? "privado" : "publico";
-      console.log("Backend - Actualizando privacidad a:", nuevoValor);
       user.privacidad = {
         ...(user.privacidad ? user.privacidad.toObject?.() ?? user.privacidad : {}),
         perfil: nuevoValor,
@@ -225,11 +207,6 @@ router.put("/profile/:id", async (req, res) => {
     }
 
     const savedUser = await user.save();
-
-    console.log("Backend - Usuario después de actualizar:", {
-      email: savedUser?.email,
-      privacidad: savedUser?.privacidad,
-    });
 
     res.json({ message: "Perfil actualizado", user: savedUser });
   } catch (err) {
