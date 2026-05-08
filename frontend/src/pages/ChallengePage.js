@@ -210,10 +210,31 @@ function ChallengePage() {
         
         <div className="challenge-info-column">
           <div className="challenge-card-white">
-            
-            <div className="challenge-rating-badge">
-              <span className="rating-score">{challenge.valoracionPromedio?.toFixed(1) || "—"}/5</span>
-              <span className="rating-stars">{"★".repeat(Math.round(challenge.valoracionPromedio || 0))}{"☆".repeat(5 - Math.round(challenge.valoracionPromedio || 0))}</span>
+            <div className="challenge-header-row">
+              {challenge.creadorId && (
+                <div className="challenge-creator-info">
+                  <Link to={`/profile/${challenge.creadorId._id}`} className="creator-link">
+                    {challenge.creadorId.fotoPerfil ? (
+                      <img 
+                        src={challenge.creadorId.fotoPerfil} 
+                        alt={challenge.creadorId.nombre} 
+                        className="creator-avatar" 
+                      />
+                    ) : (
+                      <div className="creator-avatar-placeholder">
+                        {challenge.creadorId.nombre?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <span className="creator-name">
+                      {challenge.creadorId.nombre} {challenge.creadorId.apellido}
+                    </span>
+                  </Link>
+                </div>
+              )}
+              <div className="challenge-rating-badge">
+                <span className="rating-score">{challenge.valoracionPromedio?.toFixed(1) || "—"}/5</span>
+                <span className="rating-stars">{"★".repeat(Math.round(challenge.valoracionPromedio || 0))}</span>
+              </div>
             </div>
 
             <div className="challenge-content-padding">
