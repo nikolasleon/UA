@@ -757,10 +757,12 @@ body.dark-mode .mobile-menu .mobile-login {
   }
 
   .search-mobile {
-    position: static;
-    width: 100% !important;
-    margin-left: 0;
-    height: auto !important;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: calc(100% + 2rem) !important; 
+    margin-left: -1rem; 
+    height: 70px !important; 
     background: var(--color-primary);
     display: flex !important;
     align-items: center;
@@ -771,7 +773,8 @@ body.dark-mode .mobile-menu .mobile-login {
   }
 
   .header.search-active .mobile-menu {
-    max-height: calc(100vh - 126px);
+    top: 126px !important;
+    height: calc(100vh - 126px);
   }
 
   .search-input-mobile {
@@ -788,7 +791,9 @@ body.dark-mode .mobile-menu .mobile-login {
 
 
   .mobile-menu {
-    position: static !important;
+    position: fixed !important;
+    top: 56px !important;
+    left: 0;
     width: 100%;
     max-height: calc(100vh - 56px);
     z-index: 10002 !important;
@@ -798,7 +803,7 @@ body.dark-mode .mobile-menu .mobile-login {
     padding: 1rem !important;
     box-sizing: border-box;
     overflow-y: auto;
-    transition: max-height 0.2s ease;
+    transition: top 0.2s ease; 
   }
 
 
