@@ -13,7 +13,6 @@ import NotFoundPage from "./pages/NotFoundPage";
 import AccountPage from "./pages/AccountPage";
 import SettingsPage from "./pages/SettingsPage";
 import ChallengesListPage from "./pages/ChallengesListPage";
-import FormulariosPage from "./pages/FormulariosPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Buscar from "./pages/Buscar";
@@ -79,7 +78,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/formularios" element={<FormulariosPage />} />
           <Route
             path="/my-challenges/:tipo"
             element={

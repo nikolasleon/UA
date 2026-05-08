@@ -110,12 +110,12 @@ function RegisterPage() {
         <h2>Registro</h2>
         
         <div className="form-group">
-          <label htmlFor="register-usuario">Usuario</label>
+          <label htmlFor="register-usuario">Nombre</label>
           <input
             id="register-usuario"
             type="text"
             name="usuario"
-            placeholder="Introduce tu usuario"
+            placeholder="Introduce tu nombre"
             value={registerForm.usuario}
             onChange={handleRegisterChange}
           />
