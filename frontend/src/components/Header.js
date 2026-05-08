@@ -305,6 +305,16 @@ function Header() {
               <div className="mobile-menu-divider"></div>
             </>
           )}
+          {!isLoggedIn && (
+            <div className="auth-buttons-mobile">
+              <Link to="/login" onClick={() => setMenuOpen(false)} className="mobile-login">
+                Iniciar sesión
+              </Link>
+              <Link to="/register" onClick={() => setMenuOpen(false)} className="mobile-register">
+                Registrarse
+              </Link>
+            </div>
+          )}
 
           {/* Navigation Links */}
           <Link to="/" onClick={() => setMenuOpen(false)} className="mobile-nav-link">
@@ -327,16 +337,6 @@ function Header() {
             <FaEnvelope className="mobile-menu-icon" />
             Contacto
           </Link>
-          {!isLoggedIn && (
-            <div className="auth-buttons-mobile">
-              <Link to="/login" onClick={() => setMenuOpen(false)} className="mobile-login">
-                Iniciar sesión
-              </Link>
-              <Link to="/register" onClick={() => setMenuOpen(false)} className="mobile-register">
-                Registrarse
-              </Link>
-            </div>
-          )}
         </nav>
       )}
     </header>
