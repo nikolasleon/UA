@@ -5,6 +5,7 @@ import Alert from "../components/Alert";
 import Modal from "../components/Modal";
 import MediaCollage from "../components/MediaCollage";
 import ResponseCard from "../components/ResponseCard";
+import GalleryModal from "../components/GalleryModal";
 import "../styles/ChallengePage.css";
 
 function ChallengePage() {
@@ -334,35 +335,13 @@ function ChallengePage() {
             </div>
 
             {expandedGallery && (
-              <div className="gallery-modal" onClick={closeGallery}>
-                <div className="gallery-modal__content" onClick={(e) => e.stopPropagation()}>
-                  <button className="gallery-modal__close" onClick={closeGallery}>
-                    ✕
-                  </button>
-                  <button
-                    className="gallery-modal__nav gallery-modal__nav--prev"
-                    onClick={prevImage}
-                    aria-label="Imagen anterior"
-                  >
-                    ‹
-                  </button>
-                  <img
-                    src={expandedGallery.images[expandedGallery.currentIndex]}
-                    alt={`Imagen ${expandedGallery.currentIndex + 1} de ${expandedGallery.images.length}`}
-                    className="gallery-modal__image"
-                  />
-                  <button
-                    className="gallery-modal__nav gallery-modal__nav--next"
-                    onClick={nextImage}
-                    aria-label="Siguiente imagen"
-                  >
-                    ›
-                  </button>
-                  <div className="gallery-modal__counter">
-                    {expandedGallery.currentIndex + 1} / {expandedGallery.images.length}
-                  </div>
-                </div>
-              </div>
+              <GalleryModal
+                items={expandedGallery.images}
+                currentIndex={expandedGallery.currentIndex}
+                onClose={closeGallery}
+                onNext={nextImage}
+                onPrev={prevImage}
+              />
             )}
           </section>
 

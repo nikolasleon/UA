@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import ChallengeCarousel from "../components/ChallengeCarousel";
 import Alert from "../components/Alert";
 import ResponseCard from "../components/ResponseCard";
+import GalleryModal from "../components/GalleryModal";
 import "../styles/AccountPage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -107,9 +108,10 @@ function AccountPage() {
     fetchUserComments();
   }, [userId, fetchUserData, fetchUserChallenges, fetchUserComments]);
 
-  const openGallery = (images, startIndex = 0) => {
+  const openGallery = (items, startIndex = 0) => {
+    // items puede ser array de URLs o array de {tipo,url}
     setExpandedGallery({
-      images: images,
+      images: items,
       currentIndex: startIndex
     });
   };
@@ -466,55 +468,13 @@ function AccountPage() {
 
       {/* Modal Galería de Imágenes con Navegación */}
       {expandedGallery && (
-        <div 
-          className="gallery-modal-enhanced"
-          onClick={closeGallery}
-        >
-          <button
-            onClick={closeGallery}
-            className="gallery-close-btn-enhanced"
-            aria-label="Cerrar galería"
-          >
-            <FaTimes size={24} />
-          </button>
-
-          <div className="gallery-modal-enhanced-content" onClick={(e) => e.stopPropagation()}>
-
-            {/* Botón anterior */}
-            <button
-              onClick={prevImage}
-              className="gallery-nav-btn prev"
-              disabled={expandedGallery.images.length <= 1}
-              aria-label="Imagen anterior"
-            >
-              <FaChevronLeft size={24} />
-            </button>
-
-            {/* Imagen actual */}
-            <img 
-              src={expandedGallery.images[expandedGallery.currentIndex]} 
-              alt={`Imagen ${expandedGallery.currentIndex + 1}`}
-              className="gallery-enhanced-image"
-            />
-
-            {/* Botón siguiente */}
-            <button
-              onClick={nextImage}
-              className="gallery-nav-btn next"
-              disabled={expandedGallery.images.length <= 1}
-              aria-label="Imagen siguiente"
-            >
-              <FaChevronRight size={24} />
-            </button>
-
-            {/* Contador */}
-            {expandedGallery.images.length > 1 && (
-              <div className="gallery-counter">
-                {expandedGallery.currentIndex + 1} / {expandedGallery.images.length}
-              </div>
-            )}
-          </div>
-        </div>
+        <GalleryModal
+          items={expandedGallery.images}
+          currentIndex={expandedGallery.currentIndex}
+          onClose={closeGallery}
+          onNext={nextImage}
+          onPrev={prevImage}
+        />
       )}
 
     </div>
