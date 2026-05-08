@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaHome, FaInfoCircle, FaEnvelope } from "react-icons/fa";
+import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaHome, FaInfoCircle } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
 import "../styles/Header.css";
@@ -139,14 +139,6 @@ function Header() {
           >
             <FaInfoCircle className="dropdown-icon" />
             Acerca de
-          </Link>
-          <Link
-            to="/contact"
-            className="options-link"
-            onClick={() => setOptionsMenuOpen(false)}
-          >
-            <FaEnvelope className="dropdown-icon" />
-            Contacto
           </Link>
         </div>
       )}
@@ -322,10 +314,6 @@ function Header() {
           <Link to="/about" onClick={() => setMenuOpen(false)} className="mobile-nav-link">
             <FaInfoCircle className="mobile-menu-icon" />
             Acerca de
-          </Link>
-          <Link to="/contact" onClick={() => setMenuOpen(false)} className="mobile-nav-link">
-            <FaEnvelope className="mobile-menu-icon" />
-            Contacto
           </Link>
           {!isLoggedIn && (
             <div className="auth-buttons-mobile">
