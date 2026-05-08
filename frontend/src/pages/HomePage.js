@@ -155,7 +155,7 @@ function HomePage() {
         <section className="hero-section">
           <h1 className="hero-title">¿Te atreves?</h1>
           <p className="hero-subtitle">
-            Pon a prueba tu valentía — o la de tus amigos, o tus enemigos — con retos nuevos cada día.
+            Pon a prueba tu valentía con retos nuevos cada día.
             Supéralos, demuéstralo y gana fama eterna… o al menos unos likes.
           </p>
           {!user && (
