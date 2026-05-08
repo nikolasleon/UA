@@ -61,7 +61,7 @@ function ChallengesListPage() {
       if (!response.ok) throw new Error("Error al eliminar");
 
       setChallenges((prev) => prev.filter((c) => c._id !== challengeId));
-      setAlert({ message: "✓ Reto eliminado correctamente", type: "success" });
+      setAlert({ message: "Reto eliminado correctamente", type: "success" });
     } catch (error) {
       console.error("Error:", error);
       setAlert({ message: "✕ Error al eliminar el reto", type: "error" });

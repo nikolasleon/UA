@@ -21,8 +21,8 @@ function Alert({ message, type = "success", onClose }) {
         </span>
         <span className="alert-message">{message}</span>
       </div>
-      <button 
-        className="alert-close" 
+      <button
+        className="alert-close"
         onClick={onClose}
         aria-label="Cerrar alerta"
       >

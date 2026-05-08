@@ -162,7 +162,7 @@ function SettingsPage() {
       });
 
       setAlert({
-        message: "✓ Perfil guardado correctamente",
+        message: "Perfil guardado correctamente",
         type: "success",
       });
       setIsSaving(false);
@@ -196,7 +196,7 @@ function SettingsPage() {
 
       if (!response.ok) throw new Error("Error al cambiar contraseña");
 
-      setAlert({ message: "✓ Contraseña cambiada correctamente", type: "success" });
+      setAlert({ message: "Contraseña cambiada correctamente", type: "success" });
       setPassword({ nueva: "", confirmar: "" });
       setShowPasswordModal(false);
     } catch (error) {
@@ -216,7 +216,7 @@ function SettingsPage() {
 
       if (!response.ok) throw new Error("Error al eliminar");
 
-      setAlert({ message: "✓ Cuenta eliminada. Redirigiendo...", type: "success" });
+      setAlert({ message: "Cuenta eliminada. Redirigiendo...", type: "success" });
       logout();
       
       setTimeout(() => {

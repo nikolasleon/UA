@@ -201,7 +201,7 @@ function AccountPage() {
         ...prev,
         completados: prev.completados.filter(c => c._id !== challengeId),
       }));
-      setAlert({ message: "✓ Respuesta borrada correctamente", type: "success" });
+      setAlert({ message: "Respuesta borrada correctamente", type: "success" });
     } catch {
       setAlert({ message: "✕ Error al borrar la respuesta", type: "error" });
     }
@@ -220,7 +220,7 @@ function AccountPage() {
         creados: prev.creados.filter((c) => c._id !== challengeId),
       }));
 
-      setAlert({ message: "✓ Reto eliminado correctamente", type: "success" });
+      setAlert({ message: "Reto eliminado correctamente", type: "success" });
     } catch (error) {
       console.error("Error:", error);
       setAlert({ message: "✕ Error al eliminar el reto", type: "error" });
