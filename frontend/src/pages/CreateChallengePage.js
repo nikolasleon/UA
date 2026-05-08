@@ -122,10 +122,6 @@ function CreateChallengePage() {
     <div className="create-challenge-container">
       <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
       <h1 className="create-challenge-title">Crear reto</h1>
-      <p className="create-challenge-subtitle">
-        Lanza un reto a la comunidad y que se las arreglen. Define bien lo que pides, ponle nombre,
-        una imagen y asegúrate de que sea alcanzable en el tiempo indicado — nadie quiere un reto que dure más de un día.
-      </p>
 
       <form className="create-challenge-form" onSubmit={handleSubmit}>
 

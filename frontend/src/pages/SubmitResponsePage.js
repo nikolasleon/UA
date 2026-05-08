@@ -124,9 +124,6 @@ function SubmitResponsePage() {
   return (
     <div className="submit-response-container">
       <h1 className="submit-response-title">Subir respuesta</h1>
-      <p className="submit-response-intro">
-        ¿Lo conseguiste? Demuéstralo. Sube una foto, vídeo o lo que necesites para que la comunidad vea que el reto está superado.
-      </p>
       <p className="submit-response-challenge-name">{challenge.titulo}</p>
 
       {error && <div className="submit-response-error">{error}</div>}

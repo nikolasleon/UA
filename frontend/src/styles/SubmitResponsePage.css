@@ -20,14 +20,6 @@
   text-align: center;
 }
 
-.submit-response-intro {
-  font-size: 0.95rem;
-  color: var(--color-text-soft);
-  text-align: center;
-  margin-bottom: 0.75rem;
-  line-height: 1.6;
-}
-
 .submit-response-challenge-name {
   font-size: 1rem;
   color: var(--color-text-muted);
@@ -147,12 +139,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-tag-success-bg);
-  border: 1px solid var(--color-success-border);
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-muted);
   padding: 0.5rem 0.8rem;
   border-radius: 6px;
   font-size: 0.9rem;
-  color: var(--color-tag-success-text);
+  color: var(--color-text-soft);
 }
 
 .btn-remove {
