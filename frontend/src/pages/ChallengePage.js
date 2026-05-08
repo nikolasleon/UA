@@ -22,6 +22,8 @@ function ChallengePage() {
   const [alert, setAlert] = useState({ message: "", type: "success" });
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [challengersPage, setChallengersPage] = useState(1);
+  const CHALLENGERS_PER_PAGE = 10;
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
   useEffect(() => {
@@ -355,15 +357,26 @@ function ChallengePage() {
             
             <div className="challengers-feed">
               {participantes.length > 0 ? (
-                participantes.slice(0, 3).map((p, index) => (
-                  <React.Fragment key={p.id || index}>
-                    <ResponseCard
-                      response={p}
-                      onLike={handleLike}
-                      onMediaImageClick={openGallery}
-                    />
-                  </React.Fragment>
-                ))
+                <>
+                  {[...participantes]
+                    .slice((challengersPage - 1) * CHALLENGERS_PER_PAGE, challengersPage * CHALLENGERS_PER_PAGE)
+                    .map((p, index) => (
+                      <React.Fragment key={p.id || index}>
+                        <ResponseCard
+                          response={p}
+                          onLike={handleLike}
+                          onMediaImageClick={openGallery}
+                        />
+                      </React.Fragment>
+                    ))}
+                  {Math.ceil(participantes.length / CHALLENGERS_PER_PAGE) > 1 && (
+                    <div className="pagination">
+                      <button className="pagination-btn" onClick={() => setChallengersPage(p => p - 1)} disabled={challengersPage === 1}>← Anterior</button>
+                      <span className="pagination-info">{challengersPage} / {Math.ceil(participantes.length / CHALLENGERS_PER_PAGE)}</span>
+                      <button className="pagination-btn" onClick={() => setChallengersPage(p => p + 1)} disabled={challengersPage === Math.ceil(participantes.length / CHALLENGERS_PER_PAGE)}>Siguiente →</button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <p className="no-data-padding">Aún no hay publicaciones.</p>
               )}

@@ -251,7 +251,7 @@ function HomePage() {
             {loading ? (
               <div className="loading-spinner">Cargando retos...</div>
             ) : popularChallenges.length > 0 ? (
-              popularChallenges.map((challenge) => (
+              popularChallenges.slice(0, 10).map((challenge) => (
                 <ChallengeCard
                   key={challenge._id}
                   challenge={challenge}
