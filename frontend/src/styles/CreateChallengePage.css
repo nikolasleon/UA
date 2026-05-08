@@ -112,12 +112,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-tag-success-bg);
-  border: 1px solid var(--color-success-border);
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-muted);
   padding: 0.5rem 0.8rem;
   border-radius: 6px;
   font-size: 0.9rem;
-  color: var(--color-tag-success-text);
+  color: var(--color-text-soft);
 }
 
 .btn-remove {
