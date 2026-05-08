@@ -15,6 +15,7 @@ function ChallengePage() {
   const [participantes, setParticipantes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("llegada");
+  const [expandedGallery, setExpandedGallery] = useState(null); // {images: [], currentIndex: 0}
   
   const [userStatus, setUserStatus] = useState("INVITADO");
   const [alert, setAlert] = useState({ message: "", type: "success" });
@@ -115,6 +116,33 @@ function ChallengePage() {
       setShowDeleteModal(false);
       setAlert({ message: "Error al borrar el reto", type: "error" });
     }
+  };
+
+  const openGallery = (images, startIndex = 0) => {
+    setExpandedGallery({
+      images: images,
+      currentIndex: startIndex
+    });
+  };
+
+  const closeGallery = () => {
+    setExpandedGallery(null);
+  };
+
+  const nextImage = () => {
+    if (!expandedGallery) return;
+    setExpandedGallery({
+      ...expandedGallery,
+      currentIndex: (expandedGallery.currentIndex + 1) % expandedGallery.images.length
+    });
+  };
+
+  const prevImage = () => {
+    if (!expandedGallery) return;
+    setExpandedGallery({
+      ...expandedGallery,
+      currentIndex: (expandedGallery.currentIndex - 1 + expandedGallery.images.length) % expandedGallery.images.length
+    });
   };
 
   const isOwner = !!user && !!challenge &&
@@ -296,6 +324,7 @@ function ChallengePage() {
                     <ResponseCard
                       response={p}
                       onLike={handleLike}
+                      onMediaImageClick={openGallery}
                     />
                   </React.Fragment>
                 ))
@@ -303,6 +332,38 @@ function ChallengePage() {
                 <p className="no-data-padding">Aún no hay publicaciones.</p>
               )}
             </div>
+
+            {expandedGallery && (
+              <div className="gallery-modal" onClick={closeGallery}>
+                <div className="gallery-modal__content" onClick={(e) => e.stopPropagation()}>
+                  <button className="gallery-modal__close" onClick={closeGallery}>
+                    ✕
+                  </button>
+                  <button
+                    className="gallery-modal__nav gallery-modal__nav--prev"
+                    onClick={prevImage}
+                    aria-label="Imagen anterior"
+                  >
+                    ‹
+                  </button>
+                  <img
+                    src={expandedGallery.images[expandedGallery.currentIndex]}
+                    alt={`Imagen ${expandedGallery.currentIndex + 1} de ${expandedGallery.images.length}`}
+                    className="gallery-modal__image"
+                  />
+                  <button
+                    className="gallery-modal__nav gallery-modal__nav--next"
+                    onClick={nextImage}
+                    aria-label="Siguiente imagen"
+                  >
+                    ›
+                  </button>
+                  <div className="gallery-modal__counter">
+                    {expandedGallery.currentIndex + 1} / {expandedGallery.images.length}
+                  </div>
+                </div>
+              </div>
+            )}
           </section>
 
         </aside>

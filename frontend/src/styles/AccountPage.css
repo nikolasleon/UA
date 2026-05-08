@@ -85,7 +85,7 @@
 }
 
 .metric-card {
-  background: linear-gradient(135deg, var(--color-info-bg) 0%, var(--color-accent) 100%);
+  background: linear-gradient(135deg, #1a7a7e 0%, #0d4a4d 100%);
   color: var(--color-info-text-strong);
   border: 1px solid var(--color-info-border);
   border-radius: 10px;
@@ -104,7 +104,7 @@
 }
 
 .metric-card:hover {
-  background: linear-gradient(135deg, var(--color-info-pill) 0%, var(--color-accent-soft) 100%);
+  background: linear-gradient(135deg, #239397 0%, #15595d 100%);
   transform: translateY(-4px);
   box-shadow: 0 10px 24px rgba(35, 91, 93, 0.2);
 }
