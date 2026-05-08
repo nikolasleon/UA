@@ -25,9 +25,12 @@ function ResponseCard({
   const isOwn = !!response.isOwn;
   const likes = Array.isArray(response.likes) ? response.likes.length : response.likes || response.likesCount || 0;
   const multimedia = response.multimediaEnvio || [];
-  const images = multimedia.filter((m) => m.tipo === "imagen").map((m) => m.url);
-  const collageImages = images.length > 0 ? images : response.imagenEnvio ? [response.imagenEnvio] : [];
-  const extraMedia = multimedia.filter((m) => m.tipo !== "imagen");
+  // Construir lista de items multimedia (acepta imagen, video, audio, pdf)
+  let mediaItems = multimedia.map((m) => ({ tipo: m.tipo, url: m.url }));
+  if (mediaItems.length === 0 && response.imagenEnvio) {
+    mediaItems = [{ tipo: "imagen", url: response.imagenEnvio }];
+  }
+  const extraMedia = []; // ahora gestionamos todo desde mediaItems (si hace falta, se pueden separar)
   const isClickable = !!onOpenChallenge;
 
   const handleCardKeyDown = (event) => {
@@ -96,11 +99,11 @@ function ResponseCard({
         {description && <p className="response-card__description">{description}</p>}
       </div>
 
-      {collageImages.length > 0 && (
+      {mediaItems.length > 0 && (
         <div className="response-card__media" onClick={stopCardClick}>
           <MediaCollage
-            images={collageImages}
-            onImageClick={(index) => onMediaImageClick?.(collageImages, index)}
+            images={mediaItems}
+            onImageClick={(index) => onMediaImageClick?.(mediaItems, index)}
           />
         </div>
       )}

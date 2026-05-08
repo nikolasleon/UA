@@ -5,6 +5,7 @@ import Alert from "../components/Alert";
 import Modal from "../components/Modal";
 import MediaCollage from "../components/MediaCollage";
 import ResponseCard from "../components/ResponseCard";
+import GalleryModal from "../components/GalleryModal";
 import "../styles/ChallengePage.css";
 
 function ChallengePage() {
@@ -15,6 +16,7 @@ function ChallengePage() {
   const [participantes, setParticipantes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("llegada");
+  const [expandedGallery, setExpandedGallery] = useState(null); // {images: [], currentIndex: 0}
   
   const [userStatus, setUserStatus] = useState("INVITADO");
   const [alert, setAlert] = useState({ message: "", type: "success" });
@@ -115,6 +117,33 @@ function ChallengePage() {
       setShowLoginModal(false);
       setAlert({ message: "Error al borrar el reto", type: "error" });
     }
+  };
+
+  const openGallery = (images, startIndex = 0) => {
+    setExpandedGallery({
+      images: images,
+      currentIndex: startIndex
+    });
+  };
+
+  const closeGallery = () => {
+    setExpandedGallery(null);
+  };
+
+  const nextImage = () => {
+    if (!expandedGallery) return;
+    setExpandedGallery({
+      ...expandedGallery,
+      currentIndex: (expandedGallery.currentIndex + 1) % expandedGallery.images.length
+    });
+  };
+
+  const prevImage = () => {
+    if (!expandedGallery) return;
+    setExpandedGallery({
+      ...expandedGallery,
+      currentIndex: (expandedGallery.currentIndex - 1 + expandedGallery.images.length) % expandedGallery.images.length
+    });
   };
 
   const isOwner = !!user && !!challenge &&
@@ -310,6 +339,7 @@ function ChallengePage() {
                     <ResponseCard
                       response={p}
                       onLike={handleLike}
+                      onMediaImageClick={openGallery}
                     />
                   </React.Fragment>
                 ))
@@ -317,6 +347,16 @@ function ChallengePage() {
                 <p className="no-data-padding">Aún no hay publicaciones.</p>
               )}
             </div>
+
+            {expandedGallery && (
+              <GalleryModal
+                items={expandedGallery.images}
+                currentIndex={expandedGallery.currentIndex}
+                onClose={closeGallery}
+                onNext={nextImage}
+                onPrev={prevImage}
+              />
+            )}
           </section>
 
         </aside>

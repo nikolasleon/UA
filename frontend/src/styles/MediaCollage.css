@@ -72,6 +72,34 @@
   transition: transform 0.2s ease;
 }
 
+.collage-video-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.collage-play-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-white);
+  z-index: 6;
+  background: rgba(0,0,0,0.35);
+  padding: 6px;
+  border-radius: 50%;
+}
+
+.collage-file-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
 .collage-media-item:hover img {
   transform: scale(1.1);
 }
