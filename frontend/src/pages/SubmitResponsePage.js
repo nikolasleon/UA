@@ -87,42 +87,35 @@ function SubmitResponsePage() {
   const executeSubmit = async () => {
     setShowConfirmModal(false);
     setIsSubmitting(true);
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      if (!titulo.trim()) { setError("El título es obligatorio"); return; }
-      if (multimediaFiles.length === 0) { setError("Debes subir al menos un archivo"); return; }
+    setError("");
+    try {
+      const multimediaEnvio = await Promise.all(
+        multimediaFiles.map(async (file) => ({
+          url: await uploadFile(file),
+          tipo: getTipo(file),
+        }))
+      );
 
-      setIsSubmitting(true);
-      setError("");
-      try {
-        const multimediaEnvio = await Promise.all(
-          multimediaFiles.map(async (file) => ({
-            url: await uploadFile(file),
-            tipo: getTipo(file),
-          }))
-        );
+      const res = await fetch(`${API_URL}/api/challenges/${id}/respuesta`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          usuarioId: user._id,
+          titulo: titulo.trim(),
+          descripcionEnvio: descripcion.trim(),
+          valoracion: valoracion || null,
+          multimediaEnvio,
+        }),
+      });
 
-        const res = await fetch(`${API_URL}/api/challenges/${id}/respuesta`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            usuarioId: user._id,
-            titulo: titulo.trim(),
-            descripcionEnvio: descripcion.trim(),
-            valoracion: valoracion || null,
-            multimediaEnvio,
-          }),
-        });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Error al enviar");
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Error al enviar");
-
-        navigate(`/reto/${id}`);
-      } catch (err) {
-        setError(err.message || "Error al enviar la respuesta");
-        setIsSubmitting(false);
-      }
-    };
+      navigate(`/reto/${id}`);
+    } catch (err) {
+      setError(err.message || "Error al enviar la respuesta");
+      setIsSubmitting(false);
+    }
   };
 
 
