@@ -3,8 +3,8 @@ import "../styles/AboutPage.css";
 
 const teamMembers = [
   "Sandra Moya del Amo",
-  "Nikolas Leon De Oliveira",
-  "Noelia Almeida",
+  "Nikolas Leon De Oliveira Dominguez",
+  "Noelia Almeida Ibáñez",
   "Andrea García",
 ];
 
