@@ -20,6 +20,14 @@
   text-align: center;
 }
 
+.submit-response-intro {
+  font-size: 0.95rem;
+  color: var(--color-text-soft);
+  text-align: center;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
 .submit-response-challenge-name {
   font-size: 1rem;
   color: var(--color-text-muted);
