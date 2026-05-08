@@ -22,6 +22,7 @@ import ChallengePage from "./pages/ChallengePage";
 import CreateChallengePage from "./pages/CreateChallengePage";
 import EditChallengePage from "./pages/EditChallengePage";
 import SubmitResponsePage from "./pages/SubmitResponsePage";
+import GalleryModal from "./components/GalleryModal";
 import "./styles/CreateChallengePage.css";
 
 function FAB() {
