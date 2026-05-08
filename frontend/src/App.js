@@ -7,7 +7,6 @@ import Header from "./components/Header";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import AccountPage from "./pages/AccountPage";
@@ -52,7 +51,6 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/buscar" element={<Buscar />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
           <Route path="/profile/:userId" element={<PublicProfilePage />} />
           <Route path="/reto/:id" element={<ChallengePage />} />
           <Route
