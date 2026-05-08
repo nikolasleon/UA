@@ -152,6 +152,19 @@ function HomePage() {
     <div className="homepage-wrapper">
       <main className="homepage-main">
 
+        <section className="hero-section">
+          <h1 className="hero-title">¿Te atreves?</h1>
+          <p className="hero-subtitle">
+            Pon a prueba tu valentía con retos nuevos cada día.
+            Supéralos, demuéstralo y gana fama eterna… o al menos unos likes.
+          </p>
+          {!user && (
+            <p className="hero-cta-text">
+              <Link to="/login" className="hero-link">Inicia sesión</Link> para crear retos, gestionar tus respuestas y dejar tu huella en la comunidad.
+            </p>
+          )}
+        </section>
+
         <section className="daily-challenge-box">
           <h1 className="main-title">RETO DIARIO</h1>
           {loading ? (
@@ -238,7 +251,7 @@ function HomePage() {
             {loading ? (
               <div className="loading-spinner">Cargando retos...</div>
             ) : popularChallenges.length > 0 ? (
-              popularChallenges.map((challenge) => (
+              popularChallenges.slice(0, 10).map((challenge) => (
                 <ChallengeCard
                   key={challenge._id}
                   challenge={challenge}

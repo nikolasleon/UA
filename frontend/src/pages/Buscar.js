@@ -19,11 +19,14 @@ function Buscar() {
 
   useEffect(() => {
     setSearch(urlSearch);
+    setPage(1);
   }, [urlSearch]);
   const [duracion, setDuracion] = useState("");
   const [nivel, setNivel] = useState("");
   const [retos, setRetos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 10;
 
   useEffect(() => {
     fetch(`${API_URL}/api/challenges`)
@@ -44,6 +47,9 @@ function Buscar() {
 
     return coincideTexto && coincideCategoria && coincideDuracion && coincideNivel;
   });
+
+  const totalPages = Math.ceil(retosFiltrados.length / PER_PAGE);
+  const retosPagina = retosFiltrados.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
     <div className="page">
@@ -68,7 +74,7 @@ function Buscar() {
           <h3 className="filters-title">Filtros rápidos</h3>
 
           <div className="filters">
-            <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+            <select value={categoria} onChange={(e) => { setCategoria(e.target.value); setPage(1); }}>
               <option value="">Categorías</option>
               <option value="fuerza">Fuerza</option>
               <option value="cardio">Cardio</option>
@@ -78,7 +84,7 @@ function Buscar() {
               <option value="general">General</option>
             </select>
 
-            <select value={duracion} onChange={(e) => setDuracion(e.target.value)}>
+            <select value={duracion} onChange={(e) => { setDuracion(e.target.value); setPage(1); }}>
               <option value="">Duración</option>
               <option value="5min">5min</option>
               <option value="10min">10min</option>
@@ -87,7 +93,7 @@ function Buscar() {
               <option value="15-20min">15-20min</option>
             </select>
 
-            <select value={nivel} onChange={(e) => setNivel(e.target.value)}>
+            <select value={nivel} onChange={(e) => { setNivel(e.target.value); setPage(1); }}>
               <option value="">Nivel</option>
               <option value="fácil">Fácil</option>
               <option value="medio">Medio</option>
@@ -104,30 +110,39 @@ function Buscar() {
       {loading ? (
         <p style={{ textAlign: "center", padding: "2rem" }}>Cargando retos...</p>
       ) : (
-        <div className="cards-container">
-          {retosFiltrados.length > 0 ? (
-            retosFiltrados.map((reto) => (
-              <div className="card" key={reto._id} onClick={() => navigate(`/reto/${reto._id}`)} style={{ cursor: "pointer" }}>
-                {reto.imagenDesafio ? (
-                  <img src={reto.imagenDesafio} alt={reto.titulo} />
-                ) : (
-                  <div className="card-no-image">Sin imagen</div>
-                )}
-                <div className="card-info">
-                  <h3>{reto.titulo}</h3>
-                  <p>{reto.descripcion}</p>
-                  <div className="tags">
-                    {reto.categoria && <span>{reto.categoria}</span>}
-                    {reto.duracion && <span>{reto.duracion}</span>}
-                    {reto.dificultad && <span>{reto.dificultad}</span>}
+        <>
+          <div className="cards-container">
+            {retosFiltrados.length > 0 ? (
+              retosPagina.map((reto) => (
+                <div className="card" key={reto._id} onClick={() => navigate(`/reto/${reto._id}`)} style={{ cursor: "pointer" }}>
+                  {reto.imagenDesafio ? (
+                    <img src={reto.imagenDesafio} alt={reto.titulo} />
+                  ) : (
+                    <div className="card-no-image">Sin imagen</div>
+                  )}
+                  <div className="card-info">
+                    <h3>{reto.titulo}</h3>
+                    <p>{reto.descripcion}</p>
+                    <div className="tags">
+                      {reto.categoria && <span>{reto.categoria}</span>}
+                      {reto.duracion && <span>{reto.duracion}</span>}
+                      {reto.dificultad && <span>{reto.dificultad}</span>}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p style={{ textAlign: "center" }}>No se encontraron retos.</p>
+              ))
+            ) : (
+              <p style={{ textAlign: "center" }}>No se encontraron retos.</p>
+            )}
+          </div>
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button className="pagination-btn" onClick={() => setPage(p => p - 1)} disabled={page === 1}>← Anterior</button>
+              <span className="pagination-info">{page} / {totalPages}</span>
+              <button className="pagination-btn" onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>Siguiente →</button>
+            </div>
           )}
-        </div>
+        </>
       )}
 
     </div>
