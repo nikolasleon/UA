@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaHome, FaInfoCircle, FaEnvelope } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
+import Alert from "../components/Alert";
 import "../styles/Header.css";
 
 function Header() {
@@ -17,6 +18,7 @@ function Header() {
   const navigate = useNavigate();
   const userName = user?.nombre || "";
   const userPhoto = user?.fotoPerfil || "";
+  const [alert, setAlert] = useState({ message: "", type: "success" });
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const toggleSearch = () => setSearchOpen(!searchOpen);
@@ -54,11 +56,12 @@ function Header() {
     setProfileMenuOpen(false);
     setOptionsMenuOpen(false);
     logout();
+    setAlert({ message: "Has cerrado sesión", type: "success" });
     setTimeout(() => {
       navigate("/", { replace: true });
-    }, 200);
+      window.location.reload();
+    }, 1000);
 
-    window.location.reload();
   };
 
   useEffect(() => {
@@ -151,6 +154,12 @@ function Header() {
   );
 
   return (
+    <>
+    <Alert 
+      message={alert.message} 
+      type={alert.type} 
+      onClose={() => setAlert({ ...alert, message: "" })} 
+    />
     <header className={`header ${searchOpen ? "search-active" : ""}`}>
       <div className="header-container">
         {/* Logo */}
@@ -331,6 +340,7 @@ function Header() {
         </nav>
       )}
     </header>
+    </>
   );
 }
 

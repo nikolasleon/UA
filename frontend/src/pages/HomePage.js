@@ -48,9 +48,22 @@ function HomePage() {
         ]);
 
         const dataPopulares = await resPopulares.json();
-        setPopularChallenges(
-          dataPopulares.map(c => ({ ...c, valoracionPromedio: c.valoracionPromedio || 0 }))
-        );
+        const sortedChallenges = dataPopulares
+          .map(c => ({ 
+            ...c, 
+            valoracionPromedio: c.valoracionPromedio || 0,
+            participantes: c.participantes || 0 
+          }))
+          .sort((a, b) => {
+            // Primero comparamos por número de participantes
+            if (b.participantes !== a.participantes) {
+              return b.participantes - a.participantes;
+            }
+            // Si tienen los mismos participantes, ordenamos por valoración
+            return b.valoracionPromedio - a.valoracionPromedio;
+          });
+
+        setPopularChallenges(sortedChallenges);
 
         const dataDaily = await resDaily.json();
         if (dataDaily.reto) {
@@ -85,7 +98,7 @@ function HomePage() {
 
   const handleAcceptDaily = async () => {
     if (!user) {
-      setAlert({ message: "Debes iniciar sesión para participar.", type: "error" });
+      setAlert({ message: "Debes iniciar sesión para aceptar el reto", type: "error" });
       return;
     }
     setIsJoining(true);
@@ -137,12 +150,10 @@ function HomePage() {
 
   return (
     <div className="homepage-wrapper">
-      <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
       <main className="homepage-main">
 
         <section className="daily-challenge-box">
           <h1 className="main-title">RETO DIARIO</h1>
-
           {loading ? (
             <div className="daily-white-card">
               <p className="no-challengers">Cargando reto diario...</p>
@@ -157,7 +168,7 @@ function HomePage() {
                 <div className="daily-card-header">
                   <h2 className="challenge-title">{dailyChallenge.titulo}</h2>
                   <span className="participants-badge">
-                    <strong>{dailyChallenge.participantes || 0}</strong> personas participando
+                    <strong>{dailyChallenge.participantes || 0}</strong> {dailyChallenge.participantes === 1 ? "persona" : "personas"} participando
                   </span>
                 </div>
 

@@ -62,22 +62,31 @@ router.get("/", async (req, res) => {
 router.get("/daily", async (req, res) => {
   try {
     const ahora = new Date();
-    const hace24h = new Date(ahora - 24 * 60 * 60 * 1000);
 
     let daily = await Challenge.findOne({ esRetoDia: true, estado: "activo" });
-
+    const esDeOtroDia = daily && daily.fechaRetoDia && new Date(daily.fechaRetoDia).toDateString() !== ahora.toDateString();
     // Rotar si no hay ninguno o si han pasado más de 24h desde que se asignó
-    if (!daily || !daily.fechaRetoDia || daily.fechaRetoDia < hace24h) {
+    if (!daily || esDeOtroDia) {
       // Quitar la bandera al anterior
       if (daily) {
         await Challenge.findByIdAndUpdate(daily._id, { esRetoDia: false });
       }
 
       // Elegir el reto activo con la fecha de reto del día más antigua (o null), para rotar de forma justa
-      const candidato = await Challenge.findOne({ estado: "activo" })
-        .sort({ fechaRetoDia: 1 }); // null va primero, luego el más antiguo
+      const candidato = await Challenge.findOne({ 
+        estado: "activo",
+        _id: { $ne: daily ? daily._id : null } // Forzamos que sea uno distinto si es posible
+      }).sort({ fechaRetoDia: 1 });
 
-      if (!candidato) return res.json({ reto: null, imagenesParticipantes: [] });
+      if (candidato) {
+        await Challenge.findByIdAndUpdate(candidato._id, {
+          esRetoDia: true,
+          fechaRetoDia: ahora, // Guardamos la fecha de hoy
+        });
+        daily = await Challenge.findById(candidato._id);
+      } else {
+        return res.json({ reto: null, imagenesParticipantes: [] });
+      }
 
       await Challenge.findByIdAndUpdate(candidato._id, {
         esRetoDia: true,

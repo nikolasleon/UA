@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/SubmitResponsePage.css";
+import Modal from "../components/Modal";
+import Alert from "../components/Alert";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -17,6 +19,8 @@ function SubmitResponsePage() {
   const [multimediaFiles, setMultimediaFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [alert, setAlert] = useState({ message: "", type: "" });
 
   useEffect(() => {
     fetch(`${API_URL}/api/challenges/${id}`)
@@ -26,9 +30,31 @@ function SubmitResponsePage() {
   }, [id]);
 
   const handleFileChange = (e) => {
-    setMultimediaFiles(prev => [...prev, ...Array.from(e.target.files)]);
-  };
+    const selectedFiles = Array.from(e.target.files);
+    const MAX_SIZE = 50 * 1024 * 1024; // 50MB
+    const ALLOWED_TYPES = ["image/", "video/", "audio/", "application/pdf"];
+    
+    let filesToNodes = [];
 
+    for (const file of selectedFiles) {
+      const isValidType = ALLOWED_TYPES.some(type => file.type.startsWith(type) || file.type === type);
+      
+      if (!isValidType) {
+        setAlert({ message: `Formato de "${file.name}" no permitido.`, type: "error" });
+        return; // Detenemos la carga si hay un error
+      } 
+      
+      if (file.size > MAX_SIZE) {
+        setAlert({ message: `"${file.name}" supera los 10MB.`, type: "error" });
+        return;
+      }
+      
+      filesToNodes.push(file);
+    }
+
+    setMultimediaFiles(prev => [...prev, ...filesToNodes]);
+    e.target.value = null; 
+  };
   const removeFile = (index) => {
     setMultimediaFiles(prev => prev.filter((_, i) => i !== index));
   };
@@ -49,43 +75,56 @@ function SubmitResponsePage() {
     const data = await res.json();
     return data.url;
   };
-
-  const handleSubmit = async (e) => {
+// Esta función ahora solo abre el modal
+  const preSubmitCheck = (e) => {
     e.preventDefault();
     if (!titulo.trim()) { setError("El título es obligatorio"); return; }
     if (multimediaFiles.length === 0) { setError("Debes subir al menos un archivo"); return; }
-
-    setIsSubmitting(true);
-    setError("");
-    try {
-      const multimediaEnvio = await Promise.all(
-        multimediaFiles.map(async (file) => ({
-          url: await uploadFile(file),
-          tipo: getTipo(file),
-        }))
-      );
-
-      const res = await fetch(`${API_URL}/api/challenges/${id}/respuesta`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          usuarioId: user._id,
-          titulo: titulo.trim(),
-          descripcionEnvio: descripcion.trim(),
-          valoracion: valoracion || null,
-          multimediaEnvio,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Error al enviar");
-
-      navigate(`/reto/${id}`);
-    } catch (err) {
-      setError(err.message || "Error al enviar la respuesta");
-      setIsSubmitting(false);
-    }
+    setShowConfirmModal(true);
   };
+
+  // Esta es la función que realmente hace el trabajo (llámala desde el onConfirm del Modal)
+  const executeSubmit = async () => {
+    setShowConfirmModal(false);
+    setIsSubmitting(true);
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!titulo.trim()) { setError("El título es obligatorio"); return; }
+      if (multimediaFiles.length === 0) { setError("Debes subir al menos un archivo"); return; }
+
+      setIsSubmitting(true);
+      setError("");
+      try {
+        const multimediaEnvio = await Promise.all(
+          multimediaFiles.map(async (file) => ({
+            url: await uploadFile(file),
+            tipo: getTipo(file),
+          }))
+        );
+
+        const res = await fetch(`${API_URL}/api/challenges/${id}/respuesta`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            usuarioId: user._id,
+            titulo: titulo.trim(),
+            descripcionEnvio: descripcion.trim(),
+            valoracion: valoracion || null,
+            multimediaEnvio,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Error al enviar");
+
+        navigate(`/reto/${id}`);
+      } catch (err) {
+        setError(err.message || "Error al enviar la respuesta");
+        setIsSubmitting(false);
+      }
+    };
+  };
+
 
   if (!challenge) return <div className="loading-state">Cargando...</div>;
 
@@ -96,7 +135,7 @@ function SubmitResponsePage() {
 
       {error && <div className="submit-response-error">{error}</div>}
 
-      <form className="submit-response-form" onSubmit={handleSubmit}>
+      <form className="submit-response-form" onSubmit={preSubmitCheck}>
         <div className="form-group">
           <label>Título <span className="required">*</span></label>
           <input
@@ -158,6 +197,22 @@ function SubmitResponsePage() {
           {isSubmitting ? "Enviando..." : "Enviar respuesta"}
         </button>
       </form>
+      <Alert 
+        message={alert.message} 
+        type={alert.type} 
+        onClose={() => setAlert({ ...alert, message: "" })} 
+      />
+      {showConfirmModal && (
+        <Modal
+          title="¿Confirmar envío?"
+          confirmText="Sí, subir prueba"
+          onClose={() => setShowConfirmModal(false)}
+          onConfirm={executeSubmit}
+        >
+          <p>Estás a punto de subir tu prueba para el reto <strong>{challenge.titulo}</strong>.</p>
+          <p>Una vez enviada, los demás usuarios podrán ver tu respuesta. ¿Estás listo?</p>
+        </Modal>
+      )}
     </div>
   );
 }

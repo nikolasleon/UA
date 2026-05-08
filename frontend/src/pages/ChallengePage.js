@@ -18,8 +18,8 @@ function ChallengePage() {
   
   const [userStatus, setUserStatus] = useState("INVITADO");
   const [alert, setAlert] = useState({ message: "", type: "success" });
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
   useEffect(() => {
@@ -65,7 +65,7 @@ function ChallengePage() {
 
   const handleAction = async () => {
     if (userStatus === "INVITADO") {
-      setAlert({ message: "Debes iniciar sesión para participar.", type: "error" });
+      setShowLoginModal(true);
       return;
     }
 
@@ -112,7 +112,7 @@ function ChallengePage() {
       if (!res.ok) throw new Error();
       navigate("/account");
     } catch {
-      setShowDeleteModal(false);
+      setShowLoginModal(false);
       setAlert({ message: "Error al borrar el reto", type: "error" });
     }
   };
@@ -139,6 +139,20 @@ function ChallengePage() {
 
   return (
     <div className="challenge-page-container">
+            {showLoginModal && (
+      <Modal
+        title="¡Únete al reto!"
+        confirmText="Ir a Iniciar Sesión"
+        onClose={() => setShowLoginModal(false)}
+        onConfirm={() => {
+          setShowLoginModal(false);
+          navigate("/login"); // Asegúrate de tener 'navigate' configurado
+        }}
+      >
+        <p>Para poder aceptar este reto y subir tus pruebas, necesitas tener una cuenta en DayDare.</p>
+        <p>¿Quieres iniciar sesión ahora?</p>
+      </Modal>
+    )}
       <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
 
       {showDeleteModal && (

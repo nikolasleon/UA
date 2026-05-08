@@ -72,13 +72,14 @@ function LoginPage() {
       }
 
       // Pasar rememberMe a login() para que maneje la persistencia
-      login(data.user, rememberMe);
+      
 
       setAlert({ message: "Login correcto", type: "success" });
       resetLoginForm();
       setTimeout(() => {
+        login(data.user, rememberMe);
         navigate("/account");
-      }, 500);
+      }, 1000);
     } catch (error) {
       setAlert({ message: error.message || "Error al iniciar sesión", type: "error" });
     } finally {
@@ -88,7 +89,7 @@ function LoginPage() {
 
   return (
     <div className="formularios-container">
-      <Alert message={alert.message} type={alert.type} />
+      <Alert message={alert.message} type={alert.type } onClose={() => setAlert({ ...alert, message: "" })} />
       
       <div className="form-block">
         <h2>Iniciar Sesión</h2>
@@ -138,7 +139,7 @@ function LoginPage() {
 
         <p className="login-footer">
           ¿Aún no eres miembro?{" "}
-          <Link to="/register">crea una nueva cuenta aquí</Link>
+          <Link to="/register">Crea una nueva cuenta aquí</Link>
         </p>
       </div>
     </div>
