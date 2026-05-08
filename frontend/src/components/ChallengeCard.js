@@ -14,7 +14,12 @@ function ChallengeCard({ challenge, onEdit, onDelete, onDeleteResponse, onViewDe
   const creatorPhoto = creator?.fotoPerfil;
 
   const handleOpenDetails = () => {
-    onViewDetails(challenge._id);
+    if (typeof onViewDetails === "function") {
+      onViewDetails(challenge._id);
+      return;
+    }
+    // fallback: navegar directamente si no se proporcionó callback
+    navigate(`/reto/${challenge._id}`);
   };
 
   const handleCardKeyDown = (event) => {
