@@ -110,37 +110,39 @@ function Buscar() {
       {loading ? (
         <p style={{ textAlign: "center", padding: "2rem" }}>Cargando retos...</p>
       ) : (
-        <div className="cards-container">
-          {retosFiltrados.length > 0 ? (
-            retosPagina.map((reto) => (
-              <div className="card" key={reto._id} onClick={() => navigate(`/reto/${reto._id}`)} style={{ cursor: "pointer" }}>
-                {reto.imagenDesafio ? (
-                  <img src={reto.imagenDesafio} alt={reto.titulo} />
-                ) : (
-                  <div className="card-no-image">Sin imagen</div>
-                )}
-                <div className="card-info">
-                  <h3>{reto.titulo}</h3>
-                  <p>{reto.descripcion}</p>
-                  <div className="tags">
-                    {reto.categoria && <span>{reto.categoria}</span>}
-                    {reto.duracion && <span>{reto.duracion}</span>}
-                    {reto.dificultad && <span>{reto.dificultad}</span>}
+        <>
+          <div className="cards-container">
+            {retosFiltrados.length > 0 ? (
+              retosPagina.map((reto) => (
+                <div className="card" key={reto._id} onClick={() => navigate(`/reto/${reto._id}`)} style={{ cursor: "pointer" }}>
+                  {reto.imagenDesafio ? (
+                    <img src={reto.imagenDesafio} alt={reto.titulo} />
+                  ) : (
+                    <div className="card-no-image">Sin imagen</div>
+                  )}
+                  <div className="card-info">
+                    <h3>{reto.titulo}</h3>
+                    <p>{reto.descripcion}</p>
+                    <div className="tags">
+                      {reto.categoria && <span>{reto.categoria}</span>}
+                      {reto.duracion && <span>{reto.duracion}</span>}
+                      {reto.dificultad && <span>{reto.dificultad}</span>}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p style={{ textAlign: "center" }}>No se encontraron retos.</p>
-          )}
-        </div>
-        {totalPages > 1 && (
-          <div className="pagination">
-            <button className="pagination-btn" onClick={() => setPage(p => p - 1)} disabled={page === 1}>← Anterior</button>
-            <span className="pagination-info">{page} / {totalPages}</span>
-            <button className="pagination-btn" onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>Siguiente →</button>
+              ))
+            ) : (
+              <p style={{ textAlign: "center" }}>No se encontraron retos.</p>
+            )}
           </div>
-        )}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button className="pagination-btn" onClick={() => setPage(p => p - 1)} disabled={page === 1}>← Anterior</button>
+              <span className="pagination-info">{page} / {totalPages}</span>
+              <button className="pagination-btn" onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>Siguiente →</button>
+            </div>
+          )}
+        </>
       )}
 
     </div>
