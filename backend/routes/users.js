@@ -195,6 +195,22 @@ router.put("/profile/:id", async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
+    if (fotoPerfil !== undefined && user.fotoPerfil && fotoPerfil !== user.fotoPerfil) {
+      try {
+        // Extraemos el nombre del archivo de la URL antigua
+        const fileNameAntiguo = user.fotoPerfil.split("/").pop();
+        
+        // Borramos el archivo de Supabase
+        await supabase.storage
+          .from("uploads")
+          .remove([fileNameAntiguo]);
+        
+        console.log("Foto de perfil antigua eliminada de Supabase:", fileNameAntiguo);
+      } catch (err) {
+        console.error("Error al borrar foto antigua de Supabase:", err);
+      }
+    }
+
     if (nombre !== undefined) user.nombre = nombre;
     if (apellido !== undefined) user.apellido = apellido;
     if (bio !== undefined) user.bio = bio;
@@ -294,44 +310,82 @@ router.put("/settings/:id/password", async (req, res) => {
   }
 });
 
-// Borrar cuenta del usuario
 router.delete("/:id", async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const usuarioId = req.params.id;
 
+    const user = await User.findById(usuarioId);
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
+    const archivosABorrar = [];
+
+    // Foto de perfil
+    if (user.fotoPerfil) {
+      archivosABorrar.push(user.fotoPerfil.split("/").pop());
+    }
+
+    // Retos creados
+    const retosCreados = await Challenge.find({ creadorId: usuarioId }); 
+    retosCreados.forEach(reto => {
+      if (reto.imagenDesafio) archivosABorrar.push(reto.imagenDesafio.split("/").pop());
+      if (reto.multimedia) {
+        reto.multimedia.forEach(m => {
+           if (m.url) archivosABorrar.push(m.url.split("/").pop());
+        });
+      }
+    });
+
+    // Participaciones
+    const participacionesPropias = await UserChallenge.find({ usuarioId: usuarioId });
+    participacionesPropias.forEach(p => {
+      if (p.imagenEnvio) archivosABorrar.push(p.imagenEnvio.split("/").pop());
+      if (p.multimediaEnvio) {
+        p.multimediaEnvio.forEach(m => {
+          if (m.url) archivosABorrar.push(m.url.split("/").pop());
+        });
+      }
+    });
+
+    // Borrado físico en Supabase
+    if (archivosABorrar.length > 0) {
+      const listaUnica = [...new Set(archivosABorrar.filter(name => name))];
+      await supabase.storage.from("uploads").remove(listaUnica);
+      console.log("Multimedia borrada de Supabase");
+    }
+    
     // Borrar participaciones en retos creados por el usuario y luego los retos
-    const retosCreados = await Challenge.find({ creadorId: req.params.id }, "_id");
     const retosIds = retosCreados.map((r) => r._id);
     await UserChallenge.deleteMany({ desafioId: { $in: retosIds } });
-    await Challenge.deleteMany({ creadorId: req.params.id });
+    await Challenge.deleteMany({ creadorId: usuarioId });
 
-    // Encontrar retos ajenos en los que el usuario participó
-    const participaciones = await UserChallenge.find({ usuarioId: req.params.id }, "desafioId");
-    const desafiosAfectados = [...new Set(participaciones.map((p) => String(p.desafioId)))];
+    // Guardamos los retos ajenos afectados antes de borrar las participaciones
+    const desafiosAfectados = [...new Set(participacionesPropias.map((p) => String(p.desafioId)))];
 
-    // Borrar las participaciones propias del usuario
-    await UserChallenge.deleteMany({ usuarioId: req.params.id });
+    // Borrar participaciones del usuario
+    await UserChallenge.deleteMany({ usuarioId: usuarioId });
 
-    // Recalcular contadores y valoraciones de los retos afectados
+    // Borrar el usuario finalmente
+    await User.findByIdAndDelete(usuarioId);
+
+    // 3. Recalcular promedios de los retos donde participó
     for (const desafioId of desafiosAfectados) {
       const aprobados = await UserChallenge.find({ desafioId, estado: "aprobado" });
       const conValoracion = aprobados.filter((p) => p.valoracion != null);
-      const promedio =
-        conValoracion.length > 0
+      const promedio = conValoracion.length > 0
           ? conValoracion.reduce((acc, p) => acc + p.valoracion, 0) / conValoracion.length
           : 0;
+      
       await Challenge.findByIdAndUpdate(desafioId, {
         participantes: aprobados.length,
         valoracionPromedio: Math.round(promedio * 10) / 10,
       });
     }
 
-    res.json({ message: "Cuenta eliminada exitosamente" });
+    res.json({ message: "Cuenta y toda su multimedia eliminadas exitosamente" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error al eliminar cuenta", error: err });
   }
 });

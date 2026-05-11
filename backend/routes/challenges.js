@@ -3,6 +3,12 @@ const router = express.Router();
 const Challenge = require("../models/Challenge");
 const UserChallenge = require("../models/UserChallenge");
 const User = require("../models/User");
+const { createClient } = require("@supabase/supabase-js");
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
 
 // Obtener retos del usuario (creados, en progreso, completados)
 router.get("/user/:userId", async (req, res) => {
@@ -260,7 +266,44 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { titulo, descripcion, imagenDesafio, dificultad, categoria, duracion, multimedia } = req.body;
+    const challengeAntiguo = await Challenge.findById(req.params.id);
 
+    if (!challengeAntiguo) {
+      return res.status(404).json({ message: "Reto no encontrado" });
+    }
+
+    // --- LÓGICA DE LIMPIEZA EN SUPABASE ---
+    const archivosParaBorrar = [];
+
+    if (imagenDesafio && challengeAntiguo.imagenDesafio && imagenDesafio !== challengeAntiguo.imagenDesafio) {
+      const fileNameAntiguo = challengeAntiguo.imagenDesafio.split("/").pop();
+      archivosParaBorrar.push(fileNameAntiguo);
+    }
+
+    // B. Verificar si se han eliminado archivos del array multimedia
+    if (multimedia && challengeAntiguo.multimedia) {
+      const urlsNuevas = multimedia.map(m => m.url);
+      
+      challengeAntiguo.multimedia.forEach(m => {
+        // Si la URL antigua no está en la nueva lista, hay que borrar el archivo
+        if (!urlsNuevas.includes(m.url)) {
+          const fileName = m.url.split("/").pop();
+          archivosParaBorrar.push(fileName);
+        }
+      });
+    }
+
+    if (archivosParaBorrar.length > 0) {
+      const { error: storageError } = await supabase.storage
+        .from("uploads")
+        .remove(archivosParaBorrar);
+
+      if (storageError) {
+        console.error("Error al limpiar archivos antiguos de Supabase:", storageError);
+      } else {
+        console.log("Archivos antiguos eliminados:", archivosParaBorrar);
+      }
+    }
     const challenge = await Challenge.findByIdAndUpdate(
       req.params.id,
       { titulo, descripcion, imagenDesafio, dificultad, categoria, duracion, multimedia },
@@ -285,6 +328,34 @@ router.delete("/:id", async (req, res) => {
     if (!challenge) {
       return res.status(404).json({ message: "Reto no encontrado" });
     }
+    const archivosABorrar = [];
+
+    // A. Añadir imagen principal si existe
+    if (challenge.imagenDesafio) {
+      const fileName = challenge.imagenDesafio.split("/").pop();
+      archivosABorrar.push(fileName);
+    }
+
+    // B. Añadir todos los archivos del array multimedia
+    // Asumiendo que 'multimedia' es un array de objetos con un campo 'url'
+    if (challenge.multimedia && challenge.multimedia.length > 0) {
+      challenge.multimedia.forEach(item => {
+        if (item.url) {
+          const fileName = item.url.split("/").pop();
+          archivosABorrar.push(fileName);
+        }
+      });
+    }
+
+    if (archivosABorrar.length > 0) {
+      const { error: storageError } = await supabase.storage
+        .from("uploads")
+        .remove(archivosABorrar); // .remove() acepta un array de nombres
+
+      if (storageError) {
+        console.error("Error al borrar archivos de Supabase:", storageError);
+      }
+    }
 
     // Borrar todas las participaciones del reto
     await UserChallenge.deleteMany({ desafioId: req.params.id });
@@ -303,6 +374,19 @@ router.delete("/:id/respuesta/:usuarioId", async (req, res) => {
     const participacion = await UserChallenge.findOneAndDelete({ desafioId: id, usuarioId });
     if (!participacion) {
       return res.status(404).json({ message: "Participación no encontrada" });
+    }
+    const archivosABorrar = [];
+    if (participacion.imagenEnvio) {
+      archivosABorrar.push(participacion.imagenEnvio.split("/").pop());
+    }
+    if (participacion.multimediaEnvio && participacion.multimediaEnvio.length > 0) {
+      participacion.multimediaEnvio.forEach(m => {
+        if (m.url) archivosABorrar.push(m.url.split("/").pop());
+      });
+    }
+
+    if (archivosABorrar.length > 0) {
+      await supabase.storage.from("uploads").remove(archivosABorrar);
     }
 
     // Decrementar contador de participantes
