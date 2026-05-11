@@ -30,6 +30,7 @@ function Header() {
   const toggleDarkMode = async () => {
     const newMode = !darkModeEnabled;
     const themeString = newMode ? "oscuro" : "claro";
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api"; // Fallback a local
     
     setDarkModeEnabled(newMode);
 
@@ -42,21 +43,22 @@ function Header() {
     }
 
     if (isLoggedIn && user?._id) {
-      try {
-        const response = await fetch(`http://localhost:5000/api/users/profile/${user._id}`, { 
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tema: themeString }), 
-        });
+        try {
+          // Usamos la variable de entorno en lugar de localhost
+          const response = await fetch(`${API_URL}/users/profile/${user._id}`, { 
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tema: themeString }), 
+          });
 
-        if (response.ok) {
-          updateUser({ tema: themeString }); 
-          console.log("Tema actualizado en el estado global");
+          if (response.ok) {
+            updateUser({ tema: themeString }); 
+            console.log("Tema actualizado en el estado global");
+          }
+        } catch (error) {
+          console.error("Error al guardar preferencia de tema:", error);
         }
-      } catch (error) {
-        console.error("Error al guardar preferencia de tema:", error);
       }
-    }
   };
 
   const handleSearchChange = (e) => {
