@@ -134,6 +134,7 @@ router.post("/login", async (req, res) => {
         apellido: user.apellido,
         email: user.email,
         fotoPerfil: user.fotoPerfil || "",
+        tema: user.tema || "claro",
       },
     });
   } catch (err) {

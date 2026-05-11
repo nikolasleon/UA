@@ -6,7 +6,7 @@ import Alert from "../components/Alert";
 import "../styles/Header.css";
 
 function Header() {
-  const { user, isLoggedIn, logout } = useAuth();
+  const { user, isLoggedIn, logout, updateUser } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,9 +25,13 @@ function Header() {
   const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen);
   const toggleOptionsMenu = () => setOptionsMenuOpen(!optionsMenuOpen);
   // const toggleDarkMode = () => setDarkModeEnabled(!darkModeEnabled);
-  const toggleDarkMode = () => {
-  const newMode = !darkModeEnabled;
-  setDarkModeEnabled(newMode);
+
+
+  const toggleDarkMode = async () => {
+    const newMode = !darkModeEnabled;
+    const themeString = newMode ? "oscuro" : "claro";
+    
+    setDarkModeEnabled(newMode);
 
     if (newMode) {
       document.body.classList.add("dark-mode");
@@ -35,6 +39,23 @@ function Header() {
     } else {
       document.body.classList.remove("dark-mode");
       localStorage.setItem("theme", "light");
+    }
+
+    if (isLoggedIn && user?._id) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/users/profile/${user._id}`, { 
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tema: themeString }), 
+        });
+
+        if (response.ok) {
+          updateUser({ tema: themeString }); 
+          console.log("Tema actualizado en el estado global");
+        }
+      } catch (error) {
+        console.error("Error al guardar preferencia de tema:", error);
+      }
     }
   };
 
@@ -90,7 +111,9 @@ function Header() {
   }, [profileMenuOpen, optionsMenuOpen]);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    const userTheme = user?.tema === "oscuro" ? "dark" : (user?.tema === "claro" ? "light" : null);
+    
+    const savedTheme = userTheme || localStorage.getItem("theme") || "light";
 
     if (savedTheme === "dark") {
       document.body.classList.add("dark-mode");
@@ -99,7 +122,7 @@ function Header() {
       document.body.classList.remove("dark-mode");
       setDarkModeEnabled(false);
     }
-  }, []);
+  }, [user, isLoggedIn]);
 
   const renderOptionsDropdown = () => (
     <div className="options-menu" ref={optionsMenuRef}>

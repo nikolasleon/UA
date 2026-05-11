@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }) => {
       apellido: userData.apellido || "",
       email: userData.email || "",
       fotoPerfil: userData.fotoPerfil || "",
+      tema: userData.tema || "claro",
     };
     setUser(userToStore);
 
