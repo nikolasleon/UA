@@ -5,7 +5,7 @@ const teamMembers = [
   "Sandra Moya del Amo",
   "Nikolas Leon De Oliveira Dominguez",
   "Noelia Almeida Ibáñez",
-  "Andrea García",
+  "Andrea Gómez Bobes",
 ];
 
 function AboutPage() {
