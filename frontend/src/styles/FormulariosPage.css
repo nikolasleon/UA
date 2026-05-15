@@ -363,6 +363,56 @@ body.dark-mode .header .search-input-mobile {
     color: white !important;
 }
 
+
+/* 1. Detalle del Reto y Modales (Cambiar Pass / Borrar Cuenta) */
+body.dark-mode .challenge-details-card,
+body.dark-mode .modal-content, 
+body.dark-mode .settings-modal,
+body.dark-mode .delete-account-section,
+body.dark-mode .change-password-section {
+    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5) !important;
+    color: #ffffff !important;
+}
+
+
+body.dark-mode .challenge-details-card input,
+body.dark-mode .modal-content input,
+body.dark-mode .settings-modal input,
+body.dark-mode .modal-content textarea {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+}
+
+
+body.dark-mode .challenge-page-container {
+    background-color: #0f0f12 !important;
+}
+
+
+body.dark-mode .modal-content h2,
+body.dark-mode .modal-content h3,
+body.dark-mode .challenge-header-row h1,
+body.dark-mode .challenge-description-p {
+    color: #ffffff !important;
+}
+
+body.dark-mode .btn-cancel,
+body.dark-mode .modal-close-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+
+body.dark-mode .delete-warning-text {
+    color: #ffbaba !important;
+}
+
+
 @media (min-width: 768px) {
   .formularios-container {
     padding: 1.5rem;
