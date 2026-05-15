@@ -797,6 +797,19 @@ body.dark-mode .creator-name {
   color: var(--color-primary-text);
 }
 
+body.dark-mode .challenge-card-white {
+  background: var(--color-surface);
+}
+
+body.dark-mode .challenge-description {
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+body.dark-mode .challenge-sub-text {
+  color: var(--color-text-muted);
+}
+
 .creator-avatar {
   width: 35px;
   height: 35px;
