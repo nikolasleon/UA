@@ -268,7 +268,9 @@
 }
 
 .options-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   width: 100%;
   padding: 0.75rem 1rem;
   border: none;
@@ -601,7 +603,9 @@ body.dark-mode .mobile-menu .mobile-login {
   transition: all 0.2s ease;
   width: 100%;
   text-align: left;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 .mobile-menu-search {
@@ -638,7 +642,9 @@ body.dark-mode .mobile-menu .mobile-login {
   font-size: 0.95rem;
   font-weight: 500;
   transition: all 0.2s ease;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
   text-align: left;
 }
 

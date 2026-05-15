@@ -315,7 +315,7 @@ body.dark-mode .challenge-card__creator {
 }
 
 body.dark-mode .challenge-card__creator-link {
-  color: var(--color-challenge-cyan);
+  color: var(--color-primary-text);
 }
 
 body.dark-mode .challenge-card__creator-link:hover .challenge-card__creator-name {

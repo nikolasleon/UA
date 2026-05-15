@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { FaThumbsUp } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
 import Modal from "../components/Modal";
@@ -381,7 +382,7 @@ function ChallengePage() {
                         <span style={{ flex: 1 }}>Usuario eliminado</span>
                       )}
                       {activeTab === "favoritos" && (
-                        <span className="ranking-likes">👍 {p.likes}</span>
+                        <span className="ranking-likes"><FaThumbsUp size={13} /> {p.likes}</span>
                       )}
                       <span className="ranking-arrow">›</span>
                     </li>
