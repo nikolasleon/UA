@@ -266,81 +266,53 @@
 
 
 
-/* Mobile-First Formularios Page */
+body.dark-mode .modal-content,
+body.dark-mode .settings-modal,
+body.dark-mode .change-password-modal {
+    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
+    color: #fff !important;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer,
+body.dark-mode .settings-modal-header,
+body.dark-mode .settings-modal-footer {
+    background: transparent !important;
+    background-color: transparent !important;
+}
 
 
-body.dark-mode,
-body.dark-mode .challenge-page-container,
-body.dark-mode .settings-container,
-body.dark-mode .formularios-container {
-    background-color: #0f0f12 !important;
-    background: #0f0f12 !important;
+body.dark-mode .modal-content input,
+body.dark-mode .settings-modal input {
+    background: rgba(255,255,255,0.08) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
 }
 
 
 body.dark-mode .challenge-details-card,
-body.dark-mode .challenge-hero-banner,
-body.dark-mode .tabs-container,
-body.dark-mode .rankings-list,
-body.dark-mode .form-block,
-body.dark-mode .formularios-card,
-body.dark-mode .settings-card,
-body.dark-mode .create-challenge-form,
-body.dark-mode .submit-response-form,
-body.dark-mode .modal-content,
-body.dark-mode .settings-modal,
-body.dark-mode .change-password-section,
-body.dark-mode .delete-account-section {
+body.dark-mode .challenge-card,
+body.dark-mode .reto-card {
     background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
-    background-color: transparent !important; 
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    color: #fff !important;
 }
 
 
-body.dark-mode input,
-body.dark-mode textarea,
-body.dark-mode select {
-    background: rgba(255, 255, 255, 0.08) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-
-body.dark-mode .tab-button {
+body.dark-mode .challenge-content,
+body.dark-mode .challenge-info,
+body.dark-mode .challenge-body,
+body.dark-mode .participants-section,
+body.dark-mode .challenge-description-box {
     background: transparent !important;
-    color: rgba(255, 255, 255, 0.5) !important;
-    border: none !important;
-}
-
-body.dark-mode .tab-button.active {
-    color: #ffffff !important;
-    border-bottom: 3px solid #ffffff !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-}
-
-body.dark-mode label,
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode p,
-body.dark-mode .challenge-description-p,
-body.dark-mode .ranking-item {
-    color: #ffffff !important;
+    color: #fff !important;
 }
 
 
-body.dark-mode .modal-overlay,
-body.dark-mode .settings-modal-overlay {
-    background-color: rgba(0, 0, 0, 0.85) !important;
+body.dark-mode .participants-count,
+body.dark-mode .challenge-meta {
+    color: rgba(255,255,255,0.7) !important;
 }
 
-
-body.dark-mode .header .search-input-mobile {
-    background: rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
-}
 
 @media (min-width: 768px) {
   .formularios-container {
