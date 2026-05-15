@@ -642,7 +642,9 @@ body.dark-mode .mobile-menu .mobile-login {
   font-size: 0.95rem;
   font-weight: 500;
   transition: all 0.2s ease;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
   text-align: left;
 }
 
