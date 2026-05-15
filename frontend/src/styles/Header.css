@@ -603,7 +603,9 @@ body.dark-mode .mobile-menu .mobile-login {
   transition: all 0.2s ease;
   width: 100%;
   text-align: left;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 .mobile-menu-search {
