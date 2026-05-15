@@ -37,13 +37,14 @@ function EditChallengePage() {
   }, [form.titulo]);
 
   useEffect(() => {
+    if (!user) return;
     const fetchChallenge = async () => {
       try {
         const res = await fetch(`${API_URL}/api/challenges/${id}`);
         const data = await res.json();
 
         const creadorId = String(data.creadorId?._id || data.creadorId);
-        if (creadorId !== String(user?._id)) {
+        if (creadorId !== String(user._id)) {
           navigate(`/reto/${id}`);
           return;
         }
