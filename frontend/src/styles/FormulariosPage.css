@@ -1,61 +1,3 @@
-/* Mobile-First Formularios Page */
-
-body.dark-mode .form-block,
-body.dark-mode .formularios-card,
-body.dark-mode .settings-card.personal-info-card,
-body.dark-mode .create-challenge-form,
-body.dark-mode .submit-response-form,
-body.dark-mode .challenge-details-card {
-    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3) !important;
-}
-
-body.dark-mode .form-block input,
-body.dark-mode .formularios-card input,
-body.dark-mode .settings-card input,
-body.dark-mode .create-challenge-form input,
-body.dark-mode .create-challenge-form textarea,
-body.dark-mode .create-challenge-form select,
-body.dark-mode .submit-response-form input,
-body.dark-mode .submit-response-form textarea,
-body.dark-mode .submit-response-form select {
-    background: rgba(255, 255, 255, 0.05) !important; 
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 8px !important;
-    padding: 12px !important;
-}
-
-body.dark-mode .create-challenge-form input:focus,
-body.dark-mode .create-challenge-form textarea:focus,
-body.dark-mode .submit-response-form input:focus,
-body.dark-mode .submit-response-form textarea:focus,
-body.dark-mode .form-block input:focus {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
-    outline: none !important;
-}
-
-body.dark-mode .form-group label,
-body.dark-mode .form-block h2,
-body.dark-mode .formularios-container h1,
-body.dark-mode .create-challenge-title,
-body.dark-mode .submit-response-title,
-body.dark-mode .submit-response-challenge-name {
-    color: #ffffff !important;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder {
-    color: rgba(255, 255, 255, 0.4) !important;
-}
-
-body.dark-mode .header .search-input-mobile {
-    background: rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
-}
 
 .formularios-container {
   padding: 1rem;
@@ -321,6 +263,70 @@ body.dark-mode .header .search-input-mobile {
   color: var(--color-action-alt);
   text-decoration: underline;
 }
+
+
+
+/* Mobile-First Formularios Page */
+
+body.dark-mode .form-block,
+body.dark-mode .formularios-card,
+body.dark-mode .settings-card.personal-info-card,
+body.dark-mode .create-challenge-form,
+body.dark-mode .submit-response-form,
+body.dark-mode .challenge-details-card {
+    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .form-block input,
+body.dark-mode .formularios-card input,
+body.dark-mode .settings-card input,
+body.dark-mode .create-challenge-form input,
+body.dark-mode .create-challenge-form textarea,
+body.dark-mode .create-challenge-form select,
+body.dark-mode .submit-response-form input,
+body.dark-mode .submit-response-form textarea,
+body.dark-mode .submit-response-form select {
+    background: rgba(255, 255, 255, 0.05) !important; 
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+}
+
+body.dark-mode .create-challenge-form input:focus,
+body.dark-mode .create-challenge-form textarea:focus,
+body.dark-mode .submit-response-form input:focus,
+body.dark-mode .submit-response-form textarea:focus,
+body.dark-mode .form-block input:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    outline: none !important;
+}
+
+body.dark-mode .form-group label,
+body.dark-mode .form-block h2,
+body.dark-mode .formularios-container h1,
+body.dark-mode .create-challenge-title,
+body.dark-mode .submit-response-title,
+body.dark-mode .submit-response-challenge-name {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+body.dark-mode .header .search-input-mobile {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+
+
 
 
 
