@@ -287,6 +287,8 @@ body.dark-mode .challenger-card-mini {
   list-style: none;
   padding: 10px 25px 30px 25px; /* Más padding inferior */
   margin: 0;
+  max-height: 250px;
+  overflow-y: auto;
 }
 
 .ranking-item {
