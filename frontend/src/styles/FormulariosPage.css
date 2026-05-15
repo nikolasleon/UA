@@ -363,53 +363,55 @@ body.dark-mode .header .search-input-mobile {
     color: white !important;
 }
 
-
-/* 1. Detalle del Reto y Modales (Cambiar Pass / Borrar Cuenta) */
-body.dark-mode .challenge-details-card,
-body.dark-mode .modal-content, 
-body.dark-mode .settings-modal,
-body.dark-mode .delete-account-section,
-body.dark-mode .change-password-section {
-    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5) !important;
-    color: #ffffff !important;
-}
-
-
-body.dark-mode .challenge-details-card input,
-body.dark-mode .modal-content input,
-body.dark-mode .settings-modal input,
-body.dark-mode .modal-content textarea {
-    background: rgba(255, 255, 255, 0.05) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 8px !important;
-}
-
+/*  */
 
 body.dark-mode .challenge-page-container {
-    background-color: #0f0f12 !important;
+    background-color: #0f0f12 !important; 
 }
 
 
-body.dark-mode .modal-content h2,
-body.dark-mode .modal-content h3,
-body.dark-mode .challenge-header-row h1,
-body.dark-mode .challenge-description-p {
-    color: #ffffff !important;
-}
-
-body.dark-mode .btn-cancel,
-body.dark-mode .modal-close-btn {
-    background: rgba(255, 255, 255, 0.1) !important;
+body.dark-mode .challenge-details-card,
+body.dark-mode .challenge-hero-banner,
+body.dark-mode .tabs-container {
+    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
     color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+
+body.dark-mode .modal-overlay, 
+body.dark-mode .settings-modal-overlay {
+    background-color: rgba(0, 0, 0, 0.8) !important; 
+}
+
+body.dark-mode .modal-content, 
+body.dark-mode .settings-modal,
+body.dark-mode .change-password-section,
+body.dark-mode .delete-account-section {
+    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
+    padding: 2rem !important; 
+    border-radius: 12px !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
 
-body.dark-mode .delete-warning-text {
-    color: #ffbaba !important;
+body.dark-mode .form-group input,
+body.dark-mode .form-group textarea,
+body.dark-mode .modal-content input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+}
+
+body.dark-mode .challenge-description-p,
+body.dark-mode .challenge-hero-banner h1,
+body.dark-mode .tab-button,
+body.dark-mode .modal-content h2 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .tab-button.active {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
 }
 
 
