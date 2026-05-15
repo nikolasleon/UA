@@ -4,6 +4,7 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import ChallengeCard from "../components/ChallengeCard";
 import Alert from "../components/Alert";
+import Breadcrumb from "../components/Breadcrumb";
 import "../styles/ChallengesListPage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -28,6 +29,16 @@ function ChallengesListPage() {
   const [filteredDuration, setFilteredDuration] = useState("");
 
   const userId = user?._id;
+
+  const tipoLabel = {
+    "completados": "Retos Completados",
+    "creados": "Mis Retos",
+    "en-progreso": "Retos en Progreso",
+  };
+
+  useEffect(() => {
+    document.title = `${tipoLabel[tipo] || "Mis Retos"} – DayDare`;
+  }, [tipo]);
 
   useEffect(() => {
     const fetchChallenges = async () => {
@@ -98,17 +109,12 @@ function ChallengesListPage() {
     return <div className="challenges-list-container"><p>Cargando...</p></div>;
   }
 
-  const tipoLabel = {
-    "completados": "Retos Completados",
-    "creados": "Mis Retos",
-    "en-progreso": "Retos en Progreso",
-  };
-
   return (
     <div className="challenges-list-container">
-      <Alert 
-        message={alert.message} 
-        type={alert.type} 
+      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Mi perfil", to: "/account" }, { label: tipoLabel[tipo] || "Mis Retos" }]} />
+      <Alert
+        message={alert.message}
+        type={alert.type}
         onClose={() => setAlert({ message: "", type: "success" })}
       />
 

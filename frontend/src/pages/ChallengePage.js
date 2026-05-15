@@ -6,6 +6,7 @@ import Modal from "../components/Modal";
 import MediaCollage from "../components/MediaCollage";
 import ResponseCard from "../components/ResponseCard";
 import GalleryModal from "../components/GalleryModal";
+import Breadcrumb from "../components/Breadcrumb";
 import "../styles/ChallengePage.css";
 
 function ChallengePage() {
@@ -22,6 +23,7 @@ function ChallengePage() {
   const [alert, setAlert] = useState({ message: "", type: "success" });
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteResponseModal, setShowDeleteResponseModal] = useState(false);
   const [challengersPage, setChallengersPage] = useState(1);
   const CHALLENGERS_PER_PAGE = 10;
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -66,6 +68,10 @@ function ChallengePage() {
 
     fetchChallengeData();
   }, [id, user, API_URL]);
+
+  useEffect(() => {
+    document.title = challenge ? `${challenge.titulo} – DayDare` : "DayDare";
+  }, [challenge]);
 
   const handleAction = async () => {
     if (userStatus === "INVITADO") {
@@ -121,6 +127,20 @@ function ChallengePage() {
     }
   };
 
+  const handleDeleteResponse = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/challenges/${id}/respuesta/${user._id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      setUserStatus("SUBIR");
+      setParticipantes(prev => prev.filter(p => String(p.usuario?._id) !== String(user._id)));
+      setAlert({ message: "Respuesta eliminada correctamente.", type: "success" });
+    } catch {
+      setAlert({ message: "Error al eliminar la respuesta.", type: "error" });
+    } finally {
+      setShowDeleteResponseModal(false);
+    }
+  };
+
   const openGallery = (images, startIndex = 0) => {
     setExpandedGallery({
       images: images,
@@ -156,7 +176,15 @@ function ChallengePage() {
     if (isOwner) return null;
     switch (userStatus) {
       case "COMPLETADO":
-        return <button className="btn-action btn-completado">¡RETO COMPLETADO!</button>;
+        return (
+          <>
+            <button className="btn-action btn-completado" style={{ marginBottom: "0.5rem" }}>¡RETO COMPLETADO!</button>
+            <div className="challenge-owner-actions" style={{ justifyContent: "center" }}>
+              <Link to={`/reto/${id}/responder`} className="btn-owner btn-edit">Editar respuesta</Link>
+              <button className="btn-owner btn-delete" onClick={() => setShowDeleteResponseModal(true)}>Eliminar respuesta</button>
+            </div>
+          </>
+        );
       case "SUBIR":
         return <button className="btn-action btn-subir" onClick={handleAction}>SUBIR RESPUESTA</button>;
       case "UNIRSE":
@@ -197,6 +225,20 @@ function ChallengePage() {
           ¿Seguro que quieres borrar este reto? Esta acción no se puede deshacer.
         </Modal>
       )}
+
+      {showDeleteResponseModal && (
+        <Modal
+          title="Eliminar respuesta"
+          onClose={() => setShowDeleteResponseModal(false)}
+          onConfirm={handleDeleteResponse}
+          confirmText="Eliminar"
+          isDanger
+        >
+          ¿Seguro que quieres eliminar tu respuesta? Esta acción no se puede deshacer.
+        </Modal>
+      )}
+
+      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: challenge.titulo }]} />
 
       <div className="challenge-hero-banner">
         <h1>{challenge.titulo?.toUpperCase() || "RETO"}</h1>

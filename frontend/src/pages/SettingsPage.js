@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
+import Breadcrumb from "../components/Breadcrumb";
 import "../styles/SettingsPage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -35,6 +36,10 @@ function SettingsPage() {
     nueva: "",
     confirmar: "",
   });
+
+  useEffect(() => {
+    document.title = "Ajustes de perfil – DayDare";
+  }, []);
 
   // Cargar datos al montar el componente
   useEffect(() => {
@@ -234,6 +239,7 @@ function SettingsPage() {
 
   return (
     <div className="settings-container">
+      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Ajustes de perfil" }]} />
       <h1>Ajustes de Perfil</h1>
 
       <Alert 

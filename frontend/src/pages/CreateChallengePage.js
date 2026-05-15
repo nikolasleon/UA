@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
+import Breadcrumb from "../components/Breadcrumb";
 import "../styles/CreateChallengePage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -118,8 +119,13 @@ function CreateChallengePage() {
     }
   };
 
+  useEffect(() => {
+    document.title = "Crear reto – DayDare";
+  }, []);
+
   return (
     <div className="create-challenge-container">
+      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Crear reto" }]} />
       <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
       <h1 className="create-challenge-title">Crear reto</h1>
       <p className="create-challenge-subtitle">
@@ -130,8 +136,9 @@ function CreateChallengePage() {
       <form className="create-challenge-form" onSubmit={handleSubmit}>
 
         <div className="form-group">
-          <label>Título</label>
+          <label htmlFor="create-titulo">Título</label>
           <input
+            id="create-titulo"
             type="text"
             name="titulo"
             value={form.titulo}
@@ -141,8 +148,9 @@ function CreateChallengePage() {
         </div>
 
         <div className="form-group">
-          <label>Descripción</label>
+          <label htmlFor="create-descripcion">Descripción</label>
           <textarea
+            id="create-descripcion"
             name="descripcion"
             value={form.descripcion}
             onChange={handleChange}
@@ -153,8 +161,8 @@ function CreateChallengePage() {
 
         <div className="form-row">
           <div className="form-group">
-            <label>Categoría</label>
-            <select name="categoria" value={form.categoria} onChange={handleChange}>
+            <label htmlFor="create-categoria">Categoría</label>
+            <select id="create-categoria" name="categoria" value={form.categoria} onChange={handleChange}>
               {CATEGORIAS.map((c) => (
                 <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
               ))}
@@ -162,8 +170,8 @@ function CreateChallengePage() {
           </div>
 
           <div className="form-group">
-            <label>Duración</label>
-            <select name="duracion" value={form.duracion} onChange={handleChange}>
+            <label htmlFor="create-duracion">Duración</label>
+            <select id="create-duracion" name="duracion" value={form.duracion} onChange={handleChange}>
               {DURACIONES.map((d) => (
                 <option key={d} value={d}>{d}</option>
               ))}
@@ -171,8 +179,8 @@ function CreateChallengePage() {
           </div>
 
           <div className="form-group">
-            <label>Nivel</label>
-            <select name="dificultad" value={form.dificultad} onChange={handleChange}>
+            <label htmlFor="create-nivel">Nivel</label>
+            <select id="create-nivel" name="dificultad" value={form.dificultad} onChange={handleChange}>
               {NIVELES.map((n) => (
                 <option key={n} value={n}>{n.charAt(0).toUpperCase() + n.slice(1)}</option>
               ))}
@@ -181,16 +189,17 @@ function CreateChallengePage() {
         </div>
 
         <div className="form-group">
-          <label>Imagen de portada <span className="required">*</span></label>
-          <input type="file" accept="image/*" onChange={handlePortadaChange} />
+          <label htmlFor="create-portada">Imagen de portada <span className="required">*</span></label>
+          <input id="create-portada" type="file" accept="image/*" onChange={handlePortadaChange} />
           {portadaPreview && (
-            <img src={portadaPreview} alt="Portada" className="portada-preview" />
+            <img src={portadaPreview} alt="Portada del reto" className="portada-preview" />
           )}
         </div>
 
         <div className="form-group">
-          <label>Multimedia adicional <span className="optional">(opcional — foto, vídeo, audio, PDF)</span></label>
+          <label htmlFor="create-multimedia">Multimedia adicional <span className="optional">(opcional — foto, vídeo, audio, PDF)</span></label>
           <input
+            id="create-multimedia"
             type="file"
             accept="image/*,video/*,audio/*,application/pdf"
             multiple

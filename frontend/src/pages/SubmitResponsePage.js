@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/SubmitResponsePage.css";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
+import Breadcrumb from "../components/Breadcrumb";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -18,9 +19,13 @@ function SubmitResponsePage() {
   const [valoracion, setValoracion] = useState(0);
   const [multimediaFiles, setMultimediaFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadLabel, setUploadLabel] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "" });
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetch(`${API_URL}/api/challenges/${id}`)
@@ -28,6 +33,10 @@ function SubmitResponsePage() {
       .then(setChallenge)
       .catch(() => setError("No se pudo cargar el reto"));
   }, [id]);
+
+  useEffect(() => {
+    document.title = challenge ? `Subir respuesta: ${challenge.titulo} – DayDare` : "DayDare";
+  }, [challenge]);
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -67,15 +76,48 @@ function SubmitResponsePage() {
     return "imagen";
   };
 
-  const uploadFile = async (file) => {
+  const uploadFile = (file, index, total) => new Promise((resolve, reject) => {
     const formData = new FormData();
     formData.append("archivo", file);
-    const res = await fetch(`${API_URL}/api/users/upload`, { method: "POST", body: formData });
-    if (!res.ok) throw new Error("Error al subir archivo");
-    const data = await res.json();
-    return data.url;
+    setUploadLabel(`Subiendo archivo ${index + 1} de ${total}...`);
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const fileBase = (index / total) * 100;
+        const fileContrib = (e.loaded / e.total) * (100 / total);
+        setUploadProgress(Math.round(fileBase + fileContrib));
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(JSON.parse(xhr.responseText).url);
+      } else {
+        reject(new Error("Error al subir archivo"));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Error de red al subir archivo"));
+    xhr.open("POST", `${API_URL}/api/users/upload`);
+    xhr.send(formData);
+  });
+
+  const handleDragEnter = (e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(true); };
+  const handleDragOver = (e) => { e.preventDefault(); e.stopPropagation(); };
+  const handleDragLeave = (e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(false); };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    const MAX_SIZE = 50 * 1024 * 1024;
+    const ALLOWED_TYPES = ["image/", "video/", "audio/", "application/pdf"];
+    for (const file of droppedFiles) {
+      const isValidType = ALLOWED_TYPES.some(t => file.type.startsWith(t) || file.type === t);
+      if (!isValidType) { setAlert({ message: `Formato de "${file.name}" no permitido.`, type: "error" }); return; }
+      if (file.size > MAX_SIZE) { setAlert({ message: `"${file.name}" supera los 50MB.`, type: "error" }); return; }
+    }
+    setMultimediaFiles(prev => [...prev, ...droppedFiles]);
   };
-// Esta función ahora solo abre el modal
+
   const preSubmitCheck = (e) => {
     e.preventDefault();
     if (!titulo.trim()) { setError("El título es obligatorio"); return; }
@@ -83,18 +125,19 @@ function SubmitResponsePage() {
     setShowConfirmModal(true);
   };
 
-  // Esta es la función que realmente hace el trabajo (llámala desde el onConfirm del Modal)
   const executeSubmit = async () => {
     setShowConfirmModal(false);
     setIsSubmitting(true);
+    setUploadProgress(0);
     setError("");
     try {
-      const multimediaEnvio = await Promise.all(
-        multimediaFiles.map(async (file) => ({
-          url: await uploadFile(file),
-          tipo: getTipo(file),
-        }))
-      );
+      const multimediaEnvio = [];
+      for (let i = 0; i < multimediaFiles.length; i++) {
+        const url = await uploadFile(multimediaFiles[i], i, multimediaFiles.length);
+        multimediaEnvio.push({ url, tipo: getTipo(multimediaFiles[i]) });
+      }
+      setUploadProgress(100);
+      setUploadLabel("Guardando respuesta...");
 
       const res = await fetch(`${API_URL}/api/challenges/${id}/respuesta`, {
         method: "PUT",
@@ -123,6 +166,7 @@ function SubmitResponsePage() {
 
   return (
     <div className="submit-response-container">
+      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: challenge.titulo, to: `/reto/${id}` }, { label: "Subir respuesta" }]} />
       <h1 className="submit-response-title">Subir respuesta</h1>
       <p className="submit-response-intro">
         ¿Lo conseguiste? Demuéstralo. Sube una foto, vídeo o lo que necesites para que la comunidad vea que el reto está superado.
@@ -133,8 +177,9 @@ function SubmitResponsePage() {
 
       <form className="submit-response-form" onSubmit={preSubmitCheck}>
         <div className="form-group">
-          <label>Título <span className="required">*</span></label>
+          <label htmlFor="resp-titulo">Título <span className="required">*</span></label>
           <input
+            id="resp-titulo"
             type="text"
             value={titulo}
             onChange={e => setTitulo(e.target.value)}
@@ -143,8 +188,9 @@ function SubmitResponsePage() {
         </div>
 
         <div className="form-group">
-          <label>Descripción</label>
+          <label htmlFor="resp-descripcion">Descripción</label>
           <textarea
+            id="resp-descripcion"
             value={descripcion}
             onChange={e => setDescripcion(e.target.value)}
             rows={4}
@@ -153,8 +199,8 @@ function SubmitResponsePage() {
         </div>
 
         <div className="form-group">
-          <label>Valoración del reto</label>
-          <div className="star-selector">
+          <label id="resp-valoracion-label">Valoración del reto</label>
+          <div className="star-selector" role="group" aria-labelledby="resp-valoracion-label">
             {[1, 2, 3, 4, 5].map(n => (
               <button
                 key={n}
@@ -171,11 +217,29 @@ function SubmitResponsePage() {
 
         <div className="form-group">
           <label>Multimedia <span className="required">*</span> <span className="optional">(foto, vídeo, audio, PDF)</span></label>
+          <div
+            className={`drop-zone${isDragging ? " dragging" : ""}`}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current.click()}
+            role="button"
+            tabIndex={0}
+            aria-label="Zona de carga de archivos. Haz clic o arrastra archivos aquí"
+            onKeyDown={e => e.key === "Enter" && fileInputRef.current.click()}
+          >
+            <span className="drop-zone-icon">📎</span>
+            <span className="drop-zone-text">Arrastra tus archivos aquí o <strong>haz clic para seleccionar</strong></span>
+            <span className="drop-zone-hint">Imágenes, vídeos, audios o PDFs — máx. 50 MB</span>
+          </div>
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*,video/*,audio/*,application/pdf"
             multiple
             onChange={handleFileChange}
+            style={{ display: "none" }}
           />
           {multimediaFiles.length > 0 && (
             <ul className="multimedia-list">
@@ -188,6 +252,16 @@ function SubmitResponsePage() {
             </ul>
           )}
         </div>
+
+        {isSubmitting && (
+          <div className="upload-progress-wrapper">
+            <div className="upload-label">{uploadLabel}</div>
+            <div className="upload-progress-track">
+              <div className="upload-progress-fill" style={{ width: `${uploadProgress}%` }} />
+            </div>
+            <div className="upload-progress-pct">{uploadProgress}%</div>
+          </div>
+        )}
 
         <button type="submit" className="btn-submit-response" disabled={isSubmitting}>
           {isSubmitting ? "Enviando..." : "Enviar respuesta"}

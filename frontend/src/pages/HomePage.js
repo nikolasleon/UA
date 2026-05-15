@@ -19,6 +19,10 @@ function HomePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.title = "DayDare – ¿Te atreves?";
+  }, []);
+
   // Temporizador hasta medianoche
   useEffect(() => {
     const tick = () => {

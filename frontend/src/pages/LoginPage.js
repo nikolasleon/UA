@@ -19,6 +19,10 @@ function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
 
+  useEffect(() => {
+    document.title = "Iniciar sesión – DayDare";
+  }, []);
+
   // Redirigir si ya está logueado
   useEffect(() => {
     if (isLoggedIn) {

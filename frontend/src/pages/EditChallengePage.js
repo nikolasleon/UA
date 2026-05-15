@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
+import Breadcrumb from "../components/Breadcrumb";
 import "../styles/CreateChallengePage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -30,6 +31,10 @@ function EditChallengePage() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
+
+  useEffect(() => {
+    document.title = form.titulo ? `Editar: ${form.titulo} – DayDare` : "Editar reto – DayDare";
+  }, [form.titulo]);
 
   useEffect(() => {
     const fetchChallenge = async () => {
@@ -159,25 +164,26 @@ function EditChallengePage() {
 
   return (
     <div className="create-challenge-container">
+      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: form.titulo || "Reto", to: `/reto/${id}` }, { label: "Editar" }]} />
       <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
       <h1 className="create-challenge-title">Editar reto</h1>
 
       <form className="create-challenge-form" onSubmit={handleSubmit}>
 
         <div className="form-group">
-          <label>Título</label>
-          <input type="text" name="titulo" value={form.titulo} onChange={handleChange} />
+          <label htmlFor="edit-titulo">Título</label>
+          <input id="edit-titulo" type="text" name="titulo" value={form.titulo} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label>Descripción</label>
-          <textarea name="descripcion" value={form.descripcion} onChange={handleChange} rows={4} />
+          <label htmlFor="edit-descripcion">Descripción</label>
+          <textarea id="edit-descripcion" name="descripcion" value={form.descripcion} onChange={handleChange} rows={4} />
         </div>
 
         <div className="form-row">
           <div className="form-group">
-            <label>Categoría</label>
-            <select name="categoria" value={form.categoria} onChange={handleChange}>
+            <label htmlFor="edit-categoria">Categoría</label>
+            <select id="edit-categoria" name="categoria" value={form.categoria} onChange={handleChange}>
               {CATEGORIAS.map((c) => (
                 <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
               ))}
@@ -185,8 +191,8 @@ function EditChallengePage() {
           </div>
 
           <div className="form-group">
-            <label>Duración</label>
-            <select name="duracion" value={form.duracion} onChange={handleChange}>
+            <label htmlFor="edit-duracion">Duración</label>
+            <select id="edit-duracion" name="duracion" value={form.duracion} onChange={handleChange}>
               {DURACIONES.map((d) => (
                 <option key={d} value={d}>{d}</option>
               ))}
@@ -194,8 +200,8 @@ function EditChallengePage() {
           </div>
 
           <div className="form-group">
-            <label>Nivel</label>
-            <select name="dificultad" value={form.dificultad} onChange={handleChange}>
+            <label htmlFor="edit-nivel">Nivel</label>
+            <select id="edit-nivel" name="dificultad" value={form.dificultad} onChange={handleChange}>
               {NIVELES.map((n) => (
                 <option key={n} value={n}>{n.charAt(0).toUpperCase() + n.slice(1)}</option>
               ))}
@@ -204,11 +210,11 @@ function EditChallengePage() {
         </div>
 
         <div className="form-group">
-          <label>Imagen de portada</label>
+          <label htmlFor="edit-portada">Imagen de portada</label>
           {portadaPreview && (
             <img src={portadaPreview} alt="Portada actual" className="portada-preview" />
           )}
-          <input type="file" accept="image/*" onChange={handlePortadaChange} />
+          <input id="edit-portada" type="file" accept="image/*" onChange={handlePortadaChange} />
         </div>
 
         <div className="form-group">

@@ -22,6 +22,10 @@ function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
 
+  useEffect(() => {
+    document.title = "Regístrate – DayDare";
+  }, []);
+
   // Redirigir si ya está logueado
   useEffect(() => {
     if (isLoggedIn) {

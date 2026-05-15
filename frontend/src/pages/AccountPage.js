@@ -6,6 +6,7 @@ import ChallengeCarousel from "../components/ChallengeCarousel";
 import Alert from "../components/Alert";
 import ResponseCard from "../components/ResponseCard";
 import GalleryModal from "../components/GalleryModal";
+import Breadcrumb from "../components/Breadcrumb";
 import "../styles/AccountPage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -94,6 +95,10 @@ function AccountPage() {
       setComments([]);
     }
   }, [userId]);
+
+  useEffect(() => {
+    document.title = user ? `${user.nombre} – DayDare` : "Mi perfil – DayDare";
+  }, [user]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -233,9 +238,10 @@ function AccountPage() {
 
   return (
     <div className="account-container">
-      <Alert 
-        message={alert.message} 
-        type={alert.type} 
+      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Mi perfil" }]} />
+      <Alert
+        message={alert.message}
+        type={alert.type}
         onClose={() => setAlert({ message: "", type: "success" })}
       />
 

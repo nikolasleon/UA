@@ -2,6 +2,7 @@ import "../styles/Buscar.css";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Breadcrumb from "../components/Breadcrumb";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -29,6 +30,10 @@ function Buscar() {
   const PER_PAGE = 10;
 
   useEffect(() => {
+    document.title = "Buscar retos – DayDare";
+  }, []);
+
+  useEffect(() => {
     fetch(`${API_URL}/api/challenges`)
       .then(r => r.json())
       .then(data => setRetos(Array.isArray(data) ? data : []))
@@ -53,6 +58,7 @@ function Buscar() {
 
   return (
     <div className="page">
+      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Buscar retos" }]} />
 
       <section className="search-block">
         <h1 className="search-title">BUSCA TU RETO</h1>
