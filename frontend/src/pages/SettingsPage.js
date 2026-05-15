@@ -31,6 +31,7 @@ function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
   const [password, setPassword] = useState({
+    actual: "",
     nueva: "",
     confirmar: "",
   });
@@ -168,14 +169,14 @@ function SettingsPage() {
       setIsSaving(false);
     } catch (error) {
       console.error("Frontend - Error:", error);
-      setAlert({ message: "✕ Error al guardar los cambios", type: "error" });
+      setAlert({ message: "Error al guardar los cambios", type: "error" });
       setIsSaving(false);
     }
   };
 
   const handleChangePassword = async () => {
     if (password.nueva !== password.confirmar) {
-      setAlert({ message: "✕ Las contraseñas no coinciden", type: "error" });
+      setAlert({ message: "Las contraseñas no coinciden", type: "error" });
       return;
     }
 
@@ -188,20 +189,23 @@ function SettingsPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            contraseñaActual: "oldPassword", // En producción, pedir la actual
+            contraseñaActual: password.actual,
             contraseñaNueva: password.nueva,
           }),
         }
       );
 
-      if (!response.ok) throw new Error("Error al cambiar contraseña");
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || "Error al cambiar contraseña");
+      }
 
       setAlert({ message: "Contraseña cambiada correctamente", type: "success" });
-      setPassword({ nueva: "", confirmar: "" });
+      setPassword({ actual: "", nueva: "", confirmar: "" });
       setShowPasswordModal(false);
     } catch (error) {
       console.error("Error:", error);
-      setAlert({ message: "✕ Error al cambiar la contraseña", type: "error" });
+      setAlert({ message: error.message || "Error al cambiar la contraseña", type: "error" });
     }
   };
 
@@ -224,7 +228,7 @@ function SettingsPage() {
       }, 2000);
     } catch (error) {
       console.error("Error:", error);
-      setAlert({ message: "✕ Error al eliminar la cuenta", type: "error" });
+      setAlert({ message: "Error al eliminar la cuenta", type: "error" });
     }
   };
 
@@ -459,6 +463,18 @@ function SettingsPage() {
           onConfirm={handleChangePassword}
           confirmText="Cambiar Contraseña"
         >
+          <div className="form-group">
+            <label htmlFor="currentPassword">Contraseña Actual:</label>
+            <input
+              id="currentPassword"
+              type="password"
+              name="actual"
+              value={password.actual}
+              onChange={handlePasswordChange}
+              placeholder="Ingresa tu contraseña actual"
+            />
+          </div>
+
           <div className="form-group">
             <label htmlFor="newPassword">Nueva Contraseña:</label>
             <input
