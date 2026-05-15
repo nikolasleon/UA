@@ -1,4 +1,3 @@
-
 .formularios-container {
   padding: 1rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -313,6 +312,48 @@ body.dark-mode .challenge-meta {
     color: rgba(255,255,255,0.7) !important;
 }
 
+/* Added styles for dark mode for challenge details and change password modal */
+
+body.dark-mode .change-password-modal {
+    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .change-password-modal input {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+body.dark-mode .change-password-modal button {
+    background: var(--color-action-alt) !important;
+    color: #fff !important;
+    border: none;
+    transition: background 0.2s;
+}
+
+body.dark-mode .change-password-modal button:hover {
+    background: var(--color-action-active) !important;
+}
+
+body.dark-mode .reto-card {
+    background: linear-gradient(135deg, #2b1a3d 0%, #1a2a4d 100%) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .reto-card .reto-content {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+body.dark-mode .reto-card .reto-footer {
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+}
 
 @media (min-width: 768px) {
   .formularios-container {
