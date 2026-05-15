@@ -790,7 +790,11 @@ body.dark-mode .challenger-card-mini {
 .creator-name {
   font-weight: 600;
   font-size: 1rem;
-  color: #333;           
+  color: #333;
+}
+
+body.dark-mode .creator-name {
+  color: var(--color-primary-text);
 }
 
 .creator-avatar {
