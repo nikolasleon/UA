@@ -442,3 +442,70 @@ body.dark-mode .btn-submit:hover:not(:disabled) {
     max-width: 1000px;
   }
 }
+
+/* Updated styles for create challenge and submit response forms to match login form */
+
+body.dark-mode .create-challenge-form,
+body.dark-mode .submit-response-form {
+    background: linear-gradient(135deg, #1a2a4d, #2b1a3d) !important; /* Gasoline gradient background */
+    color: #e0e0e0 !important; /* Light text color for contrast */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+body.dark-mode .create-challenge-form input,
+body.dark-mode .submit-response-form input,
+body.dark-mode .create-challenge-form textarea,
+body.dark-mode .submit-response-form textarea,
+body.dark-mode .create-challenge-form select,
+body.dark-mode .submit-response-form select {
+    background: rgba(26, 26, 46, 0.8) !important; /* Semi-transparent dark background */
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+body.dark-mode .create-challenge-form input:focus,
+body.dark-mode .submit-response-form input:focus,
+body.dark-mode .create-challenge-form textarea:focus,
+body.dark-mode .submit-response-form textarea:focus,
+body.dark-mode .create-challenge-form select:focus,
+body.dark-mode .submit-response-form select:focus {
+    border-color: var(--color-action) !important;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3) !important;
+    outline: none;
+}
+
+body.dark-mode .create-challenge-form label,
+body.dark-mode .submit-response-form label {
+    color: rgba(255, 255, 255, 0.7) !important; /* Softer text color for labels */
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+body.dark-mode .create-challenge-form .btn-submit,
+body.dark-mode .submit-response-form .btn-submit {
+    background: var(--color-action-alt) !important;
+    color: #fff !important;
+    border: none;
+    transition: background 0.2s;
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+body.dark-mode .create-challenge-form .btn-submit:hover:not(:disabled),
+body.dark-mode .submit-response-form .btn-submit:hover:not(:disabled) {
+    background: var(--color-action-active) !important;
+}
