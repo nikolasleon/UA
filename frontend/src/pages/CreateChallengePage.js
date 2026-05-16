@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
-import Breadcrumb from "../components/Breadcrumb";
 import "../styles/CreateChallengePage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -125,7 +124,6 @@ function CreateChallengePage() {
 
   return (
     <div className="create-challenge-container">
-      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Crear reto" }]} />
       <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
       <h1 className="create-challenge-title">Crear reto</h1>
       <p className="create-challenge-subtitle">

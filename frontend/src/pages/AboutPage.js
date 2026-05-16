@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { FaEnvelope, FaLayerGroup, FaReact, FaUniversalAccess, FaUsers } from "react-icons/fa";
 import "../styles/AboutPage.css";
-import Breadcrumb from "../components/Breadcrumb";
 
 const teamMembers = [
   "Sandra Moya del Amo",
@@ -17,7 +16,6 @@ function AboutPage() {
 
   return (
     <main className="about-page">
-      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Acerca de" }]} />
       <section className="about-hero" aria-labelledby="about-title">
         <div className="about-hero__content">
           <span className="about-kicker">Proyecto académico</span>

@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaLock } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import ChallengeCarousel from "../components/ChallengeCarousel";
-import Breadcrumb from "../components/Breadcrumb";
 import "../styles/AccountPage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -111,7 +110,6 @@ function PublicProfilePage() {
 
   return (
     <div className="account-container">
-      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: user ? `${user.nombre} ${user.apellido}` : "Perfil" }]} />
       <button onClick={() => navigate(-1)} className="btn btn-secondary" style={{ marginBottom: "2rem" }}>
         <FaArrowLeft style={{ marginRight: "0.5rem" }} />
         Volver

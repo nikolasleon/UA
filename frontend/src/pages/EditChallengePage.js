@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
-import Breadcrumb from "../components/Breadcrumb";
 import "../styles/CreateChallengePage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -165,7 +164,6 @@ function EditChallengePage() {
 
   return (
     <div className="create-challenge-container">
-      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: form.titulo || "Reto", to: `/reto/${id}` }, { label: "Editar" }]} />
       <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: "", type: "success" })} />
       <h1 className="create-challenge-title">Editar reto</h1>
 

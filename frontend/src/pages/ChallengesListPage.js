@@ -4,7 +4,6 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import ChallengeCard from "../components/ChallengeCard";
 import Alert from "../components/Alert";
-import Breadcrumb from "../components/Breadcrumb";
 import "../styles/ChallengesListPage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -111,7 +110,6 @@ function ChallengesListPage() {
 
   return (
     <div className="challenges-list-container">
-      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Mi perfil", to: "/account" }, { label: tipoLabel[tipo] || "Mis Retos" }]} />
       <Alert
         message={alert.message}
         type={alert.type}

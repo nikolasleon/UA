@@ -7,7 +7,6 @@ import Modal from "../components/Modal";
 import MediaCollage from "../components/MediaCollage";
 import ResponseCard from "../components/ResponseCard";
 import GalleryModal from "../components/GalleryModal";
-import Breadcrumb from "../components/Breadcrumb";
 import "../styles/ChallengePage.css";
 
 function ChallengePage() {
@@ -238,8 +237,6 @@ function ChallengePage() {
           ¿Seguro que quieres eliminar tu respuesta? Esta acción no se puede deshacer.
         </Modal>
       )}
-
-      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: challenge.titulo }]} />
 
       <div className="challenge-hero-banner">
         <h1>{challenge.titulo?.toUpperCase() || "RETO"}</h1>
