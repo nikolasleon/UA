@@ -41,12 +41,12 @@ const challengeSchema = new mongoose.Schema({
   },
   categoria: {
     type: String,
-    enum: ["fuerza", "cardio", "aire libre", "gimnasio", "yoga", "general"],
+    enum: ["fuerza", "cardio", "aire libre", "gimnasio", "yoga", "general", "equipo", "flexibilidad", "resistencia"],
     default: "general",
   },
   duracion: {
     type: String,
-    enum: ["5min", "10min", "15min", "30min", "15-20min"],
+    enum: ["5min", "10min", "15min", "30min", "15-20min", "45min", "1h"],
     default: "15min",
   },
   multimedia: [

@@ -171,6 +171,8 @@ function ChallengesListPage() {
             <option value="5">5 min</option>
             <option value="15">15 min</option>
             <option value="30">30 min</option>
+            <option value="45">45 min</option>
+            <option value="60">1h</option>
             <option value="7">1-7 días</option>
           </select>
         </div>
