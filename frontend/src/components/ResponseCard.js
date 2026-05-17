@@ -109,7 +109,7 @@ function ResponseCard({
                     alt={`adjunto-${i}`}
                     className="response-card__img"
                     style={{ cursor: onMediaImageClick ? "zoom-in" : "default" }}
-                    onClick={() => onMediaImageClick?.(mediaItems.map(x => x.url), i)}
+                    onClick={() => onMediaImageClick?.(mediaItems, i)}
                   />
                   <div className="response-card__download-row">
                     <a href={m.url} download target="_blank" rel="noreferrer" className="response-card__download">
