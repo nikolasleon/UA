@@ -139,6 +139,7 @@ body {
   height: 110px;
   object-fit: cover;
   border-radius: 12px;
+  flex-shrink: 0;
 }
 
 .card-no-image {
