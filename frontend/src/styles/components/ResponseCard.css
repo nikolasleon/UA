@@ -113,6 +113,13 @@
   gap: 0.8rem;
 }
 
+@media (min-width: 768px) {
+  .response-card__media-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .response-card__media-item {
   border-radius: 8px;
   overflow: hidden;
@@ -133,6 +140,7 @@
 }
 
 .response-card__show-more {
+  grid-column: 1 / -1;
   width: 100%;
   padding: 0.5rem;
   border: 1px dashed var(--color-border-muted);
@@ -147,6 +155,11 @@
 
 .response-card__show-more:hover {
   background: var(--color-action-subtle);
+}
+
+.response-card__media-item:has(.response-card__audio-wrap),
+.response-card__media-item:has(.response-card__pdf-item) {
+  grid-column: 1 / -1;
 }
 
 .response-card__pdf-item {
