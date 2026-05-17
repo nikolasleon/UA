@@ -6,7 +6,6 @@ import ChallengeCarousel from "../components/ChallengeCarousel";
 import Alert from "../components/Alert";
 import ResponseCard from "../components/ResponseCard";
 import GalleryModal from "../components/GalleryModal";
-import Breadcrumb from "../components/Breadcrumb";
 import "../styles/AccountPage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -238,7 +237,6 @@ function AccountPage() {
 
   return (
     <div className="account-container">
-      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: "Mi perfil" }]} />
       <Alert
         message={alert.message}
         type={alert.type}

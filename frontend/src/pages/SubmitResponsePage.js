@@ -4,7 +4,6 @@ import { useAuth } from "../context/AuthContext";
 import "../styles/SubmitResponsePage.css";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
-import Breadcrumb from "../components/Breadcrumb";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -166,7 +165,6 @@ function SubmitResponsePage() {
 
   return (
     <div className="submit-response-container">
-      <Breadcrumb items={[{ label: "Inicio", to: "/" }, { label: challenge.titulo, to: `/reto/${id}` }, { label: "Subir respuesta" }]} />
       <h1 className="submit-response-title">Subir respuesta</h1>
       <p className="submit-response-intro">
         ¿Lo conseguiste? Demuéstralo. Sube una foto, vídeo o lo que necesites para que la comunidad vea que el reto está superado.
