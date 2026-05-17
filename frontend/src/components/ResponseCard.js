@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaStar, FaThumbsUp } from "react-icons/fa";
 import "../styles/components/ResponseCard.css";
@@ -29,8 +29,12 @@ function ResponseCard({
   if (mediaItems.length === 0 && response.imagenEnvio) {
     mediaItems = [{ tipo: "imagen", url: response.imagenEnvio }];
   }
-  const extraMedia = []; // ahora gestionamos todo desde mediaItems (si hace falta, se pueden separar)
+  const extraMedia = [];
   const isClickable = !!onOpenChallenge;
+  const MEDIA_LIMIT = 2;
+  const [mediaExpanded, setMediaExpanded] = useState(false);
+  const visibleMedia = mediaExpanded ? mediaItems : mediaItems.slice(0, MEDIA_LIMIT);
+  const hiddenCount = mediaItems.length - MEDIA_LIMIT;
 
   const handleCardKeyDown = (event) => {
     if (!isClickable) return;
@@ -100,7 +104,7 @@ function ResponseCard({
 
       {mediaItems.length > 0 && (
         <div className="response-card__media-list" onClick={stopCardClick}>
-          {mediaItems.map((m, i) => (
+          {visibleMedia.map((m, i) => (
             <div key={i} className="response-card__media-item">
               {m.tipo === "imagen" && (
                 <>
@@ -147,6 +151,24 @@ function ResponseCard({
               )}
             </div>
           ))}
+          {hiddenCount > 0 && !mediaExpanded && (
+            <button
+              type="button"
+              className="response-card__show-more"
+              onClick={(e) => { e.stopPropagation(); setMediaExpanded(true); }}
+            >
+              Mostrar {hiddenCount} {hiddenCount === 1 ? "archivo más" : "archivos más"}
+            </button>
+          )}
+          {mediaExpanded && mediaItems.length > MEDIA_LIMIT && (
+            <button
+              type="button"
+              className="response-card__show-more"
+              onClick={(e) => { e.stopPropagation(); setMediaExpanded(false); }}
+            >
+              Mostrar menos
+            </button>
+          )}
         </div>
       )}
 

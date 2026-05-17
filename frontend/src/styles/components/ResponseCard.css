@@ -132,6 +132,23 @@
   padding: 0.35rem 0.1rem 0;
 }
 
+.response-card__show-more {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px dashed var(--color-border-muted);
+  border-radius: 8px;
+  background: none;
+  color: var(--color-action);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.response-card__show-more:hover {
+  background: var(--color-action-subtle);
+}
+
 .response-card__pdf-item {
   display: flex;
   align-items: center;
@@ -291,4 +308,13 @@ body.dark-mode .response-card__download {
 body.dark-mode .response-card__download:hover {
   background: var(--color-warning-hover);
   color: var(--color-white);
+}
+
+body.dark-mode .response-card__show-more {
+  border-color: var(--color-border);
+  color: var(--color-action);
+}
+
+body.dark-mode .response-card__show-more:hover {
+  background: var(--color-action-subtle);
 }
