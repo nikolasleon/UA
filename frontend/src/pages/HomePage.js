@@ -16,6 +16,8 @@ function HomePage() {
   const [dailyStatus, setDailyStatus] = useState("INVITADO");
   const [isJoining, setIsJoining] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
+  const [popularPage, setPopularPage] = useState(1);
+  const POPULAR_PER_PAGE = 9;
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -255,17 +257,26 @@ function HomePage() {
             {loading ? (
               <div className="loading-spinner">Cargando retos...</div>
             ) : popularChallenges.length > 0 ? (
-              popularChallenges.slice(0, 10).map((challenge) => (
-                <ChallengeCard
-                  key={challenge._id}
-                  challenge={challenge}
-                  onViewDetails={handleViewDetails}
-                />
-              ))
+              popularChallenges
+                .slice((popularPage - 1) * POPULAR_PER_PAGE, popularPage * POPULAR_PER_PAGE)
+                .map((challenge) => (
+                  <ChallengeCard
+                    key={challenge._id}
+                    challenge={challenge}
+                    onViewDetails={handleViewDetails}
+                  />
+                ))
             ) : (
               <p>No hay retos disponibles.</p>
             )}
           </div>
+          {Math.ceil(popularChallenges.length / POPULAR_PER_PAGE) > 1 && (
+            <div className="pagination">
+              <button className="pagination-btn" onClick={() => setPopularPage(p => p - 1)} disabled={popularPage === 1}>← Anterior</button>
+              <span className="pagination-info">{popularPage} / {Math.ceil(popularChallenges.length / POPULAR_PER_PAGE)}</span>
+              <button className="pagination-btn" onClick={() => setPopularPage(p => p + 1)} disabled={popularPage === Math.ceil(popularChallenges.length / POPULAR_PER_PAGE)}>Siguiente →</button>
+            </div>
+          )}
         </section>
 
       </main>
