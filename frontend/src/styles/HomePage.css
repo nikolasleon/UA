@@ -44,13 +44,14 @@
 }
 
 .hero-link {
-  color: var(--color-primary);
-  font-weight: 600;
-  text-decoration: none;
+  color: var(--color-primary-text);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .hero-link:hover {
-  text-decoration: underline;
+  opacity: 0.75;
 }
 
 /* Contenedor principal verde */
