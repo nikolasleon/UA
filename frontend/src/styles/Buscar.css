@@ -53,11 +53,10 @@ body {
 /* BUSCADOR */
 .search-block {
   background: linear-gradient(135deg, var(--color-surface-alt) 0%, var(--color-action-subtle) 100%);
-  margin: 0 0 25px 0;
+  margin: 25px 0;
   padding: 25px;
-  border-radius: 0 0 18px 18px;
+  border-radius: 18px;
   border: 1px solid var(--color-border-muted);
-  border-top: none;
   box-shadow: 0 10px 24px rgba(111, 74, 122, 0.12);
 }
 
@@ -216,11 +215,7 @@ body {
     box-sizing: border-box;
   }
 
-  .search-block {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
+  .search-block,
   .popular-title,
   .card {
     margin-left: 12px;
@@ -239,13 +234,6 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 40px 50px;
-  }
-
-  .search-block {
-    margin-left: -40px;
-    margin-right: -40px;
-    padding: 25px 65px;
-    border-radius: 0 0 18px 18px;
   }
 
   .cards-container {
@@ -274,7 +262,6 @@ body {
 body.dark-mode .search-block {
   background: linear-gradient(135deg, var(--color-surface-alt) 0%, var(--color-surface-soft) 100%);
   border-color: var(--color-border);
-  border-top: none;
   box-shadow: var(--shadow-md);
 }
 
