@@ -309,6 +309,12 @@ body.dark-mode .response-card__likes--readonly {
   background: var(--color-surface-muted);
 }
 
+body.dark-mode .response-card__likes--active {
+  border-color: var(--color-warning-hover);
+  background: var(--color-tag-warning-bg);
+  color: var(--color-tag-warning-text);
+}
+
 body.dark-mode .response-card__pdf-item {
   background: var(--color-page-card);
 }
