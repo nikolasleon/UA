@@ -5,8 +5,8 @@ import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
 import Modal from "../components/Modal";
 import MediaCollage from "../components/MediaCollage";
-import ResponseCard from "../components/ResponseCard";
 import GalleryModal from "../components/GalleryModal";
+import ResponseCard from "../components/ResponseCard";
 import "../styles/ChallengePage.css";
 
 function ChallengePage() {
@@ -25,7 +25,7 @@ function ChallengePage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteResponseModal, setShowDeleteResponseModal] = useState(false);
   const [challengersPage, setChallengersPage] = useState(1);
-  const CHALLENGERS_PER_PAGE = 10;
+  const CHALLENGERS_PER_PAGE = 9;
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
   useEffect(() => {
@@ -390,51 +390,50 @@ function ChallengePage() {
             </ul>
           </section>
 
-          <section className="community-section">
-            <div className="section-header cyan">
-              <h2>CHALLENGERS</h2>
-            </div>
-            
-            <div className="challengers-feed">
-              {participantes.length > 0 ? (
-                <>
-                  {[...participantes]
-                    .slice((challengersPage - 1) * CHALLENGERS_PER_PAGE, challengersPage * CHALLENGERS_PER_PAGE)
-                    .map((p, index) => (
-                      <React.Fragment key={p.id || index}>
-                        <ResponseCard
-                          response={p}
-                          onLike={handleLike}
-                          onMediaImageClick={openGallery}
-                        />
-                      </React.Fragment>
-                    ))}
-                  {Math.ceil(participantes.length / CHALLENGERS_PER_PAGE) > 1 && (
-                    <div className="pagination">
-                      <button className="pagination-btn" onClick={() => setChallengersPage(p => p - 1)} disabled={challengersPage === 1}>← Anterior</button>
-                      <span className="pagination-info">{challengersPage} / {Math.ceil(participantes.length / CHALLENGERS_PER_PAGE)}</span>
-                      <button className="pagination-btn" onClick={() => setChallengersPage(p => p + 1)} disabled={challengersPage === Math.ceil(participantes.length / CHALLENGERS_PER_PAGE)}>Siguiente →</button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <p className="no-data-padding">Aún no hay publicaciones.</p>
-              )}
-            </div>
-
-            {expandedGallery && (
-              <GalleryModal
-                items={expandedGallery.images}
-                currentIndex={expandedGallery.currentIndex}
-                onClose={closeGallery}
-                onNext={nextImage}
-                onPrev={prevImage}
-              />
-            )}
-          </section>
-
         </aside>
       </main>
+
+      <section className="challengers-below-section">
+        <div className="section-header cyan challengers-below-header">
+          <h2>CHALLENGERS</h2>
+        </div>
+        {participantes.length > 0 ? (
+          <>
+            <div className="challengers-feed">
+              {participantes
+                .slice((challengersPage - 1) * CHALLENGERS_PER_PAGE, challengersPage * CHALLENGERS_PER_PAGE)
+                .map((p, index) => (
+                  <React.Fragment key={p.id || index}>
+                    <ResponseCard
+                      response={p}
+                      onLike={handleLike}
+                      onMediaImageClick={openGallery}
+                    />
+                  </React.Fragment>
+                ))}
+            </div>
+            {Math.ceil(participantes.length / CHALLENGERS_PER_PAGE) > 1 && (
+              <div className="pagination">
+                <button className="pagination-btn" onClick={() => setChallengersPage(p => p - 1)} disabled={challengersPage === 1}>← Anterior</button>
+                <span className="pagination-info">{challengersPage} / {Math.ceil(participantes.length / CHALLENGERS_PER_PAGE)}</span>
+                <button className="pagination-btn" onClick={() => setChallengersPage(p => p + 1)} disabled={challengersPage === Math.ceil(participantes.length / CHALLENGERS_PER_PAGE)}>Siguiente →</button>
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="no-data-padding">Aún no hay publicaciones.</p>
+        )}
+        {expandedGallery && (
+          <GalleryModal
+            items={expandedGallery.images}
+            currentIndex={expandedGallery.currentIndex}
+            onClose={closeGallery}
+            onNext={nextImage}
+            onPrev={prevImage}
+          />
+        )}
+      </section>
+
     </div>
   );
 }

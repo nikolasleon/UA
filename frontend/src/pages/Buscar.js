@@ -26,7 +26,7 @@ function Buscar() {
   const [retos, setRetos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const PER_PAGE = 10;
+  const PER_PAGE = 9;
 
   useEffect(() => {
     document.title = "Buscar retos – DayDare";
