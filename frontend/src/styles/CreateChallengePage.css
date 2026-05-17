@@ -172,6 +172,54 @@
   font-size: 1rem;
 }
 
+.upload-progress-wrapper {
+  margin: 0.5rem 0 1rem;
+}
+
+.upload-label {
+  font-size: 0.85rem;
+  color: var(--color-text-soft);
+  margin-bottom: 0.4rem;
+}
+
+.upload-progress-track {
+  width: 100%;
+  height: 10px;
+  background: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.upload-progress-fill {
+  height: 100%;
+  background: var(--color-action);
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.upload-progress-indeterminate {
+  position: absolute;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+  background: var(--color-action);
+  border-radius: 999px;
+  animation: indeterminate-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes indeterminate-slide {
+  from { left: -40%; }
+  to { left: 100%; }
+}
+
+.upload-progress-pct {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: right;
+  margin-top: 0.2rem;
+}
+
 @media (min-width: 768px) {
   .create-challenge-container {
     padding: 2rem 1.5rem;
@@ -250,4 +298,54 @@
 .fab:hover {
   background: var(--color-action-alt);
   transform: scale(1.08);
+}
+
+/* Drop zones */
+.drop-zone {
+  border: 2px dashed var(--color-border);
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  background: var(--color-surface);
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.drop-zone:hover,
+.drop-zone:focus {
+  border-color: var(--color-action);
+  background: var(--color-tag-bg, #f0f4ff);
+  outline: none;
+}
+
+.drop-zone.dragging {
+  border-color: var(--color-action);
+  background: var(--color-tag-bg, #e8f0ff);
+  box-shadow: 0 0 0 3px var(--focus-action, rgba(99,102,241,0.2));
+}
+
+.drop-zone-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.drop-zone-text {
+  font-size: 0.95rem;
+  color: var(--color-text-soft);
+}
+
+.drop-zone-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
+}
+
+.portada-preview-inside {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 6px;
 }

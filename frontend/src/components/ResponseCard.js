@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaStar, FaThumbsUp } from "react-icons/fa";
-import MediaCollage from "./MediaCollage";
 import "../styles/components/ResponseCard.css";
 
 function ResponseCard({
@@ -100,29 +99,51 @@ function ResponseCard({
       </div>
 
       {mediaItems.length > 0 && (
-        <div className="response-card__media" onClick={stopCardClick}>
-          <MediaCollage
-            images={mediaItems}
-            onImageClick={(index) => onMediaImageClick?.(mediaItems, index)}
-          />
-        </div>
-      )}
-
-      {extraMedia.length > 0 && (
-        <div className="response-card__attachments" onClick={stopCardClick}>
-          {extraMedia.map((media, index) => (
-            <div key={`${media.url}-${index}`} className="response-card__attachment">
-              {media.tipo === "video" && <video src={media.url} controls className="response-card__video" />}
-              {media.tipo === "audio" && (
+        <div className="response-card__media-list" onClick={stopCardClick}>
+          {mediaItems.map((m, i) => (
+            <div key={i} className="response-card__media-item">
+              {m.tipo === "imagen" && (
+                <>
+                  <img
+                    src={m.url}
+                    alt={`adjunto-${i}`}
+                    className="response-card__img"
+                    style={{ cursor: onMediaImageClick ? "zoom-in" : "default" }}
+                    onClick={() => onMediaImageClick?.(mediaItems.map(x => x.url), i)}
+                  />
+                  <div className="response-card__download-row">
+                    <a href={m.url} download target="_blank" rel="noreferrer" className="response-card__download">
+                      Descargar imagen
+                    </a>
+                  </div>
+                </>
+              )}
+              {m.tipo === "video" && (
+                <>
+                  <video src={m.url} controls className="response-card__video" />
+                  <div className="response-card__download-row">
+                    <a href={m.url} download target="_blank" rel="noreferrer" className="response-card__download">
+                      Descargar vídeo
+                    </a>
+                  </div>
+                </>
+              )}
+              {m.tipo === "audio" && (
                 <div className="response-card__audio-wrap">
-                  <span className="response-card__file-name">{media.url.split("/").pop().split("?")[0]}</span>
-                  <audio src={media.url} controls className="response-card__audio" />
+                  <span className="response-card__file-name">{m.url.split("/").pop().split("?")[0]}</span>
+                  <audio src={m.url} controls className="response-card__audio" />
+                  <a href={m.url} download target="_blank" rel="noreferrer" className="response-card__download" style={{ alignSelf: "flex-start" }}>
+                    Descargar audio
+                  </a>
                 </div>
               )}
-              {media.tipo === "pdf" && (
-                <a href={media.url} download target="_blank" rel="noreferrer" className="response-card__download">
-                  Descargar PDF
-                </a>
+              {m.tipo === "pdf" && (
+                <div className="response-card__pdf-item">
+                  <span className="response-card__file-name">📄 {m.url.split("/").pop().split("?")[0]}</span>
+                  <a href={m.url} download target="_blank" rel="noreferrer" className="response-card__download">
+                    Descargar PDF
+                  </a>
+                </div>
               )}
             </div>
           ))}

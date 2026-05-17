@@ -2,14 +2,14 @@
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  background: var(--color-search-bg);
+  background: var(--color-white);
 }
 
 /* CONTENEDOR PRINCIPAL */
 .page {
   width: 100%;
   min-height: 100vh;
-  background: var(--color-surface-muted);
+  background: var(--color-white);
   padding-bottom: 50px;
 }
 
@@ -53,10 +53,11 @@ body {
 /* BUSCADOR */
 .search-block {
   background: linear-gradient(135deg, var(--color-surface-alt) 0%, var(--color-action-subtle) 100%);
-  margin: 25px 0;
+  margin: 0 0 25px 0;
   padding: 25px;
-  border-radius: 18px;
+  border-radius: 0 0 18px 18px;
   border: 1px solid var(--color-border-muted);
+  border-top: none;
   box-shadow: 0 10px 24px rgba(111, 74, 122, 0.12);
 }
 
@@ -215,7 +216,11 @@ body {
     box-sizing: border-box;
   }
 
-  .search-block,
+  .search-block {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .popular-title,
   .card {
     margin-left: 12px;
@@ -231,9 +236,16 @@ body {
 @media (min-width: 768px) {
 
   .page {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 40px 50px;
+  }
+
+  .search-block {
+    margin-left: -40px;
+    margin-right: -40px;
+    padding: 25px 65px;
+    border-radius: 0 0 18px 18px;
   }
 
   .cards-container {
@@ -262,6 +274,7 @@ body {
 body.dark-mode .search-block {
   background: linear-gradient(135deg, var(--color-surface-alt) 0%, var(--color-surface-soft) 100%);
   border-color: var(--color-border);
+  border-top: none;
   box-shadow: var(--shadow-md);
 }
 
@@ -284,4 +297,8 @@ body.dark-mode .search-bar input {
 body.dark-mode .tags span {
   background: var(--color-tag-purple-bg);
   color: var(--color-tag-purple-text);
+}
+
+body.dark-mode .page {
+  background: var(--color-page);
 }

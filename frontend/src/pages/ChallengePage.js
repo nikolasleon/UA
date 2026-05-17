@@ -24,6 +24,7 @@ function ChallengePage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteResponseModal, setShowDeleteResponseModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [challengersPage, setChallengersPage] = useState(1);
   const CHALLENGERS_PER_PAGE = 9;
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -117,17 +118,21 @@ function ChallengePage() {
   };
 
   const handleDelete = async () => {
+    setIsDeleting(true);
+    setShowDeleteModal(false);
     try {
       const res = await fetch(`${API_URL}/api/challenges/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
       navigate("/account");
     } catch {
-      setShowLoginModal(false);
+      setIsDeleting(false);
       setAlert({ message: "Error al borrar el reto", type: "error" });
     }
   };
 
   const handleDeleteResponse = async () => {
+    setIsDeleting(true);
+    setShowDeleteResponseModal(false);
     try {
       const res = await fetch(`${API_URL}/api/challenges/${id}/respuesta/${user._id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
@@ -137,7 +142,7 @@ function ChallengePage() {
     } catch {
       setAlert({ message: "Error al eliminar la respuesta.", type: "error" });
     } finally {
-      setShowDeleteResponseModal(false);
+      setIsDeleting(false);
     }
   };
 
@@ -198,6 +203,7 @@ function ChallengePage() {
 
   return (
     <div className="challenge-page-container">
+      {isDeleting && <div className="delete-progress-bar" />}
             {showLoginModal && (
       <Modal
         title="¡Únete al reto!"
@@ -280,9 +286,20 @@ function ChallengePage() {
             </div>
 
             <div className="challenge-content-padding">
-              <div className="challenge-media-container">
+              <div
+                className="challenge-media-container"
+                style={{ cursor: challenge.imagenDesafio ? "zoom-in" : "default" }}
+                onClick={() => challenge.imagenDesafio && openGallery([challenge.imagenDesafio], 0)}
+              >
                 <MediaCollage images={challenge.imagenDesafio ? [challenge.imagenDesafio] : []} />
               </div>
+              {challenge.imagenDesafio && (
+                <div className="portada-download-row">
+                  <a href={challenge.imagenDesafio} download target="_blank" rel="noreferrer" className="btn-download">
+                    Descargar portada
+                  </a>
+                </div>
+              )}
 
               <p className="challenge-sub-text">
                 {challenge.participantes || 0} participante{challenge.participantes !== 1 ? "s" : ""}
@@ -299,15 +316,38 @@ function ChallengePage() {
                     {challenge.multimedia.map((m, i) => (
                       <div key={i} className="multimedia-media-item">
                         {m.tipo === "imagen" && (
-                          <img src={m.url} alt={`multimedia-${i}`} className="multimedia-img" />
+                          <>
+                            <img
+                              src={m.url}
+                              alt={`multimedia-${i}`}
+                              className="multimedia-img"
+                              style={{ cursor: "zoom-in" }}
+                              onClick={() => openGallery([m.url], 0)}
+                            />
+                            <div className="multimedia-download-row">
+                              <a href={m.url} download target="_blank" rel="noreferrer" className="btn-download">
+                                Descargar imagen
+                              </a>
+                            </div>
+                          </>
                         )}
                         {m.tipo === "video" && (
-                          <video src={m.url} controls className="multimedia-video" />
+                          <>
+                            <video src={m.url} controls className="multimedia-video" />
+                            <div className="multimedia-download-row">
+                              <a href={m.url} download target="_blank" rel="noreferrer" className="btn-download">
+                                Descargar vídeo
+                              </a>
+                            </div>
+                          </>
                         )}
                         {m.tipo === "audio" && (
                           <div className="multimedia-audio-wrap">
                             <span className="multimedia-audio-name">{m.url.split("/").pop().split("?")[0]}</span>
                             <audio src={m.url} controls className="multimedia-audio" />
+                            <a href={m.url} download target="_blank" rel="noreferrer" className="btn-download" style={{ alignSelf: "flex-start" }}>
+                              Descargar audio
+                            </a>
                           </div>
                         )}
                         {m.tipo === "pdf" && (

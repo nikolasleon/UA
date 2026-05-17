@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
@@ -26,7 +26,13 @@ function CreateChallengePage() {
   const [portadaPreview, setPortadaPreview] = useState(null);
   const [multimediaFiles, setMultimediaFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadLabel, setUploadLabel] = useState("");
   const [alert, setAlert] = useState({ message: "", type: "success" });
+  const [isDraggingPortada, setIsDraggingPortada] = useState(false);
+  const [isDraggingMultimedia, setIsDraggingMultimedia] = useState(false);
+  const portadaRef = useRef(null);
+  const multimediaRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,17 +56,46 @@ function CreateChallengePage() {
     setMultimediaFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const uploadFile = async (file) => {
+  const handlePortadaDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingPortada(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setPortadaFile(file);
+      setPortadaPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleMultimediaDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingMultimedia(false);
+    const files = Array.from(e.dataTransfer.files);
+    setMultimediaFiles((prev) => [...prev, ...files]);
+  };
+
+  const uploadFile = (file, index, total) => new Promise((resolve, reject) => {
     const formData = new FormData();
     formData.append("archivo", file);
-    const res = await fetch(`${API_URL}/api/users/upload`, {
-      method: "POST",
-      body: formData,
-    });
-    if (!res.ok) throw new Error("Error al subir archivo");
-    const data = await res.json();
-    return data.url;
-  };
+    setUploadLabel(`Subiendo archivo ${index + 1} de ${total}...`);
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const fileBase = (index / total) * 100;
+        const fileContrib = (e.loaded / e.total) * (100 / total);
+        setUploadProgress(Math.round(fileBase + fileContrib));
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(JSON.parse(xhr.responseText).url);
+      } else {
+        reject(new Error("Error al subir archivo"));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Error de red al subir archivo"));
+    xhr.open("POST", `${API_URL}/api/users/upload`);
+    xhr.send(formData);
+  });
 
   const getTipo = (file) => {
     if (file.type.startsWith("image/")) return "imagen";
@@ -82,15 +117,19 @@ function CreateChallengePage() {
     }
 
     setIsSubmitting(true);
+    setUploadProgress(0);
+    const totalFiles = 1 + multimediaFiles.length;
     try {
-      const portadaUrl = await uploadFile(portadaFile);
+      const portadaUrl = await uploadFile(portadaFile, 0, totalFiles);
 
-      const multimedia = await Promise.all(
-        multimediaFiles.map(async (file) => ({
-          url: await uploadFile(file),
-          tipo: getTipo(file),
-        }))
-      );
+      const multimedia = [];
+      for (let i = 0; i < multimediaFiles.length; i++) {
+        const url = await uploadFile(multimediaFiles[i], 1 + i, totalFiles);
+        multimedia.push({ url, tipo: getTipo(multimediaFiles[i]) });
+      }
+
+      setUploadProgress(100);
+      setUploadLabel("Creando reto...");
 
       const res = await fetch(`${API_URL}/api/challenges`, {
         method: "POST",
@@ -187,22 +226,49 @@ function CreateChallengePage() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="create-portada">Imagen de portada <span className="required">*</span></label>
-          <input id="create-portada" type="file" accept="image/*" onChange={handlePortadaChange} />
-          {portadaPreview && (
-            <img src={portadaPreview} alt="Portada del reto" className="portada-preview" />
-          )}
+          <label>Imagen de portada <span className="required">*</span></label>
+          <div
+            className={`drop-zone${isDraggingPortada ? " dragging" : ""}`}
+            onDragEnter={(e) => { e.preventDefault(); setIsDraggingPortada(true); }}
+            onDragOver={(e) => e.preventDefault()}
+            onDragLeave={() => setIsDraggingPortada(false)}
+            onDrop={handlePortadaDrop}
+            onClick={() => portadaRef.current.click()}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && portadaRef.current.click()}
+          >
+            {portadaPreview ? (
+              <img src={portadaPreview} alt="Portada del reto" className="portada-preview-inside" />
+            ) : (
+              <>
+                <span className="drop-zone-icon">🖼️</span>
+                <span className="drop-zone-text">Arrastra la imagen aquí o <strong>haz clic para seleccionar</strong></span>
+                <span className="drop-zone-hint">Solo imágenes</span>
+              </>
+            )}
+          </div>
+          <input ref={portadaRef} type="file" accept="image/*" onChange={handlePortadaChange} style={{ display: "none" }} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="create-multimedia">Multimedia adicional <span className="optional">(opcional — foto, vídeo, audio, PDF)</span></label>
-          <input
-            id="create-multimedia"
-            type="file"
-            accept="image/*,video/*,audio/*,application/pdf"
-            multiple
-            onChange={handleMultimediaChange}
-          />
+          <label>Multimedia adicional <span className="optional">(opcional — foto, vídeo, audio, PDF)</span></label>
+          <div
+            className={`drop-zone${isDraggingMultimedia ? " dragging" : ""}`}
+            onDragEnter={(e) => { e.preventDefault(); setIsDraggingMultimedia(true); }}
+            onDragOver={(e) => e.preventDefault()}
+            onDragLeave={() => setIsDraggingMultimedia(false)}
+            onDrop={handleMultimediaDrop}
+            onClick={() => multimediaRef.current.click()}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && multimediaRef.current.click()}
+          >
+            <span className="drop-zone-icon">📎</span>
+            <span className="drop-zone-text">Arrastra tus archivos aquí o <strong>haz clic para seleccionar</strong></span>
+            <span className="drop-zone-hint">Imágenes, vídeos, audios o PDFs — máx. 50 MB</span>
+          </div>
+          <input ref={multimediaRef} type="file" accept="image/*,video/*,audio/*,application/pdf" multiple onChange={handleMultimediaChange} style={{ display: "none" }} />
           {multimediaFiles.length > 0 && (
             <ul className="multimedia-list">
               {multimediaFiles.map((file, i) => (
@@ -214,6 +280,16 @@ function CreateChallengePage() {
             </ul>
           )}
         </div>
+
+        {isSubmitting && (
+          <div className="upload-progress-wrapper">
+            <div className="upload-label">{uploadLabel}</div>
+            <div className="upload-progress-track">
+              <div className="upload-progress-fill" style={{ width: `${uploadProgress}%` }} />
+            </div>
+            <div className="upload-progress-pct">{uploadProgress}%</div>
+          </div>
+        )}
 
         <button type="submit" className="btn-create" disabled={isSubmitting}>
           {isSubmitting ? "Creando..." : "Crear reto"}

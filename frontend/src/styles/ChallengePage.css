@@ -40,7 +40,7 @@
   flex-direction: column; /* Móvil: Vertical */
   gap: 40px; /* Espacio generoso entre secciones */
   padding: 30px 20px;
-  max-width: 1100px; /* Ancho controlado para que no se vea "estirado" */
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -173,9 +173,7 @@
 }
 
 body.dark-mode .challenge-page-container {
-  background:
-    radial-gradient(circle at top right, rgba(143, 216, 213, 0.1), transparent 32%),
-    linear-gradient(180deg, var(--color-page-soft), var(--color-page));
+  background: var(--color-page);
   color: var(--color-text);
 }
 
@@ -686,9 +684,7 @@ body.dark-mode .challenger-card-mini {
 }
 
 body.dark-mode .challenge-page-container {
-  background:
-    radial-gradient(circle at top right, rgba(143, 216, 213, 0.1), transparent 32%),
-    linear-gradient(180deg, var(--color-page-soft), var(--color-page));
+  background: var(--color-page);
   color: var(--color-text);
 }
 
@@ -812,7 +808,7 @@ body.dark-mode .challenge-sub-text {
 
 /* --- CHALLENGERS BELOW SECTION --- */
 .challengers-below-section {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px 50px;
 }
@@ -906,4 +902,59 @@ body.dark-mode .challengers-below-grid .challenger-name-tag {
   font-weight: 700;
   color: var(--color-primary-text);
   flex-shrink: 0;
+}
+
+.delete-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  z-index: 9999;
+  overflow: hidden;
+  background: rgba(0,0,0,0.06);
+}
+
+.delete-progress-bar::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: var(--color-danger-bright);
+  border-radius: 999px;
+  animation: delete-slide 1s ease-in-out infinite;
+}
+
+@keyframes delete-slide {
+  from { left: -50%; }
+  to { left: 100%; }
+}
+
+.challenge-media-container {
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.portada-download-row,
+.multimedia-download-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.4rem 0.2rem 0;
+}
+
+body.dark-mode .btn-download {
+  background: var(--color-tag-warning-bg);
+  color: var(--color-tag-warning-text);
+}
+
+body.dark-mode .btn-download:hover {
+  background: var(--color-warning-hover);
+  color: var(--color-white);
+}
+
+body.dark-mode .multimedia-download-item {
+  background: var(--color-page-card);
 }

@@ -29,6 +29,9 @@ function EditChallengePage() {
   const [existingMultimedia, setExistingMultimedia] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadLabel, setUploadLabel] = useState("");
+  const [uploadTotal, setUploadTotal] = useState(0);
   const [alert, setAlert] = useState({ message: "", type: "success" });
 
   useEffect(() => {
@@ -92,17 +95,29 @@ function EditChallengePage() {
     setExistingMultimedia((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const uploadFile = async (file) => {
+  const uploadFile = (file, index, total) => new Promise((resolve, reject) => {
     const formData = new FormData();
     formData.append("archivo", file);
-    const res = await fetch(`${API_URL}/api/users/upload`, {
-      method: "POST",
-      body: formData,
-    });
-    if (!res.ok) throw new Error("Error al subir archivo");
-    const data = await res.json();
-    return data.url;
-  };
+    setUploadLabel(`Subiendo archivo ${index + 1} de ${total}...`);
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const fileBase = (index / total) * 100;
+        const fileContrib = (e.loaded / e.total) * (100 / total);
+        setUploadProgress(Math.round(fileBase + fileContrib));
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(JSON.parse(xhr.responseText).url);
+      } else {
+        reject(new Error("Error al subir archivo"));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Error de red al subir archivo"));
+    xhr.open("POST", `${API_URL}/api/users/upload`);
+    xhr.send(formData);
+  });
 
   const getTipo = (file) => {
     if (file.type.startsWith("image/")) return "imagen";
@@ -120,18 +135,24 @@ function EditChallengePage() {
     }
 
     setIsSubmitting(true);
+    setUploadProgress(0);
+    const totalFiles = (portadaFile ? 1 : 0) + multimediaFiles.length;
+    setUploadTotal(totalFiles);
     try {
       let imagenDesafio = portadaPreview;
       if (portadaFile) {
-        imagenDesafio = await uploadFile(portadaFile);
+        imagenDesafio = await uploadFile(portadaFile, 0, totalFiles);
       }
 
-      const newMultimedia = await Promise.all(
-        multimediaFiles.map(async (file) => ({
-          url: await uploadFile(file),
-          tipo: getTipo(file),
-        }))
-      );
+      const newMultimedia = [];
+      const offset = portadaFile ? 1 : 0;
+      for (let i = 0; i < multimediaFiles.length; i++) {
+        const url = await uploadFile(multimediaFiles[i], offset + i, totalFiles || 1);
+        newMultimedia.push({ url, tipo: getTipo(multimediaFiles[i]) });
+      }
+
+      if (totalFiles > 0) setUploadProgress(100);
+      setUploadLabel("Guardando cambios...");
 
       const multimedia = [...existingMultimedia, ...newMultimedia];
 
@@ -246,6 +267,20 @@ function EditChallengePage() {
             </ul>
           )}
         </div>
+
+        {isSubmitting && (
+          <div className="upload-progress-wrapper">
+            <div className="upload-label">{uploadLabel || "Guardando cambios..."}</div>
+            <div className="upload-progress-track">
+              {uploadTotal > 0 ? (
+                <div className="upload-progress-fill" style={{ width: `${uploadProgress}%` }} />
+              ) : (
+                <div className="upload-progress-indeterminate" />
+              )}
+            </div>
+            {uploadTotal > 0 && <div className="upload-progress-pct">{uploadProgress}%</div>}
+          </div>
+        )}
 
         <button type="submit" className="btn-create" disabled={isSubmitting}>
           {isSubmitting ? "Guardando..." : "Guardar cambios"}
