@@ -58,6 +58,7 @@ function Buscar() {
   return (
     <div className="page">
 
+      <div className="search-hero">
       <section className="search-block">
         <h1 className="search-title">BUSCA TU RETO</h1>
 
@@ -117,6 +118,7 @@ function Buscar() {
           </div>
         </div>
       </section>
+      </div>
 
       <h2 className="popular-title">
         {search || categoria || duracion || nivel ? "RESULTADOS" : "TODOS LOS RETOS"}

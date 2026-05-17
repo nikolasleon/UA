@@ -96,6 +96,10 @@
   font-weight: 700;
   color: var(--color-text-heading);
   line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 
 .challenge-card__description {
@@ -104,6 +108,10 @@
   color: var(--color-text-soft);
   line-height: 1.5;
   flex-grow: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 /* TAGS */
