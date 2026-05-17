@@ -6,8 +6,8 @@ import "../styles/CreateChallengePage.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-const CATEGORIAS = ["fuerza", "cardio", "aire libre", "gimnasio", "yoga", "equipo", "flexibilidad", "resistencia"];
-const DURACIONES = ["5min", "10min", "15min", "30min", "15-20min", "45min", "1h"];
+const CATEGORIAS = ["fuerza", "cardio", "aire libre", "gimnasio", "yoga", "equipo", "flexibilidad", "resistencia", "arte", "tecnologia", "cocina", "música"];
+const DURACIONES = ["5min", "10min", "15min", "20min", "30min", "45min", "1h", "1h 30min", "2h"];
 const NIVELES = ["fácil", "medio", "intenso"];
 
 function CreateChallengePage() {

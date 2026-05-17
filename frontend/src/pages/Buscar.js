@@ -89,6 +89,10 @@ function Buscar() {
               <option value="equipo">Equipo</option>
               <option value="flexibilidad">Flexibilidad</option>
               <option value="resistencia">Resistencia</option>
+              <option value="arte">Arte</option>
+              <option value="tecnologia">Tecnologia</option>
+              <option value="cocina">Cocina</option>
+              <option value="música">Música</option>
             </select>
 
             <select value={duracion} onChange={(e) => { setDuracion(e.target.value); setPage(1); }}>
@@ -96,10 +100,12 @@ function Buscar() {
               <option value="5min">5min</option>
               <option value="10min">10min</option>
               <option value="15min">15min</option>
+              <option value="20min">20min</option>
               <option value="30min">30min</option>
-              <option value="15-20min">15-20min</option>
               <option value="45min">45min</option>
               <option value="1h">1h</option>
+              <option value="1h 30min">1h 30min</option>
+              <option value="2h">2h</option>
             </select>
 
             <select value={nivel} onChange={(e) => { setNivel(e.target.value); setPage(1); }}>
