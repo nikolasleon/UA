@@ -11,7 +11,9 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  background-color: var(--color-page-soft); /* Un gris muy suave para que el blanco resalte */
+  background-color: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(111, 74, 122, 0.08);
 }
 
 /* Hero intro */

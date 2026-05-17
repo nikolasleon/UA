@@ -345,7 +345,7 @@ function ChallengePage() {
                           <div className="multimedia-audio-wrap">
                             <span className="multimedia-audio-name">{m.url.split("/").pop().split("?")[0]}</span>
                             <audio src={m.url} controls className="multimedia-audio" />
-                            <a href={m.url} download target="_blank" rel="noreferrer" className="btn-download" style={{ alignSelf: "flex-start" }}>
+                            <a href={m.url} download target="_blank" rel="noreferrer" className="btn-download" style={{ alignSelf: "flex-end" }}>
                               Descargar audio
                             </a>
                           </div>

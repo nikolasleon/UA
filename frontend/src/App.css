@@ -24,7 +24,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background: var(--color-page);
+  background: var(--color-search-bg);
   color: var(--color-text-strong);
 
   transition: background 0.3s ease, color 0.3s ease;

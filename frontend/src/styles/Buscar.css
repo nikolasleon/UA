@@ -2,7 +2,6 @@
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  background: var(--color-white);
 }
 
 /* CONTENEDOR PRINCIPAL */
@@ -11,6 +10,8 @@ body {
   min-height: 100vh;
   background: var(--color-white);
   padding-bottom: 50px;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(111, 74, 122, 0.08);
 }
 
 /* MÁS ANCHO PARA ESCRITORIO */
@@ -287,5 +288,6 @@ body.dark-mode .tags span {
 }
 
 body.dark-mode .page {
-  background: var(--color-page);
+  background: var(--color-surface);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }

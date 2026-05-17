@@ -132,7 +132,7 @@ function ResponseCard({
                 <div className="response-card__audio-wrap">
                   <span className="response-card__file-name">{m.url.split("/").pop().split("?")[0]}</span>
                   <audio src={m.url} controls className="response-card__audio" />
-                  <a href={m.url} download target="_blank" rel="noreferrer" className="response-card__download" style={{ alignSelf: "flex-start" }}>
+                  <a href={m.url} download target="_blank" rel="noreferrer" className="response-card__download" style={{ alignSelf: "flex-end" }}>
                     Descargar audio
                   </a>
                 </div>
