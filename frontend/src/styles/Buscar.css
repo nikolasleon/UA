@@ -10,7 +10,7 @@ body {
   min-height: 100vh;
   background: var(--color-white);
   padding-bottom: 50px;
-  border-radius: 16px;
+  border-radius: 0 0 16px 16px;
   box-shadow: 0 4px 24px rgba(111, 74, 122, 0.08);
 }
 
