@@ -93,6 +93,7 @@ function Buscar() {
               <option value="tecnologia">Tecnologia</option>
               <option value="cocina">Cocina</option>
               <option value="música">Música</option>
+              <option value="otros">Otros</option>
             </select>
 
             <select value={duracion} onChange={(e) => { setDuracion(e.target.value); setPage(1); }}>
