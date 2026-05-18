@@ -20,8 +20,14 @@ function Header() {
   const userPhoto = user?.fotoPerfil || "";
   const [alert, setAlert] = useState({ message: "", type: "success" });
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const toggleSearch = () => setSearchOpen(!searchOpen);
+  const toggleMenu = () => {
+    setMenuOpen(prev => !prev);
+    setSearchOpen(false);
+  };
+  const toggleSearch = () => {
+    setSearchOpen(prev => !prev);
+    setMenuOpen(false);
+  };
   const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen);
   const toggleOptionsMenu = () => setOptionsMenuOpen(!optionsMenuOpen);
   // const toggleDarkMode = () => setDarkModeEnabled(!darkModeEnabled);

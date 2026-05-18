@@ -9,6 +9,7 @@ body {
   width: 100%;
   min-height: 100vh;
   background: var(--color-white);
+  padding-top: 25px;
   padding-bottom: 50px;
   border-radius: 0 0 16px 16px;
   box-shadow: 0 4px 24px rgba(111, 74, 122, 0.08);
@@ -54,7 +55,7 @@ body {
 /* BUSCADOR */
 .search-block {
   background: linear-gradient(135deg, var(--color-surface-alt) 0%, var(--color-action-subtle) 100%);
-  margin: 25px 0;
+  margin: 0 0 25px;
   padding: 25px;
   border-radius: 18px;
   border: 1px solid var(--color-border-muted);
@@ -234,7 +235,7 @@ body {
   .page {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 40px 50px;
+    padding: 25px 40px 50px;
   }
 
   .cards-container {

@@ -41,7 +41,7 @@ const challengeSchema = new mongoose.Schema({
   },
   categoria: {
     type: String,
-    enum: ["fuerza", "cardio", "aire libre", "gimnasio", "yoga", "general", "equipo", "flexibilidad", "resistencia", "arte", "tecnologia", "cocina", "música"],
+    enum: ["fuerza", "cardio", "aire libre", "gimnasio", "yoga", "general", "equipo", "flexibilidad", "resistencia", "arte", "tecnologia", "cocina", "música", "otros"],
     default: "general",
   },
   duracion: {
