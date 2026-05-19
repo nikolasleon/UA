@@ -263,6 +263,9 @@ function Header() {
               <Link to="/login" className="login-btn">
                 Iniciar sesión
               </Link>
+              <Link to="/register" className="register-btn">
+                Registrarse
+              </Link>
               {renderOptionsDropdown()}
             </div>
           )}

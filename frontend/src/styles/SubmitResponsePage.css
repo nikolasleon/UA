@@ -133,6 +133,17 @@
   margin-left: 0.5rem;
 }
 
+/* Existing multimedia (edit mode) */
+.multimedia-existing {
+  margin-top: 0.8rem;
+}
+
+.multimedia-existing-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+}
+
 /* Multimedia list */
 .multimedia-list {
   list-style: none;

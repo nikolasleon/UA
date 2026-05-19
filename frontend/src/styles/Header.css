@@ -318,6 +318,31 @@
   transform: translateY(0);
 }
 
+.register-btn {
+  background: var(--color-action);
+  color: var(--color-white);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.register-btn:hover {
+  background: var(--color-action-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  color: var(--color-white);
+}
+
+.register-btn:active {
+  transform: translateY(0);
+}
+
 /* AUTH BUTTONS DESKTOP */
 .auth-buttons-desktop {
   display: flex;

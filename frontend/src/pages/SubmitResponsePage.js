@@ -17,6 +17,9 @@ function SubmitResponsePage() {
   const [descripcion, setDescripcion] = useState("");
   const [valoracion, setValoracion] = useState(0);
   const [multimediaFiles, setMultimediaFiles] = useState([]);
+  // Archivos ya subidos en una respuesta previa (URLs, no File objects)
+  const [existingMultimedia, setExistingMultimedia] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadLabel, setUploadLabel] = useState("");
@@ -32,6 +35,26 @@ function SubmitResponsePage() {
       .then(setChallenge)
       .catch(() => setError("No se pudo cargar el reto"));
   }, [id]);
+
+  // Cargar respuesta existente del usuario si ya completó el reto
+  useEffect(() => {
+    if (!user?._id || !id) return;
+    fetch(`${API_URL}/api/challenges/${id}/participantes?userId=${user._id}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data) return;
+        const lista = data.participantes || [];
+        const miRespuesta = lista.find(p => String(p.usuario?._id) === String(user._id));
+        if (miRespuesta) {
+          setIsEditMode(true);
+          setTitulo(miRespuesta.titulo || "");
+          setDescripcion(miRespuesta.descripcionEnvio || "");
+          setValoracion(miRespuesta.valoracion || 0);
+          setExistingMultimedia(miRespuesta.multimediaEnvio || []);
+        }
+      })
+      .catch(() => {});
+  }, [id, user]);
 
   useEffect(() => {
     document.title = challenge ? `Subir respuesta: ${challenge.titulo} – DayDare` : "DayDare";
@@ -117,10 +140,17 @@ function SubmitResponsePage() {
     setMultimediaFiles(prev => [...prev, ...droppedFiles]);
   };
 
+  const removeExistingFile = (index) => {
+    setExistingMultimedia(prev => prev.filter((_, i) => i !== index));
+  };
+
   const preSubmitCheck = (e) => {
     e.preventDefault();
     if (!titulo.trim()) { setError("El título es obligatorio"); return; }
-    if (multimediaFiles.length === 0) { setError("Debes subir al menos un archivo"); return; }
+    if (multimediaFiles.length === 0 && existingMultimedia.length === 0) {
+      setError("Debes subir al menos un archivo");
+      return;
+    }
     setShowConfirmModal(true);
   };
 
@@ -130,11 +160,14 @@ function SubmitResponsePage() {
     setUploadProgress(0);
     setError("");
     try {
-      const multimediaEnvio = [];
+      // Subir archivos nuevos
+      const nuevosMultimedia = [];
       for (let i = 0; i < multimediaFiles.length; i++) {
         const url = await uploadFile(multimediaFiles[i], i, multimediaFiles.length);
-        multimediaEnvio.push({ url, tipo: getTipo(multimediaFiles[i]) });
+        nuevosMultimedia.push({ url, tipo: getTipo(multimediaFiles[i]) });
       }
+      // Combinar archivos existentes (que el usuario no eliminó) con los nuevos
+      const multimediaEnvio = [...existingMultimedia, ...nuevosMultimedia];
       setUploadProgress(100);
       setUploadLabel("Guardando respuesta...");
 
@@ -165,9 +198,11 @@ function SubmitResponsePage() {
 
   return (
     <div className="submit-response-container">
-      <h1 className="submit-response-title">Subir respuesta</h1>
+      <h1 className="submit-response-title">{isEditMode ? "Editar respuesta" : "Subir respuesta"}</h1>
       <p className="submit-response-intro">
-        ¿Lo conseguiste? Demuéstralo. Sube una foto, vídeo o lo que necesites para que la comunidad vea que el reto está superado.
+        {isEditMode
+          ? "Modifica tu respuesta para el reto. Puedes cambiar el título, descripción, valoración o los archivos."
+          : "¿Lo conseguiste? Demuéstralo. Sube una foto, vídeo o lo que necesites para que la comunidad vea que el reto está superado."}
       </p>
       <p className="submit-response-challenge-name">{challenge.titulo}</p>
 
@@ -239,6 +274,19 @@ function SubmitResponsePage() {
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
+          {existingMultimedia.length > 0 && (
+            <div className="multimedia-existing">
+              <p className="multimedia-existing-label">Archivos actuales (puedes eliminar los que no quieras conservar):</p>
+              <ul className="multimedia-list">
+                {existingMultimedia.map((m, i) => (
+                  <li key={i} className="multimedia-item">
+                    <span>{m.url.split("/").pop().split("?")[0] || `Archivo ${i + 1}`}</span>
+                    <button type="button" onClick={() => removeExistingFile(i)} className="btn-remove">✕</button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {multimediaFiles.length > 0 && (
             <ul className="multimedia-list">
               {multimediaFiles.map((file, i) => (
@@ -262,7 +310,7 @@ function SubmitResponsePage() {
         )}
 
         <button type="submit" className="btn-submit-response" disabled={isSubmitting}>
-          {isSubmitting ? "Enviando..." : "Enviar respuesta"}
+          {isSubmitting ? "Enviando..." : isEditMode ? "Guardar cambios" : "Enviar respuesta"}
         </button>
       </form>
       <Alert 
@@ -272,13 +320,22 @@ function SubmitResponsePage() {
       />
       {showConfirmModal && (
         <Modal
-          title="¿Confirmar envío?"
-          confirmText="Sí, subir prueba"
+          title={isEditMode ? "¿Guardar cambios?" : "¿Confirmar envío?"}
+          confirmText={isEditMode ? "Sí, guardar cambios" : "Sí, subir prueba"}
           onClose={() => setShowConfirmModal(false)}
           onConfirm={executeSubmit}
         >
-          <p>Estás a punto de subir tu prueba para el reto <strong>{challenge.titulo}</strong>.</p>
-          <p>Una vez enviada, los demás usuarios podrán ver tu respuesta. ¿Estás listo?</p>
+          {isEditMode ? (
+            <>
+              <p>Vas a actualizar tu respuesta para el reto <strong>{challenge.titulo}</strong>.</p>
+              <p>Los cambios serán visibles para todos los usuarios. ¿Continuar?</p>
+            </>
+          ) : (
+            <>
+              <p>Estás a punto de subir tu prueba para el reto <strong>{challenge.titulo}</strong>.</p>
+              <p>Una vez enviada, los demás usuarios podrán ver tu respuesta. ¿Estás listo?</p>
+            </>
+          )}
         </Modal>
       )}
     </div>

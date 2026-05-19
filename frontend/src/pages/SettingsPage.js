@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
@@ -28,8 +28,10 @@ function SettingsPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [pendingPhotoFile, setPendingPhotoFile] = useState(null);
+  const [isDraggingPhoto, setIsDraggingPhoto] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "success" });
+  const photoInputRef = useRef(null);
   const [password, setPassword] = useState({
     actual: "",
     nueva: "",
@@ -98,6 +100,22 @@ function SettingsPage() {
     if (file) {
       setPendingPhotoFile(file);
       setPhotoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handlePhotoDragEnter = (e) => { e.preventDefault(); e.stopPropagation(); setIsDraggingPhoto(true); };
+  const handlePhotoDragOver = (e) => { e.preventDefault(); e.stopPropagation(); };
+  const handlePhotoDragLeave = (e) => { e.preventDefault(); e.stopPropagation(); setIsDraggingPhoto(false); };
+  const handlePhotoDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingPhoto(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setPendingPhotoFile(file);
+      setPhotoPreview(URL.createObjectURL(file));
+    } else if (file) {
+      setAlert({ message: "Solo se permiten imágenes", type: "error" });
     }
   };
 
@@ -386,34 +404,44 @@ function SettingsPage() {
             </div>
 
             <div className="form-group">
+              <label>Foto de perfil:</label>
+              <div
+                className={`photo-drop-zone${isDraggingPhoto ? " dragging" : ""}`}
+                onDragEnter={handlePhotoDragEnter}
+                onDragOver={handlePhotoDragOver}
+                onDragLeave={handlePhotoDragLeave}
+                onDrop={handlePhotoDrop}
+                onClick={() => photoInputRef.current.click()}
+                role="button"
+                tabIndex={0}
+                aria-label="Zona para subir foto de perfil. Haz clic o arrastra una imagen aquí"
+                onKeyDown={e => e.key === "Enter" && photoInputRef.current.click()}
+              >
+                {(photoPreview || profile.fotoPerfil) ? (
+                  <img
+                    src={photoPreview || profile.fotoPerfil}
+                    alt="Previsualización de foto de perfil"
+                    className="photo-drop-preview"
+                  />
+                ) : (
+                  <>
+                    <span className="photo-drop-icon">📷</span>
+                    <span className="photo-drop-text">Arrastra tu foto aquí o <strong>haz clic para seleccionar</strong></span>
+                  </>
+                )}
+                {(photoPreview || profile.fotoPerfil) && (
+                  <span className="photo-drop-hint">Haz clic o arrastra para cambiar la foto</span>
+                )}
+              </div>
               <input
+                ref={photoInputRef}
                 id="fotoPerfil"
                 type="file"
                 accept="image/*"
                 onChange={handlePhotoChange}
+                style={{ display: "none" }}
               />
-              <p style={{ fontSize: "0.85rem", color: "#888", marginTop: "0.5rem" }}>
-                Selecciona una imagen desde tu galería
-              </p>
             </div>
-
-            {/* Previsualización de foto */}
-            {(photoPreview || profile.fotoPerfil) && (
-              <div className="photo-preview">
-                <img 
-                  src={photoPreview || profile.fotoPerfil} 
-                  alt="Previsualización de foto de perfil"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    border: "3px solid #007bff",
-                    marginBottom: "1rem"
-                  }}
-                />
-              </div>
-            )}
 
             <div className="button-group">
               <button 

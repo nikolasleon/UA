@@ -116,39 +116,33 @@ function PublicProfilePage() {
       </button>
 
       {/* Encabezado de perfil */}
-      <div className="profile-header" style={{ textAlign: "center", marginBottom: "3rem" }}>
-        {user.fotoPerfil && (
-          <img
-            src={user.fotoPerfil}
-            alt={`${user.nombre} ${user.apellido}`}
-            style={{
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              marginBottom: "1rem",
-              border: "3px solid #007bff",
-            }}
-          />
+      <div className="public-profile-card">
+        <div className="public-profile-avatar-wrap">
+          {user.fotoPerfil ? (
+            <img
+              src={user.fotoPerfil}
+              alt={`${user.nombre} ${user.apellido}`}
+              className="public-profile-avatar"
+            />
+          ) : (
+            <div className="public-profile-avatar-placeholder">
+              {user.nombre?.charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
+        <h1 className="public-profile-name">{user.nombre} {user.apellido}</h1>
+        {user.bio && <p className="public-profile-bio">{user.bio}</p>}
+        {user.nacionalidad && (
+          <p className="public-profile-meta">🌍 {user.nacionalidad}</p>
         )}
-        <h1>{user.nombre} {user.apellido}</h1>
-        {user.bio && <p style={{ color: "#666", fontSize: "1rem" }}>{user.bio}</p>}
       </div>
 
       {/* Si el perfil es privado */}
       {isPrivate ? (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "3rem 2rem",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-            border: "2px dashed #ddd",
-          }}
-        >
-          <FaLock style={{ fontSize: "3rem", color: "#999", marginBottom: "1rem" }} />
+        <div className="public-profile-private-box">
+          <FaLock className="public-profile-lock-icon" />
           <h3>Este perfil es privado</h3>
-          <p style={{ color: "#666" }}>
+          <p>
             El propietario de esta cuenta ha hecho su perfil privado.
             Ningún usuario puede ver su perfil completo ni la información de sus retos.
           </p>

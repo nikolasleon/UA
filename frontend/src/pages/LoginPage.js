@@ -23,10 +23,10 @@ function LoginPage() {
     document.title = "Iniciar sesión – DayDare";
   }, []);
 
-  // Redirigir si ya está logueado
+  // Redirigir si ya está logueado (sin haber hecho login aquí, ej. volviendo a /login)
   useEffect(() => {
     if (isLoggedIn) {
-      navigate("/account", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [isLoggedIn, navigate]);
 
@@ -82,7 +82,6 @@ function LoginPage() {
       resetLoginForm();
       setTimeout(() => {
         login(data.user, rememberMe);
-        navigate("/account");
       }, 1000);
     } catch (error) {
       setAlert({ message: error.message || "Error al iniciar sesión", type: "error" });
