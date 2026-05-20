@@ -218,7 +218,7 @@ body.dark-mode .tags span {
 }
 
 .pagination-btn {
-  background: var(--color-primary);
+  background: var(--color-action);
   color: var(--color-white);
   border: none;
   border-radius: 8px;
@@ -226,17 +226,18 @@ body.dark-mode .tags span {
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, opacity 0.2s;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: var(--color-primary-dark);
+  background: var(--color-action-alt);
 }
 
 .pagination-btn:disabled {
-  background: var(--color-surface-muted);
-  color: var(--color-text-faint);
+  background: var(--color-border);
+  color: var(--color-text-disabled);
   cursor: default;
+  opacity: 0.6;
 }
 
 .pagination-info {
